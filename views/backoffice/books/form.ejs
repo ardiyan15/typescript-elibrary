@@ -1,0 +1,90 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/navigation.ejs')
+%>
+<div class="container-fluid">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary"><%= formTitle %></h6>
+    </div>
+    <div class="card-body">
+      <% action = ''; %> <% if(book.id) { %> <% action =
+      `/backoffice/updatebook/${bookIdEncrypted}` %> <% } else { %> <% action =
+      '/backoffice/books'%> <% } %>
+      <form action="<%= action %>" method="POST" enctype="multipart/form-data">
+        <input
+          type="hidden"
+          name="id"
+          value="<%= book.id ? bookIdEncrypted : '' %>"
+        />
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              class="form-control"
+              placeholder="Title"
+              required
+              value="<%= book.title ? book.title : '' %>"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="password">Author</label>
+            <input
+              type="text"
+              name="author"
+              id="author"
+              class="form-control"
+              placeholder="Author"
+              value="<%= book.author ? book.author : '' %>"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="text">Description</label>
+            <input
+              type="text"
+              name="description"
+              id="description"
+              class="form-control"
+              placeholder="Description"
+              required
+              value="<%= book.description ? book.description : '' %>"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <% if(book.id) { %>
+            <div class="row">
+              <div class="col-md-6">
+                <img
+                  width="100%"
+                  height="100"
+                  src="/<%= book.image %>"
+                  alt="<%= book.title %>"
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="image">Upload New Image</label>
+                <input
+                  type="file"
+                  name="image"
+                  id="image"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <% } else { %>
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image" class="form-control" />
+            <% } %>
+          </div>
+        </div>
+        <a href="/backoffice/books" class="btn btn-secondary btn-sm rounded"
+          >Back</a
+        >
+        <button type="submit" class="btn btn-primary btn-sm rounded">
+          <%= buttonText %>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
