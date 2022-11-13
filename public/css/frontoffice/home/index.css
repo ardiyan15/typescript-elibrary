@@ -1,0 +1,19 @@
+.checked {
+    color: orange;
+}
+
+.card-title {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.see-all {
+    color: #0060ae;
+    font-size: 17px;
+}
+
+.see-all:hover {
+    text-decoration: none;
+}
