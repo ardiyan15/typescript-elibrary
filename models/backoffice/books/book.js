@@ -11,6 +11,7 @@ const Book = sequelize.define("book", {
   },
   title: Sequelize.STRING(60),
   author: Sequelize.STRING(100),
+  category: Sequelize.STRING(50),
   description: Sequelize.TEXT,
   image: Sequelize.STRING(128),
 });

@@ -4,7 +4,7 @@ const router = express.Router();
 const bookController = require("../../../controllers/backoffice/books/index");
 const isAuth = require("../../../middleware/is-auth");
 
-router.get("/books", isAuth, bookController.getBooks);
+router.get("/books", bookController.getBooks);
 
 router.get("/books/form", isAuth, bookController.getAddBook);
 

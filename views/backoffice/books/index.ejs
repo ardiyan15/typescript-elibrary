@@ -18,6 +18,8 @@ include('../includes/navigation.ejs')%>
             <th class="text-center">Title</th>
             <th class="text-center">Author</th>
             <th class="text-center">Image</th>
+            <th class="text-center">Created Date</th>
+            <th class="text-center">Updated Date</th>
             <th class="text-center">Action</th>
           </tr>
         </thead>
@@ -35,6 +37,8 @@ include('../includes/navigation.ejs')%>
                 alt="<%= book.title %>"
               />
             </td>
+            <td class="text-center"><%= book.createdAt %></td>
+            <td class="text-center"><%= book.updatedAt %></td>
             <td class="text-center">
               <div class="row">
                 <div class="col-md-6 text-right">

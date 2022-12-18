@@ -16,7 +16,7 @@
           value="<%= book.id ? bookIdEncrypted : '' %>"
         />
         <div class="row">
-          <div class="col-md-6 form-group">
+          <div class="col-md-4 form-group">
             <label for="title">Title</label>
             <input
               type="text"
@@ -28,7 +28,7 @@
               value="<%= book.title ? book.title : '' %>"
             />
           </div>
-          <div class="col-md-6 form-group">
+          <div class="col-md-4 form-group">
             <label for="password">Author</label>
             <input
               type="text"
@@ -38,6 +38,16 @@
               placeholder="Author"
               value="<%= book.author ? book.author : '' %>"
             />
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="category">Category</label>
+            <select name="category" class="form-control" required>
+              <option value="">-- Select Category --</option>
+              <option value="Self Development">Self Development</option>
+              <option value="Fiction">Fiction</option>
+              <option value="History">History</option>
+              <option value="Economy">Economy</option>
+            </select>
           </div>
           <div class="col-md-6 form-group">
             <label for="text">Description</label>

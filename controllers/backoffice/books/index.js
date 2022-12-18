@@ -1,9 +1,32 @@
 const encrypted = require("../../../util/encrypted");
 const Book = require("../../../models/backoffice/books/book");
+const sequelize = require("../../../util/database");
 
 exports.getBooks = (req, res, next) => {
   const flashMessage = req.flash("success");
-  Book.findAll()
+  Book.findAll({
+    attributes: {
+      include: [
+        [
+          sequelize.fn(
+            "date_format",
+            sequelize.col("createdAt"),
+            "%d %M %Y %H:%i"
+          ),
+          "createdAt",
+        ],
+        [
+          sequelize.fn(
+            "date_format",
+            sequelize.col("updatedAt"),
+            "%d %M %Y %H:%i"
+          ),
+          "updatedAt",
+        ],
+      ],
+    },
+    order: [["id", "DESC"]],
+  })
     .then((books) => {
       res.render("backoffice/books/index", {
         books,
@@ -23,7 +46,7 @@ exports.getAddBook = (req, res, next) => {
 };
 
 exports.saveBook = (req, res, next) => {
-  const { title, author, description } = req.body;
+  const { title, category, author, description } = req.body;
   const image = req.file;
 
   const imageUrl = image.path;
@@ -31,6 +54,7 @@ exports.saveBook = (req, res, next) => {
   Book.create({
     title,
     author,
+    category,
     description,
     image: imageUrl,
   })
