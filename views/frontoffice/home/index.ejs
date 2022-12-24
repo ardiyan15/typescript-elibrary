@@ -40,23 +40,24 @@
     </a>
   </div>
   <div class="row mt-5">
-    <div class="col-md-12">
+    <% let i = 1; %> <% results.forEach(result => { %>
+    <div class="col-md-12 mt-5">
       <div class="row d-flex justify-content-between">
-        <h4>Self Development</h4>
-        <a href="" class="see-all">See All</a>
+        <h4><%= result.category %></h4>
+        <a href="/categories/<%= encrypt() %>" class="see-all">See All</a>
       </div>
     </div>
     <div class="col-md-12">
       <div class="row">
-        <% let i = 1; %> <% books.forEach(book => { %>
+        <% for(let j = 0; j < result.book.length; j++){ %>
         <div class="col-md-3">
           <div class="card shadow-lg">
             <img
-              src="/<%= book.image %>"
+              src="/<%= result.book[j].image %>"
               height="250"
               width="180"
               class="mx-auto"
-              alt="<%= book.title %>"
+              alt="<%= result.book[j].title %>"
             />
             <div class="card-body">
               <a
@@ -64,9 +65,9 @@
                 class="card-title text-decoration-none text-dark font-weight-bold"
                 data-toggle="tooltip"
                 data-placement="top"
-                title="<%= book.title %>"
+                title="<%= result.book[j].title %>"
               >
-                <%= book.title %>
+                <%= result.book[j].title %>
               </a>
               <div class="row">
                 <div class="col-md-12">
@@ -83,9 +84,10 @@
             </div>
           </div>
         </div>
-        <% }) %>
+        <% } %>
       </div>
     </div>
+    <% }) %>
   </div>
 </div>
 <%- include('../includes/footer.ejs') %>
