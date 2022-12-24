@@ -16,7 +16,6 @@ const userRoutes = require("./routes/backoffice/users/index");
 const bookRoutes = require("./routes/backoffice/books/index");
 const authController = require("./routes/backoffice/auth/index");
 const errorController = require("./controllers/backoffice/404/index");
-const frontoffice404 = require("./controllers/frontoffice/404/index");
 
 const homeUserRoutes = require("./routes/frontoffice/home/home");
 

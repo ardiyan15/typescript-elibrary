@@ -1,0 +1,51 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/navbar.ejs') %>
+<style>
+  .checked {
+    color: orange;
+  }
+</style>
+<div class="container mt-4">
+  <% if(results.length > 0) { %>
+  <small>
+    <a href="/"> Back </a>
+  </small>
+  <h3>"<%= search %>"</h3>
+  <div class="row">
+    <% results.forEach(result => { %>
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-lg">
+        <img
+          src="/<%= result.image %>"
+          height="250"
+          width="180"
+          class="mx-auto"
+        />
+        <div class="card-body">
+          <a
+            href="#"
+            class="card-title text-decoration-none text-dark font-weight-bold"
+            data-toggle="tooltip"
+            data-placement="top"
+          >
+          </a>
+          <div class="row">
+            <div class="col-md-12">
+              <span class="text-muted">Rating</span>
+            </div>
+            <div class="col-md-12">
+              <span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } else { %>
+  <h3 class="text-center">Data Not Found</h3>
+  <% } %>
+</div>

@@ -1,5 +1,7 @@
-const Book = require("../../../models/backoffice/books/book");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 const encrypted = require("../../../util/encrypted");
+const Book = require("../../../models/backoffice/books/book");
 
 exports.getHome = (req, res, next) => {
   Book.findAll({
@@ -69,6 +71,37 @@ exports.getBookByCategories = (req, res, next) => {
     .then((results) => {
       console.log(results);
       res.render("frontoffice/home/categories", {
+        results,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.searchBook = (req, res, next) => {
+  const { search } = req.body;
+  console.log(search);
+
+  Book.findAll({
+    raw: true,
+    where: {
+      [Op.or]: [
+        {
+          title: {
+            [Op.like]: `%${search}%`,
+          },
+        },
+        {
+          category: {
+            [Op.like]: `%${search}%`,
+          },
+        },
+      ],
+    },
+  })
+    .then((results) => {
+      console.log(results);
+      res.render("frontoffice/home/search", {
+        search,
         results,
       });
     })
