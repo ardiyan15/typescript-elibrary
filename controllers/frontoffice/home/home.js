@@ -60,5 +60,17 @@ exports.getHome = (req, res, next) => {
 };
 
 exports.getBookByCategories = (req, res, next) => {
-  res.render("frontoffice/home/categories");
+  const category = encrypted.decrypt(req.params.category);
+
+  Book.findAll({
+    raw: true,
+    where: { category },
+  })
+    .then((results) => {
+      console.log(results);
+      res.render("frontoffice/home/categories", {
+        results,
+      });
+    })
+    .catch((err) => console.log(err));
 };

@@ -44,7 +44,9 @@
     <div class="col-md-12 mt-5">
       <div class="row d-flex justify-content-between">
         <h4><%= result.category %></h4>
-        <a href="/categories/<%= encrypt() %>" class="see-all">See All</a>
+        <a href="/categories/<%= encrypt(result.category) %>" class="see-all"
+          >See All</a
+        >
       </div>
     </div>
     <div class="col-md-12">

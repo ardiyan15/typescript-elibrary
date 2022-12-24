@@ -16,6 +16,7 @@ const userRoutes = require("./routes/backoffice/users/index");
 const bookRoutes = require("./routes/backoffice/books/index");
 const authController = require("./routes/backoffice/auth/index");
 const errorController = require("./controllers/backoffice/404/index");
+const frontoffice404 = require("./controllers/frontoffice/404/index");
 
 const homeUserRoutes = require("./routes/frontoffice/home/home");
 
@@ -67,6 +68,14 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 
 // frontoffice
 app.use("/", homeUserRoutes.router);
+
+app.use((req, res, next) => {
+  if (!req.url.includes("/backoffice")) {
+    res.render("frontoffice/404/index");
+  } else {
+    next();
+  }
+});
 
 app.use("/backoffice", homeRoutes.router);
 app.use("/backoffice", userRoutes.router);

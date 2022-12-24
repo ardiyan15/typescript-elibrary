@@ -5,10 +5,20 @@
   }
 </style>
 <div class="container mt-4">
+  <small>
+    <a href="/"> Back </a>
+  </small>
+  <h3><%= results[0].category %></h3>
   <div class="row">
+    <% results.forEach(result => { %>
     <div class="col-md-3">
       <div class="card shadow-lg">
-        <img height="250" width="180" class="mx-auto" />
+        <img
+          src="/<%= result.image %>"
+          height="250"
+          width="180"
+          class="mx-auto"
+        />
         <div class="card-body">
           <a
             href="#"
@@ -32,5 +42,6 @@
         </div>
       </div>
     </div>
+    <% }) %>
   </div>
 </div>
