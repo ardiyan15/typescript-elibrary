@@ -76,6 +76,7 @@ app.use((req, res, next) => {
   }
 });
 
+// backoffice
 app.use("/backoffice", homeRoutes.router);
 app.use("/backoffice", userRoutes.router);
 app.use("/backoffice", bookRoutes.router);

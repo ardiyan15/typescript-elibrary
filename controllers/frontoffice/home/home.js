@@ -58,7 +58,11 @@ exports.getHome = (req, res, next) => {
         encrypt: encrypted.encrypt,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.render("frontoffice/error", {
+        message: err.stack,
+      });
+    });
 };
 
 exports.getBookByCategories = (req, res, next) => {
@@ -99,7 +103,6 @@ exports.searchBook = (req, res, next) => {
     },
   })
     .then((results) => {
-      console.log(results);
       res.render("frontoffice/home/search", {
         search,
         results,
