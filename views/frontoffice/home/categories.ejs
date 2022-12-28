@@ -4,10 +4,19 @@
     color: orange;
   }
 </style>
-<div class="container mt-4">
-  <small>
-    <a href="/"> Back </a>
-  </small>
+<div class="container mt-2">
+  <ol class="breadcrumb" style="background-color: transparent">
+    <li class="breadcrumb-item" style="font-size: 12px">
+      <a href="/" class="text-primary">Home</a>
+    </li>
+    <li
+      class="breadcrumb-item active"
+      aria-current="page"
+      style="font-size: 12px"
+    >
+      Categories
+    </li>
+  </ol>
   <h3><%= results[0].category %></h3>
   <div class="row">
     <% results.forEach(result => { %>

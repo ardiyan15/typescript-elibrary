@@ -61,6 +61,66 @@
               value="<%= book.description ? book.description : '' %>"
             />
           </div>
+          <div class="col-md-2 form-group">
+            <label for="text">Date Of Issue</label>
+            <input
+              type="date"
+              name="date_of_issue"
+              id="date_of_issue"
+              class="form-control datepicker"
+              placeholder="Description"
+              required
+              value="<%= book.description ? book.description : '' %>"
+            />
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">ISBN</label>
+            <input
+              type="text"
+              name="isbn"
+              id="isbn"
+              class="form-control"
+              placeholder="ISBN"
+              required
+              value="<%= book.ISBN ? book.ISBN : '' %>"
+            />
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">Language</label>
+            <input
+              type="text"
+              name="language"
+              id="language"
+              class="form-control"
+              placeholder="Language"
+              required
+              value="<%= book.language ? book.language : '' %>"
+            />
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">Publisher</label>
+            <input
+              type="text"
+              name="publisher"
+              id="publisher"
+              class="form-control"
+              placeholder="Publisher"
+              required
+              value="<%= book.publisher ? book.publisher : '' %>"
+            />
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">Number Of Pages</label>
+            <input
+              type="text"
+              name="number_of_pages"
+              id="number_of_pages"
+              class="form-control"
+              placeholder="Number Of Pages"
+              required
+              value="<%= book.number_of_pages ? book.number_of_pages : '' %>"
+            />
+          </div>
           <div class="col-md-6 form-group">
             <% if(book.id) { %>
             <div class="row">
@@ -98,3 +158,8 @@
     </div>
   </div>
 </div>
+<%- include('../includes/end.ejs') %>
+
+<script>
+  $(".datepicker").datepicker();
+</script>

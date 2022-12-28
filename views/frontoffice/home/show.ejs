@@ -4,29 +4,38 @@
     font-size: 12px;
   }
 </style>
-<div class="container mt-5">
+<div class="container mt-3">
+  <ol class="breadcrumb" style="background-color: transparent">
+    <li class="breadcrumb-item" style="font-size: 12px">
+      <a href="/" class="text-primary">Home</a>
+    </li>
+    <li
+      class="breadcrumb-item active"
+      aria-current="page"
+      style="font-size: 12px"
+    >
+      Detail
+    </li>
+  </ol>
   <div class="row">
     <div class="col-md-3">
       <div class="card">
-        <img height="250" width="180" class="mx-auto" />
+        <img
+          height="300"
+          width="180"
+          class="mx-auto"
+          src="/<%= result.image %>"
+        />
         <div class="card-body">
           <div class="row"></div>
         </div>
       </div>
     </div>
     <div class="col-md-6">
-      <span>Ardiyan Agus</span>
-      <h4>Jeda Nulis</h4>
+      <span><%= result.author %></span>
+      <h4><%= result.title %></h4>
       <span class="font-weight-bold">Description</span>
-      <p class="text-justify">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, ipsam ab
-        aliquid deleniti iure optio aspernatur autem iusto fuga saepe!
-        Reprehenderit voluptate animi quod sit distinctio vero porro ducimus
-        fugiat!. Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-        Facilis cupiditate impedit eum ratione vitae blanditiis dolorum nisi
-        architecto ipsam. Itaque illum eveniet iure, molestias corrupti
-        voluptatibus maiores eligendi consectetur id.
-      </p>
+      <p class="text-justify"><%= result.description %></p>
       <span class="font-weight-bold">Detail</span>
       <div class="row">
         <div class="col-md-6">
@@ -82,6 +91,31 @@
   </div>
   <div class="row">
     <h5 class="font-weight-bold mt-3">Review</h5>
+    <div class="col-md-12 mt-3">
+      <div class="row">
+        <div class="col-md-12">
+          <i
+            class="fa fa-user-circle"
+            style="color: #fbc252; font-size: 25px"
+            aria-hidden="true"
+          ></i>
+          <span class="ml-2" style="font-weight: 600"> UserName By User </span>
+        </div>
+        <div class="col-md-12">
+          <span class="text-justify">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Numquam
+            ducimus iste repellat vitae. Inventore ipsum enim illum, aliquid aut
+            assumenda, doloribus corporis hic praesentium architecto voluptatem
+            eligendi nisi atque quos!. Lorem ipsum dolor sit, amet consectetur
+            adipisicing elit. Error voluptatibus itaque eligendi, perspiciatis
+            soluta perferendis recusandae voluptates, nihil doloribus quam
+            quidem adipisci dolor amet iusto explicabo reiciendis numquam! Sit,
+            nesciunt.
+          </span>
+          <hr style="width: 100%" />
+        </div>
+      </div>
+    </div>
     <div class="col-md-12 mt-3">
       <div class="row">
         <div class="col-md-12">

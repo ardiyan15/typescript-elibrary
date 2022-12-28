@@ -44,7 +44,9 @@
     <div class="col-md-12 mt-5">
       <div class="row d-flex justify-content-between">
         <h4><%= result.category %></h4>
-        <a href="/categories/<%= encrypt(result.category) %>" class="see-all"
+        <a
+          href="/categories/<%= encrypt(result.category) %>"
+          class="see-all text-primary"
           >See All</a
         >
       </div>
@@ -54,7 +56,7 @@
         <% for(let j = 0; j < result.book.length; j++){ %>
         <div class="col-md-3">
           <a
-            href="/<%= result.book[j].id %>"
+            href="/show/<%= result.book[j].id %>"
             class="card-title text-decoration-none text-dark font-weight-bold shadow-lg"
             data-toggle="tooltip"
             data-placement="top"

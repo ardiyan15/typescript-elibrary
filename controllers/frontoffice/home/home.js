@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-const encrypted = require("../../../util/encrypted");
+const { encrypt, decrypt } = require("../../../util/encrypted");
 const Book = require("../../../models/backoffice/books/book");
 
 exports.getHome = (req, res, next) => {
@@ -12,7 +12,7 @@ exports.getHome = (req, res, next) => {
       let index = 0;
       let idEncrypted = "";
       books.forEach((book) => {
-        idEncrypted = encrypted.encrypt(book.id.toString());
+        idEncrypted = encrypt(book.id.toString());
         if (results.length == 0) {
           results.push({
             category: book.category,
@@ -57,7 +57,7 @@ exports.getHome = (req, res, next) => {
       });
       res.render("frontoffice/home/index", {
         results,
-        encrypt: encrypted.encrypt,
+        encrypt,
       });
     })
     .catch((err) => {
@@ -68,19 +68,22 @@ exports.getHome = (req, res, next) => {
 };
 
 exports.getBookByCategories = (req, res, next) => {
-  const category = encrypted.decrypt(req.params.category);
+  const category = decrypt(req.params.category);
 
   Book.findAll({
     raw: true,
     where: { category },
   })
     .then((results) => {
-      console.log(results);
       res.render("frontoffice/home/categories", {
         results,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.render("frontoffice/error", {
+        message: err.stack,
+      });
+    });
 };
 
 exports.searchBook = (req, res, next) => {

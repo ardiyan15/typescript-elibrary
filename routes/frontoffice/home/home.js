@@ -6,7 +6,7 @@ const bookController = require("../../../controllers/frontoffice/book/index");
 
 router.get("/", homeController.getHome);
 
-router.get("/:id", bookController.showBook);
+router.get("/show/:id", bookController.showBook);
 
 router.get("/categories/:category", homeController.getBookByCategories);
 
