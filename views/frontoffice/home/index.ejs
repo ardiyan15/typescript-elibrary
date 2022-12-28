@@ -53,38 +53,38 @@
       <div class="row">
         <% for(let j = 0; j < result.book.length; j++){ %>
         <div class="col-md-3">
-          <div class="card shadow-lg">
-            <img
-              src="/<%= result.book[j].image %>"
-              height="250"
-              width="180"
-              class="mx-auto"
-              alt="<%= result.book[j].title %>"
-            />
-            <div class="card-body">
-              <a
-                href="#"
-                class="card-title text-decoration-none text-dark font-weight-bold"
-                data-toggle="tooltip"
-                data-placement="top"
-                title="<%= result.book[j].title %>"
-              >
+          <a
+            href="/<%= result.book[j].id %>"
+            class="card-title text-decoration-none text-dark font-weight-bold shadow-lg"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="<%= result.book[j].title %>"
+          >
+            <div class="card shadow-lg">
+              <img
+                src="/<%= result.book[j].image %>"
+                height="250"
+                width="180"
+                class="mx-auto"
+                alt="<%= result.book[j].title %>"
+              />
+              <div class="card-body">
                 <%= result.book[j].title %>
-              </a>
-              <div class="row">
-                <div class="col-md-12">
-                  <span class="text-muted">Rating</span>
-                </div>
-                <div class="col-md-12">
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star"></span>
+                <div class="row">
+                  <div class="col-md-12">
+                    <span class="text-muted">Rating</span>
+                  </div>
+                  <div class="col-md-12">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </a>
         </div>
         <% } %>
       </div>

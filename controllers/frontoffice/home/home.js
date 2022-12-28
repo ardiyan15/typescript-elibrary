@@ -10,13 +10,15 @@ exports.getHome = (req, res, next) => {
     .then((books) => {
       let results = [];
       let index = 0;
+      let idEncrypted = "";
       books.forEach((book) => {
+        idEncrypted = encrypted.encrypt(book.id.toString());
         if (results.length == 0) {
           results.push({
             category: book.category,
             book: [
               {
-                id: book.id,
+                id: idEncrypted,
                 title: book.title,
                 author: book.author,
                 description: book.description,
@@ -28,7 +30,7 @@ exports.getHome = (req, res, next) => {
         } else {
           if (book.category == results[index].category) {
             results[index].book.push({
-              id: book.id,
+              id: idEncrypted,
               title: book.title,
               author: book.author,
               description: book.description,
@@ -40,7 +42,7 @@ exports.getHome = (req, res, next) => {
               category: book.category,
               book: [
                 {
-                  id: book.id,
+                  id: idEncrypted,
                   title: book.title,
                   author: book.author,
                   description: book.description,
