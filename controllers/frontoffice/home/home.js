@@ -11,9 +11,11 @@ exports.getHome = (req, res, next) => {
       let results = [];
       let index = 0;
       let idEncrypted = "";
+      let categories = [];
       books.forEach((book) => {
         idEncrypted = encrypt(book.id.toString());
         if (results.length == 0) {
+          categories.push(book.category);
           results.push({
             category: book.category,
             book: [
@@ -37,7 +39,8 @@ exports.getHome = (req, res, next) => {
               image: book.image,
               createdAt: book.createdAt,
             });
-          } else if (!book.category.includes(results[index].category)) {
+          } else if (!categories.includes(book.category)) {
+            categories.push(book.category);
             results.push({
               category: book.category,
               book: [
@@ -52,6 +55,22 @@ exports.getHome = (req, res, next) => {
               ],
             });
             index++;
+          } else if (categories.includes(book.category)) {
+            categories.forEach((category) => {
+              results.find((result) => {
+                if (result.category === category && result.book.length == 4) {
+                  result.book.pop();
+                  result.book.unshift({
+                    id: idEncrypted,
+                    title: book.title,
+                    author: book.author,
+                    description: book.description,
+                    image: book.image,
+                    createdAt: book.createdAt,
+                  });
+                }
+              });
+            });
           }
         }
       });

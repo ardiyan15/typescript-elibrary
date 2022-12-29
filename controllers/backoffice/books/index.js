@@ -46,7 +46,20 @@ exports.getAddBook = (req, res, next) => {
 };
 
 exports.saveBook = (req, res, next) => {
-  const { title, category, author, description } = req.body;
+  const {
+    title,
+    category,
+    author,
+    description,
+    publication_date,
+    isbn,
+    language,
+    publisher,
+    number_of_pages,
+    heavy,
+    width,
+    length,
+  } = req.body;
   const image = req.file;
 
   const imageUrl = image.path;
@@ -56,13 +69,23 @@ exports.saveBook = (req, res, next) => {
     author,
     category,
     description,
+    publication_date,
+    isbn,
+    language,
+    publisher,
+    number_of_pages,
+    heavy,
+    width,
+    length,
     image: imageUrl,
   })
     .then((result) => {
       req.flash("success", "Successfully add Book");
       res.redirect("/backoffice/books");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.render("/backoffice/404/error");
+    });
 };
 
 exports.getBook = (req, res, next) => {

@@ -49,30 +49,6 @@
               <option value="Economy">Economy</option>
             </select>
           </div>
-          <div class="col-md-6 form-group">
-            <label for="text">Description</label>
-            <input
-              type="text"
-              name="description"
-              id="description"
-              class="form-control"
-              placeholder="Description"
-              required
-              value="<%= book.description ? book.description : '' %>"
-            />
-          </div>
-          <div class="col-md-2 form-group">
-            <label for="text">Date Of Issue</label>
-            <input
-              type="date"
-              name="date_of_issue"
-              id="date_of_issue"
-              class="form-control datepicker"
-              placeholder="Description"
-              required
-              value="<%= book.description ? book.description : '' %>"
-            />
-          </div>
           <div class="col-md-4 form-group">
             <label for="text">ISBN</label>
             <input
@@ -85,7 +61,18 @@
               value="<%= book.ISBN ? book.ISBN : '' %>"
             />
           </div>
-          <div class="col-md-4 form-group">
+          <div class="col-md-2 form-group">
+            <label for="text">Publication Date</label>
+            <input
+              type="date"
+              name="publication_date"
+              id="publication_date"
+              class="form-control datepicker"
+              required
+              value="<%= book.publication_date ? book.publication_date : '' %>"
+            />
+          </div>
+          <div class="col-md-6 form-group">
             <label for="text">Language</label>
             <input
               type="text"
@@ -121,7 +108,31 @@
               value="<%= book.number_of_pages ? book.number_of_pages : '' %>"
             />
           </div>
-          <div class="col-md-6 form-group">
+          <div class="col-md-4 form-group">
+            <label for="text">Heavy <small>(kg)</small></label>
+            <input
+              type="text"
+              name="heavy"
+              id="heavy"
+              class="form-control"
+              placeholder="1.0"
+              required
+              value="<%= book.heavy ? book.heavy : '' %>"
+            />
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">Width <small>(cm)</small></label>
+            <input
+              type="number"
+              name="width"
+              id="width"
+              class="form-control"
+              placeholder="1.0"
+              required
+              value="<%= book.width ? book.width : '' %>"
+            />
+          </div>
+          <div class="col-md-4 form-group">
             <% if(book.id) { %>
             <div class="row">
               <div class="col-md-6">
@@ -146,6 +157,29 @@
             <label for="image">Image</label>
             <input type="file" name="image" id="image" class="form-control" />
             <% } %>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">Length <small>(cm)</small></label>
+            <input
+              type="number"
+              name="length"
+              id="length"
+              class="form-control"
+              placeholder="1.0"
+              required
+              value="<%= book.length ? book.length : '' %>"
+            />
+          </div>
+          <div class="col-md-8 form-group">
+            <label for="text">Description</label>
+            <textarea
+              class="form-control"
+              name="description"
+              id="description"
+              cols="30"
+              rows="5"
+              placeholder="Some Description"
+            ></textarea>
           </div>
         </div>
         <a href="/backoffice/books" class="btn btn-secondary btn-sm rounded"
