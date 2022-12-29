@@ -1,33 +1,54 @@
-<nav
-  class="nav-color navbar navbar-expand-lg d-flex justify-content-between"
->
-  <a class="navbar-brand text-secondary" href="/">eLibrary</a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<style>
+  .errspan {
+    margin-left: 20.5%;
+    font-size: 14px;
+    position: absolute;
+    z-index: 1;
+    color: grey;
+  }
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <div class="navbar-nav mr-auto"></div>
+  #login-toggle:hover {
+    cursor: pointer;
+  }
+</style>
+<nav class="nav-color navbar navbar-expand-lg d-flex justify-content-between">
+  <div>
+    <a class="navbar-brand text-secondary" href="/">eLibrary</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+  <div class="input-search">
     <form class="form-inline my-2 my-lg-0" method="POST" action="/search">
       <input
+        style="width: 300px;"
         name="search"
-        class="form-control mr-sm-2"
+        class="form-control"
         type="search"
         required
         placeholder="title or category"
         aria-label="Search"
       />
-      <button class="btn p-1 px-2 my-sm-0 button-search" type="submit">
-        Search
-      </button>
+      <span class="fa fa-search errspan" aria-hidden="true"></span>
     </form>
+  </div>
+  <div class="dropdown">
+    <!-- <button class="btn button-search"  data-toggle="dropdown" id="login-toggle">Login -->
+    <a href="/login" class="btn button-search">Login
+    <span class="caret"></span></a>
+    <ul class="dropdown-menu dropdown-menu-right" id="contain-menu" style="position: absolute;">
+      <li><a class="dropdown-item" href="#">HTML</a></li>
+      <li><a class="dropdown-item" href="#">CSS</a></li>
+      <li><a class="dropdown-item" href="#">JavaScript</a></li>
+    </ul>
   </div>
 </nav>

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Book extends Model {
     /**
@@ -10,15 +8,37 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Book.hasMany(models.Rating, {
+        foreignKey: "bookId",
+      });
     }
   }
-  Book.init({
-    title: DataTypes.STRING,
-    author: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Book',
-  });
+  Book.init(
+    {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+      },
+      title: Sequelize.STRING(60),
+      author: Sequelize.STRING(100),
+      category: Sequelize.STRING(50),
+      description: Sequelize.TEXT,
+      image: Sequelize.STRING(128),
+      isbn: Sequelize.STRING(13),
+      publication_date: Sequelize.DATEONLY,
+      publisher: Sequelize.STRING(100),
+      language: Sequelize.STRING(80),
+      number_of_pages: Sequelize.STRING(10),
+      heavy: Sequelize.FLOAT,
+      width: Sequelize.FLOAT,
+      length: Sequelize.FLOAT,
+    },
+    {
+      sequelize,
+      modelName: "Book",
+    }
+  );
   return Book;
 };

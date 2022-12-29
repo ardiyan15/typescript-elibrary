@@ -60,6 +60,7 @@ exports.saveBook = (req, res, next) => {
     width,
     length,
   } = req.body;
+
   const image = req.file;
 
   const imageUrl = image.path;
@@ -105,7 +106,22 @@ exports.getBook = (req, res, next) => {
 };
 
 exports.updateBook = (req, res, next) => {
-  const { id, title, author, description } = req.body;
+  const {
+    id,
+    title,
+    category,
+    author,
+    description,
+    publication_date,
+    isbn,
+    language,
+    publisher,
+    number_of_pages,
+    heavy,
+    width,
+    length,
+  } = req.body;
+
   const image = req.file;
 
   const bookIdDecrypted = encrypted.decrypt(id);
@@ -115,6 +131,16 @@ exports.updateBook = (req, res, next) => {
       book.title = title;
       book.author = author;
       book.description = description;
+      book.category = category;
+      book.publication_date = publication_date;
+      book.isbn = isbn;
+      book.language = language;
+      book.publisher = publisher;
+      book.number_of_pages = number_of_pages;
+      book.heavy = heavy;
+      book.width = width;
+      book.length = length;
+
       if (image) {
         book.image = image.path;
       }

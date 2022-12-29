@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const { encrypt, decrypt } = require("../../../util/encrypted");
 const Book = require("../../../models/backoffice/books/book");
+const Rating = require("../../../models/frontoffice/rating");
 
 exports.getHome = (req, res, next) => {
   Book.findAll({
@@ -131,6 +132,21 @@ exports.searchBook = (req, res, next) => {
         search,
         results,
       });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.saveReview = (req, res, next) => {
+  const { rate, review } = req.body;
+
+  Rating.create({
+    rate,
+    review,
+    userId: 1,
+    bookId: 1,
+  })
+    .then((result) => {
+      res.send("<h1>Success</h1>");
     })
     .catch((err) => console.log(err));
 };

@@ -8,7 +8,7 @@ module.exports = {
         type: Sequelize.STRING(13),
         allowNull: true,
       }),
-      queryInterface.addColumn("books", "date_of_issue", {
+      queryInterface.addColumn("books", "publication_date", {
         type: Sequelize.DATEONLY,
         allowNull: true,
       }),

@@ -179,7 +179,11 @@
               cols="30"
               rows="5"
               placeholder="Some Description"
-            ></textarea>
+            >
+<%= book.description
+ ? book.description
+ : '' %></textarea
+            >
           </div>
         </div>
         <a href="/backoffice/books" class="btn btn-secondary btn-sm rounded"

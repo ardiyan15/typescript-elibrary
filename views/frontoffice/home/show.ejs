@@ -1,4 +1,10 @@
 <%- include('../includes/head.ejs') %> <%- include('../includes/navbar.ejs') %>
+<link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"
+  rel="stylesheet"
+/>
+>
 <style>
   .detail {
     font-size: 12px;
@@ -30,6 +36,16 @@
           <div class="row"></div>
         </div>
       </div>
+      <div class="text-center">
+        <button
+          class="mt-3 btn btn-sm btn-primary"
+          type="button"
+          data-toggle="modal"
+          data-target="#rateModal"
+        >
+          Reivew This Book
+        </button>
+      </div>
     </div>
     <div class="col-md-6">
       <span><%= result.author %></span>
@@ -39,52 +55,67 @@
       <span class="font-weight-bold">Detail</span>
       <div class="row">
         <div class="col-md-6">
-          <span class="detail">Jumlah Halaman</span>
+          <span class="detail">Number Of Pages</span>
         </div>
         <div class="col-md-6">
-          <span class="detail">Penerbit</span>
+          <span class="detail">Publisher</span>
         </div>
         <div class="col-md-6">
-          <span class="detail">123</span>
+          <span class="detail"
+            ><%= result.number_of_pages ? result.number_of_pages : '-' %></span
+          >
         </div>
         <div class="col-md-6">
-          <span class="detail"> Gramedia Widiasarana Indonesia </span>
+          <span class="detail"
+            ><%= result.publisher ? result.publisher : '-' %>
+          </span>
         </div>
         <div class="col-md-6 mt-3">
-          <span class="detail">Tanggal Terbit</span>
+          <span class="detail">Publication Date</span>
         </div>
         <div class="col-md-6 mt-3">
-          <span class="detail">Berat</span>
+          <span class="detail">Weight</span>
         </div>
         <div class="col-md-6">
-          <span class="detail">12 Maret 2022</span>
+          <span class="detail"
+            ><%= result.publication_date ? result.publication_date : '-'
+            %></span
+          >
         </div>
         <div class="col-md-6">
-          <span class="detail">0.9 kg</span>
+          <span class="detail"
+            ><%= result.heavy ? result.heavy + ' kg' : '-' %></span
+          >
         </div>
         <div class="col-md-6 mt-3">
           <span class="detail">ISBN</span>
         </div>
         <div class="col-md-6 mt-3">
-          <span class="detail">Lebar</span>
+          <span class="detail">Width</span>
         </div>
         <div class="col-md-6">
-          <span class="detail">9786020523316</span>
+          <span class="detail"><%= result.isbn ? result.isbn : '-' %></span>
         </div>
         <div class="col-md-6">
-          <span class="detail">12.5 cm</span>
+          <span class="detail"
+            ><%= result.width ? result.width + ' cm' : '-' %></span
+          >
         </div>
         <div class="col-md-6 mt-3">
-          <span class="detail">Bahasa</span>
+          <span class="detail">Language</span>
         </div>
         <div class="col-md-6 mt-3">
-          <span class="detail">Panjang</span>
+          <span class="detail">Length</span>
         </div>
         <div class="col-md-6">
-          <span class="detail">Indonesia</span>
+          <span class="detail"
+            ><%= result.language ? result.language : '-' %></span
+          >
         </div>
         <div class="col-md-6">
-          <span class="detail">20 cm</span>
+          <span class="detail"
+            ><%= result.length ? result.length + ' cm' : '-' %></span
+          >
         </div>
       </div>
     </div>
@@ -95,7 +126,7 @@
       <div class="row">
         <div class="col-md-12">
           <i
-            class="fa fa-user-circle"
+            class="fas fa-user-circle"
             style="color: #fbc252; font-size: 25px"
             aria-hidden="true"
           ></i>
@@ -120,7 +151,7 @@
       <div class="row">
         <div class="col-md-12">
           <i
-            class="fa fa-user-circle"
+            class="fas fa-user-circle"
             style="color: #fbc252; font-size: 25px"
             aria-hidden="true"
           ></i>
@@ -143,4 +174,107 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="rateModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/review" method="POST">
+        <div class="modal-body">
+          <div class="col-md-12 text-center">
+            <input type="hidden" name="rating" id="rating" />
+            <input type="text" value="<%= result.id %>" />
+            <p>Rate This Book</p>
+            <span data-index="1">
+              <i
+                class="fa fa-star rating"
+                style="font-size: 30px"
+                aria-hidden="true"
+                data-index="1"
+              ></i>
+            </span>
+            <span data-index="2">
+              <i
+                class="fa fa-star rating"
+                style="font-size: 30px"
+                aria-hidden="true"
+                data-index="2"
+              ></i>
+            </span>
+            <span>
+              <i
+                class="fa fa-star rating"
+                style="font-size: 30px"
+                aria-hidden="true"
+                data-index="3"
+              ></i>
+            </span>
+            <span>
+              <i
+                class="fa fa-star rating"
+                style="font-size: 30px"
+                aria-hidden="true"
+                data-index="4"
+              ></i>
+            </span>
+            <span>
+              <i
+                class="fa fa-star rating"
+                style="font-size: 30px"
+                aria-hidden="true"
+                data-index="5"
+              ></i>
+            </span>
+          </div>
+
+          <div class="col-md-12">
+            <label for="review">Review</label>
+            <textarea
+              name="review"
+              class="form-control"
+              id=""
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <%- include('../includes/footer.ejs') %>
+
+<script>
+  $(".rating").on("click", function () {
+    let dataIndex = $(this).attr("data-index");
+    $(".rating").each(function (i, object) {
+      if (i < dataIndex) {
+        $("#rating").val(dataIndex);
+        $(this).animate({ color: "#FFA500" }, 100);
+      } else {
+        $("#rating").val(dataIndex);
+        $(this).animate({ color: "black" }, 500);
+      }
+    });
+  });
+</script>

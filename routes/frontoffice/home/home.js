@@ -12,4 +12,6 @@ router.get("/categories/:category", homeController.getBookByCategories);
 
 router.post("/search", homeController.searchBook);
 
+router.post("/review", homeController.saveReview);
+
 module.exports = { router };

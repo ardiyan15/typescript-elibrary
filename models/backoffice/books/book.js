@@ -14,6 +14,14 @@ const Book = sequelize.define("book", {
   category: Sequelize.STRING(50),
   description: Sequelize.TEXT,
   image: Sequelize.STRING(128),
+  isbn: Sequelize.STRING(13),
+  publication_date: Sequelize.DATEONLY,
+  publisher: Sequelize.STRING(100),
+  language: Sequelize.STRING(80),
+  number_of_pages: Sequelize.STRING(10),
+  heavy: Sequelize.FLOAT,
+  width: Sequelize.FLOAT,
+  length: Sequelize.FLOAT,
 });
 
 module.exports = Book;

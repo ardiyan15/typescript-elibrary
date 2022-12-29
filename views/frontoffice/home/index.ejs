@@ -71,7 +71,15 @@
                 alt="<%= result.book[j].title %>"
               />
               <div class="card-body">
-                <%= result.book[j].title %>
+                <p
+                  style="
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
+                >
+                  <%= result.book[j].title %>
+                </p>
                 <div class="row">
                   <div class="col-md-12">
                     <span class="text-muted">Rating</span>
