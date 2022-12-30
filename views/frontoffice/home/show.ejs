@@ -4,7 +4,6 @@
   href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"
   rel="stylesheet"
 />
->
 <style>
   .detail {
     font-size: 12px;
@@ -37,6 +36,7 @@
         </div>
       </div>
       <div class="text-center">
+        <% if(isLoggedIn) { %>
         <button
           class="mt-3 btn btn-sm btn-primary"
           type="button"
@@ -45,6 +45,11 @@
         >
           Reivew This Book
         </button>
+        <% } else { %>
+        <button class="mt-3 btn btn-sm btn-primary" type="button">
+          Login to review this book
+        </button>
+        <% } %>
       </div>
     </div>
     <div class="col-md-6">

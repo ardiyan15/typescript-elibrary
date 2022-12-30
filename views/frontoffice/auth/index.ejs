@@ -143,12 +143,42 @@
     border-radius: 5px 5px 5px 5px;
   }
 
+  input[type="password"] {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    width: 85%;
+    border: 2px solid #f6f6f6;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+  }
+
   input[type="text"]:focus {
     background-color: #fff;
     border-bottom: 2px solid #5fbae9;
   }
 
   input[type="text"]:placeholder {
+    color: #cccccc;
+  }
+
+  input[type="password"]:focus {
+    background-color: #fff;
+    border-bottom: 2px solid #5fbae9;
+  }
+
+  input[type="password"]:placeholder {
     color: #cccccc;
   }
 
@@ -247,9 +277,6 @@
 <div class="wrapper fadeInDown">
   <a href="/" class="text-warning mb-2">Back To Home</a>
   <div id="formContent">
-    <!-- Tabs Titles -->
-
-    <!-- Icon -->
     <div class="fadeIn first mt-3 mb-3">
       <i
         class="fas fa-user-circle"
@@ -257,31 +284,28 @@
         aria-hidden="true"
       ></i>
     </div>
-
-    <!-- Login Form -->
-    <form>
+    <form method="POST" action="/login">
       <input
         type="text"
-        id="login"
+        id="username"
         class="fadeIn second"
-        name="login"
-        placeholder="login"
+        name="username"
+        placeholder="Login"
       />
       <input
-        type="text"
+        type="password"
         id="password"
         class="fadeIn third"
-        name="login"
-        placeholder="password"
+        name="password"
+        placeholder="Password"
       />
       <button type="submit" class="btn btn-warning text-white mt-3 rounded">
         LOG IN
       </button>
     </form>
-
-    <!-- Remind Passowrd -->
-    <!-- <div id="formFooter">
-      <a class="underlineHover" href="#">Forgot Password?</a>
-    </div> -->
+    <div id="formFooter">
+      Don't have an account?
+      <a class="underlineHover" href="#">Register Here</a>
+    </div>
   </div>
 </div>

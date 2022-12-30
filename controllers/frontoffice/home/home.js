@@ -5,6 +5,7 @@ const Book = require("../../../models/backoffice/books/book");
 const Rating = require("../../../models/frontoffice/rating");
 
 exports.getHome = (req, res, next) => {
+  let isLoggedIn = false;
   Book.findAll({
     raw: true,
   })
@@ -76,6 +77,7 @@ exports.getHome = (req, res, next) => {
         }
       });
       res.render("frontoffice/home/index", {
+        isLoggedIn,
         results,
         encrypt,
       });

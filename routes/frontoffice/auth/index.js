@@ -5,4 +5,6 @@ const loginController = require("../../../controllers/frontoffice/auth/index");
 
 router.get("/", loginController.getLogin);
 
+router.post("/", loginController.authLogin);
+
 module.exports = { router };

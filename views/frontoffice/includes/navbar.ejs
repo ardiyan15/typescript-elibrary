@@ -7,7 +7,7 @@
     color: grey;
   }
 
-  #login-toggle:hover {
+  .user-toggle:hover {
     cursor: pointer;
   }
 </style>
@@ -30,7 +30,7 @@
   <div class="input-search">
     <form class="form-inline my-2 my-lg-0" method="POST" action="/search">
       <input
-        style="width: 300px;"
+        style="width: 300px"
         name="search"
         class="form-control"
         type="search"
@@ -42,10 +42,28 @@
     </form>
   </div>
   <div class="dropdown">
+    <% if(isLoggedIn) { %>
+    <div data-toggle="dropdown" class="user-toggle">
+      <i
+        class="align-middle fas fa-user-circle mr-1"
+        style="color: white; font-size: 30px"
+      ></i>
+      <span style="font-size: 14px" class="text-white">Ardiyan Agus</span>
+    </div>
     <!-- <button class="btn button-search"  data-toggle="dropdown" id="login-toggle">Login -->
-    <a href="/login" class="btn button-search">Login
-    <span class="caret"></span></a>
-    <ul class="dropdown-menu dropdown-menu-right" id="contain-menu" style="position: absolute;">
+    <% } else { %>
+    <a href="#" class="mr-2 btn button-search"
+      >Register <span class="caret"></span
+    ></a>
+    <a href="/login" class="btn button-search"
+      >Login <span class="caret"></span
+    ></a>
+    <% } %>
+    <ul
+      class="dropdown-menu dropdown-menu-right"
+      id="contain-menu"
+      style="position: absolute"
+    >
       <li><a class="dropdown-item" href="#">HTML</a></li>
       <li><a class="dropdown-item" href="#">CSS</a></li>
       <li><a class="dropdown-item" href="#">JavaScript</a></li>
