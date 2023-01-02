@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../../../models/backoffice/users/user");
+const { encrypt } = require("../../../util/encrypted");
 
 exports.getLogin = (req, res, next) => {
   res.render("frontoffice/auth/index");
@@ -20,7 +21,6 @@ exports.authLogin = async (req, res, next) => {
     const checkPassword = await bcrypt.compare(password, user.password);
     if (checkPassword) {
       req.session.isLoggedIn = true;
-      delete user.id;
       delete user.email;
       delete user.password;
       delete user.image;

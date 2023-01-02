@@ -72,7 +72,9 @@ app.use("/login", authFrontController.router);
 
 app.use((req, res, next) => {
   if (!req.url.includes("/backoffice")) {
-    res.render("frontoffice/404/index");
+    res.render("frontoffice/404/index", {
+      isLoggedIn: false,
+    });
   } else {
     next();
   }

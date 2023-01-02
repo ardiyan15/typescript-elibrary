@@ -110,7 +110,6 @@ exports.getBookByCategories = (req, res, next) => {
 
 exports.searchBook = (req, res, next) => {
   const { search } = req.body;
-  console.log(search);
 
   Book.findAll({
     raw: true,
@@ -139,16 +138,24 @@ exports.searchBook = (req, res, next) => {
 };
 
 exports.saveReview = (req, res, next) => {
-  const { rate, review } = req.body;
+  const { rate, review, userId, bookId } = req.body;
+
+  let bookIdDecrypted = decrypt(bookId);
+  let userIdDecrypted = decrypt(userId);
 
   Rating.create({
     rate,
     review,
-    userId: 1,
-    bookId: 1,
+    userId: userIdDecrypted,
+    bookId: bookIdDecrypted,
   })
     .then((result) => {
-      res.send("<h1>Success</h1>");
+      req.flash("success", "Successfully submit review");
+      res.redirect("back");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.render("frontoffice/error", {
+        message: err.stack,
+      });
+    });
 };
