@@ -11,6 +11,7 @@ app.set("views", "views");
 
 const isAuth = require("./middleware/is-auth");
 
+
 const homeRoutes = require("./routes/backoffice/home/home");
 const userRoutes = require("./routes/backoffice/users/index");
 const bookRoutes = require("./routes/backoffice/books/index");
@@ -21,6 +22,10 @@ const authFrontController = require("./routes/frontoffice/auth/index");
 const homeUserRoutes = require("./routes/frontoffice/home/home");
 
 const sequelize = require("./util/database");
+const Book = require("./models/backoffice/books/book");
+// const User = require("./models/backoffice/users/user");
+const Rating  = require('./models/frontoffice/rating');
+const User = require("./models/backoffice/users/user");
 
 app.use(
   session({
@@ -87,6 +92,24 @@ app.use("/backoffice", bookRoutes.router);
 app.use("/backoffice", authController.router);
 
 app.use(isAuth, errorController.get404);
+
+Book.hasMany(Rating, {
+  foreignKey: 'bookId'
+})
+
+User.hasMany(Rating, {
+  foreignKey: 'userId'
+});
+
+Rating.belongsTo(Book)
+Rating.belongsTo(User)
+
+// User.hasMany(Rating)
+
+// Rating.hasOne(Book, {
+//   foreignKey: 'bookId'
+// })
+// Rating.hasOne()
 
 sequelize
   .sync()

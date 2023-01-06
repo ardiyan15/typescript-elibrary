@@ -143,6 +143,9 @@ exports.saveReview = (req, res, next) => {
   let bookIdDecrypted = decrypt(bookId);
   let userIdDecrypted = decrypt(userId);
 
+  console.log(userId)
+  console.log(userIdDecrypted)
+
   Rating.create({
     rate,
     review,
@@ -154,6 +157,7 @@ exports.saveReview = (req, res, next) => {
       res.redirect("back");
     })
     .catch((err) => {
+      console.log(err)
       res.render("frontoffice/error", {
         message: err.stack,
       });

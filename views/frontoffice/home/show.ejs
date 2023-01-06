@@ -127,6 +127,7 @@
   </div>
   <div class="row">
     <h5 class="font-weight-bold mt-3">Review</h5>
+    <% for(let i = 0; i < result.ratings.length; i++) { %>
     <div class="col-md-12 mt-3">
       <div class="row">
         <div class="col-md-12">
@@ -135,48 +136,17 @@
             style="color: #fbc252; font-size: 25px"
             aria-hidden="true"
           ></i>
-          <span class="ml-2" style="font-weight: 600"> UserName By User </span>
+          <span class="ml-2" style="font-weight: 600">
+            <%= result.ratings[i].user.username %>
+          </span>
         </div>
         <div class="col-md-12">
-          <span class="text-justify">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Numquam
-            ducimus iste repellat vitae. Inventore ipsum enim illum, aliquid aut
-            assumenda, doloribus corporis hic praesentium architecto voluptatem
-            eligendi nisi atque quos!. Lorem ipsum dolor sit, amet consectetur
-            adipisicing elit. Error voluptatibus itaque eligendi, perspiciatis
-            soluta perferendis recusandae voluptates, nihil doloribus quam
-            quidem adipisci dolor amet iusto explicabo reiciendis numquam! Sit,
-            nesciunt.
-          </span>
+          <span class="text-justify"> <%= result.ratings[i].review %> </span>
           <hr style="width: 100%" />
         </div>
       </div>
     </div>
-    <div class="col-md-12 mt-3">
-      <div class="row">
-        <div class="col-md-12">
-          <i
-            class="fas fa-user-circle"
-            style="color: #fbc252; font-size: 25px"
-            aria-hidden="true"
-          ></i>
-          <span class="ml-2" style="font-weight: 600"> UserName By User </span>
-        </div>
-        <div class="col-md-12">
-          <span class="text-justify">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Numquam
-            ducimus iste repellat vitae. Inventore ipsum enim illum, aliquid aut
-            assumenda, doloribus corporis hic praesentium architecto voluptatem
-            eligendi nisi atque quos!. Lorem ipsum dolor sit, amet consectetur
-            adipisicing elit. Error voluptatibus itaque eligendi, perspiciatis
-            soluta perferendis recusandae voluptates, nihil doloribus quam
-            quidem adipisci dolor amet iusto explicabo reiciendis numquam! Sit,
-            nesciunt.
-          </span>
-          <hr style="width: 100%" />
-        </div>
-      </div>
-    </div>
+    <% } %>
   </div>
 </div>
 
