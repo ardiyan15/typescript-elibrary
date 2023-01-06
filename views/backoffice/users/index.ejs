@@ -18,6 +18,7 @@ include('../includes/navigation.ejs')%>
             <th class="text-center">Username</th>
             <th class="text-center">Roles</th>
             <th class="text-center">Email</th>
+            <th class="text-center">Image</th>
             <th class="text-center">Action</th>
           </tr>
         </thead>
@@ -28,6 +29,14 @@ include('../includes/navigation.ejs')%>
             <td class="text-center"><%= user.username %></td>
             <td class="text-center"><%= user.roles %></td>
             <td class="text-center"><%= user.email %></td>
+            <td class="text-center">
+              <img
+                width="80"
+                height="30"
+                src="/<%= user.image %>"
+                alt="<%= user.title %>"
+              />
+            </td>
             <td class="text-center">
               <div class="row">
                 <div class="col-md-6 text-right">

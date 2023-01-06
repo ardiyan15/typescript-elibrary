@@ -6,6 +6,13 @@ const Rating = require("../../../models/frontoffice/rating");
 
 exports.getHome = (req, res, next) => {
   let isLoggedIn = false;
+
+  if (req.session.user) {
+    isLoggedIn = true;
+    user = req.session.user;
+    user.id = encrypt(user.id.toString());
+  }
+  
   Book.findAll({
     raw: true,
   })

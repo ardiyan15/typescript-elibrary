@@ -4,7 +4,9 @@ const User = require("../../../models/backoffice/users/user");
 
 exports.getUsers = (req, res, next) => {
   const flashMessage = req.flash("success");
-  User.findAll()
+  User.findAll({
+    order: [["id", "DESC"]],
+  })
     .then((users) => {
       res.render("backoffice/users/index", {
         users,
@@ -44,11 +46,16 @@ exports.saveUser = async (req, res, next) => {
 
   const passwordHashed = await bcrypt.hash(password, 12);
 
+  const image = req.file;
+
+  const imageUrl = image.path;
+
   User.create({
     username,
     password: passwordHashed,
     roles,
     email,
+    image: imageUrl,
   })
     .then((result) => {
       req.flash("success", "Successfully Add User");

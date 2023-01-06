@@ -12,7 +12,8 @@
         <% } else { %>
         <% action = '/backoffice/users'%>
         <% } %>
-      <form action="<%= action %>" method="POST">
+      <form action="<%= action %>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="destination" value="users">
         <input type="hidden" name="id" value="<%= user.id ? userIdEncrypted : '' %>">
         <div class="row">
           <div class="col-md-6 form-group">
@@ -57,6 +58,10 @@
               <option value="admin" <%= user.roles == 'admin' ? "selected" : "" %>>Admin</option>
               <option value="user" <%= user.roles == 'user' ? "selected" : "" %>>User</option>
             </select>
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image">
           </div>
         </div>
         <a href="/backoffice/users" class="btn btn-secondary btn-sm rounded"
