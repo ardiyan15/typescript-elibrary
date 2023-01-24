@@ -98,6 +98,13 @@ exports.getHome = (req, res, next) => {
 
 exports.getBookByCategories = (req, res, next) => {
   const category = decrypt(req.params.category);
+  let isLoggedIn = false;
+
+  if (req.session.user) {
+    isLoggedIn = true;
+    user = req.session.user;
+    user.id = encrypt(user.id.toString());
+  }
 
   Book.findAll({
     raw: true,
@@ -105,6 +112,7 @@ exports.getBookByCategories = (req, res, next) => {
   })
     .then((results) => {
       res.render("frontoffice/home/categories", {
+        isLoggedIn,
         results,
       });
     })
