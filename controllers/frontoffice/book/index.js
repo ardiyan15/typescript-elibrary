@@ -20,15 +20,51 @@ exports.showBook = async (req, res, next) => {
     include: [
       {
         model: Rating,
-        include: [{model: User}]
-      }
+        include: [{ model: User }],
+      },
     ],
-  })
-  
-  bookIdEncrypted = encrypt(book.id.toString())
+  });
 
-  let result = book.toJSON()
-  
+  bookIdEncrypted = encrypt(book.id.toString());
+
+  let result = book.toJSON();
+
+  let temp_rate_value = [];
+  let object_rate_value = [
+    {
+      5: 0,
+      4: 0,
+      3: 0,
+      2: 0,
+      1: 0,
+    },
+  ];
+  let sum_current_value = 0;
+
+  for (let i = 0; i < result.ratings.length; i++) {
+    temp_rate_value.push(result.ratings[i].rate);
+
+    // temp_rate_value.reduce((accumulator, currentValue) => {
+    // console.log(accumulator, currentValue);
+    //   if (accumulator == currentValue) {
+    //     sum_current_value++;
+    //     object_rate_value.push({
+    //       5: sum_current_value,
+    //     });
+    //   }
+    // });
+  }
+
+  for (let k = 0; k < object_rate_value.length; k++) {
+    console.log(object_rate_value[k]);
+  }
+
+  // console.log(object_rate_value);
+
+  // result.forEach((item, index) => {
+  //   console.log(item);
+  // });
+
   try {
     res.render("frontoffice/home/show", {
       bookIdEncrypted,
@@ -36,7 +72,7 @@ exports.showBook = async (req, res, next) => {
       isLoggedIn,
       result,
     });
-  } catch(err) {
-    console.log(err)
+  } catch (err) {
+    console.log(err);
   }
 };
