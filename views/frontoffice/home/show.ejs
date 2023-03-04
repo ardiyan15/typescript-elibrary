@@ -219,8 +219,16 @@
         <div class="modal-body">
           <div class="col-md-12 text-center">
             <input type="hidden" name="rate" id="rate" />
-            <input type="hidden" value="<%= bookIdEncrypted %>" name="bookId" />
-            <input type="hidden" value="<%= user.id  %>" name="userId" />
+            <input
+              type="text"
+              value="<%= encrypt(result.id.toString()) %>"
+              name="bookId"
+            />
+            <input
+              type="text"
+              value="<%= encrypt(user.id.toString())  %>"
+              name="userId"
+            />
             <p>Rate This Book</p>
             <span data-index="1">
               <i

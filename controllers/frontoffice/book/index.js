@@ -5,6 +5,7 @@ const User = require("../../../models/backoffice/users/user");
 
 exports.showBook = async (req, res, next) => {
   const id = decrypt(req.params.id);
+  console.log(id);
   let user = "";
   let isLoggedIn = false;
   let bookIdEncrypted = "";
@@ -12,7 +13,7 @@ exports.showBook = async (req, res, next) => {
   if (req.session.user) {
     isLoggedIn = true;
     user = req.session.user;
-    user.id = encrypt(user.id.toString());
+    // user.id = encrypt(user.id.toString());
   }
 
   let book = await Book.findByPk(id, {
@@ -55,10 +56,6 @@ exports.showBook = async (req, res, next) => {
     // });
   }
 
-  for (let k = 0; k < object_rate_value.length; k++) {
-    console.log(object_rate_value[k]);
-  }
-
   // console.log(object_rate_value);
 
   // result.forEach((item, index) => {
@@ -67,10 +64,11 @@ exports.showBook = async (req, res, next) => {
 
   try {
     res.render("frontoffice/home/show", {
-      bookIdEncrypted,
+      // bookIdEncrypted,
       user,
       isLoggedIn,
       result,
+      encrypt,
     });
   } catch (err) {
     console.log(err);

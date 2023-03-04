@@ -25,6 +25,8 @@ module.exports = {
           roles: "admin",
           email: "admin@gmail.com",
           image: "default.jpg",
+          createdAt: Sequelize.literal("CURRENT_TIMESTAMP"),
+          updatedAt: Sequelize.literal("CURRENT_TIMESTAMP"),
         },
       ],
       {}

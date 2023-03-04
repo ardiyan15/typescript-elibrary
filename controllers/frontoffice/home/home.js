@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const { encrypt, decrypt } = require("../../../util/encrypted");
+const encrypted = require("../../../util/encrypted");
 const Book = require("../../../models/backoffice/books/book");
 const Rating = require("../../../models/frontoffice/rating");
 
@@ -12,7 +13,7 @@ exports.getHome = (req, res, next) => {
     user = req.session.user;
     user.id = encrypt(user.id.toString());
   }
-  
+
   Book.findAll({
     raw: true,
   })
@@ -155,11 +156,14 @@ exports.searchBook = (req, res, next) => {
 exports.saveReview = (req, res, next) => {
   const { rate, review, userId, bookId } = req.body;
 
-  let bookIdDecrypted = decrypt(bookId);
-  let userIdDecrypted = decrypt(userId);
+  console.log(userId);
+  console.log(bookId);
 
-  console.log(userId)
-  console.log(userIdDecrypted)
+  let bookIdDecrypted = encrypted.decrypt(bookId);
+  let userIdDecrypted = encrypted.decrypt(userId);
+
+  console.log(userId);
+  console.log(userIdDecrypted);
 
   Rating.create({
     rate,
@@ -172,7 +176,7 @@ exports.saveReview = (req, res, next) => {
       res.redirect("back");
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       res.render("frontoffice/error", {
         message: err.stack,
       });
