@@ -219,6 +219,7 @@
         <div class="modal-body">
           <div class="col-md-12 text-center">
             <input type="hidden" name="rate" id="rate" />
+            <% if(isLoggedIn) { %>
             <input
               type="text"
               value="<%= encrypt(result.id.toString()) %>"
@@ -229,6 +230,7 @@
               value="<%= encrypt(user.id.toString())  %>"
               name="userId"
             />
+            <% } %>
             <p>Rate This Book</p>
             <span data-index="1">
               <i

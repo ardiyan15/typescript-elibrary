@@ -2,10 +2,10 @@ const { encrypt, decrypt } = require("../../../util/encrypted");
 const Book = require("../../../models/backoffice/books/book");
 const Rating = require("../../../models/frontoffice/rating");
 const User = require("../../../models/backoffice/users/user");
+const sequelize = require("../../../util/database");
 
 exports.showBook = async (req, res, next) => {
   const id = decrypt(req.params.id);
-  console.log(id);
   let user = "";
   let isLoggedIn = false;
   let bookIdEncrypted = "";
@@ -13,7 +13,6 @@ exports.showBook = async (req, res, next) => {
   if (req.session.user) {
     isLoggedIn = true;
     user = req.session.user;
-    // user.id = encrypt(user.id.toString());
   }
 
   let book = await Book.findByPk(id, {
@@ -40,31 +39,23 @@ exports.showBook = async (req, res, next) => {
       1: 0,
     },
   ];
-  let sum_current_value = 0;
 
-  for (let i = 0; i < result.ratings.length; i++) {
-    temp_rate_value.push(result.ratings[i].rate);
+  let ratings = await Rating.findAll({
+    attributes: [
+      ["rate", "category"],
+      [sequelize.fn("COUNT", sequelize.col("rate")), "total"],
+    ],
+    where: { bookId: id },
+    raw: true,
+    group: "rate",
+  });
 
-    // temp_rate_value.reduce((accumulator, currentValue) => {
-    // console.log(accumulator, currentValue);
-    //   if (accumulator == currentValue) {
-    //     sum_current_value++;
-    //     object_rate_value.push({
-    //       5: sum_current_value,
-    //     });
-    //   }
-    // });
-  }
-
-  // console.log(object_rate_value);
-
-  // result.forEach((item, index) => {
-  //   console.log(item);
-  // });
+  ratings.forEach((item, index) => {
+    console.log(item);
+  });
 
   try {
     res.render("frontoffice/home/show", {
-      // bookIdEncrypted,
       user,
       isLoggedIn,
       result,
