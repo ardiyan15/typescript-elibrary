@@ -86,6 +86,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/", homeUserRoutes.router);
 app.use("/", frontUserRoutes.router);
 app.use("/login", authFrontController.router);
+app.use("/register", authFrontController.router);
 
 app.use((req, res, next) => {
   if (!req.url.includes("/backoffice")) {

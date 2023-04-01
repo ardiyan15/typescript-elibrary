@@ -27,11 +27,47 @@ exports.authLogin = async (req, res, next) => {
       delete user.createdAt;
       delete user.updatedAt;
       delete user.username;
-      req.session.user = user;
+      let frontOffice = {
+        user,
+      };
+      req.session.frontOffice = frontOffice;
       res.redirect("/");
     } else {
       req.flash("failed", "Invalid username or password");
       res.redirect("/login");
     }
   }
+};
+
+exports.getRegister = (req, res, next) => {
+  const flashMessage = req.flash("success");
+
+  res.render("frontoffice/user/register", {
+    isLoggedIn: false,
+    flashMessage,
+  });
+};
+
+exports.saveRegister = async (req, res, next) => {
+  const { username, password, roles, email } = req.body;
+
+  const passwordHashed = await bcrypt.hash(password, 12);
+
+  const image = req.file;
+
+  const imageUrl = image.path;
+
+  User.create({
+    username,
+    password: passwordHashed,
+    roles,
+    email,
+    image: imageUrl,
+    roles: "user",
+  })
+    .then((result) => {
+      req.flash("success", "Successfully Add User");
+      res.redirect("/register/user");
+    })
+    .catch((err) => console.log(err));
 };

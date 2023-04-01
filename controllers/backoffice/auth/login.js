@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../../../models/backoffice/users/user");
 
 exports.login = (req, res, next) => {
-  if (req.session.isLoggedIn) {
+  if (req.session.isLoggedIn && req.session.user == "admin") {
     return res.redirect("/backoffice/home");
   }
   const flashMessage = req.flash("failed");
@@ -22,8 +22,12 @@ exports.postLogin = async (req, res, next) => {
   } else {
     const checkPassword = await bcrypt.compare(password, user.password);
     if (checkPassword) {
+      delete user.password;
+      let backOffice = {
+        user,
+      };
       req.session.isLoggedIn = true;
-      req.session.user = user;
+      req.session.backOffice = user;
       res.redirect("/backoffice/home");
     } else {
       req.flash("failed", "Invalid username or password");

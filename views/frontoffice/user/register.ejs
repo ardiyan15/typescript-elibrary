@@ -1,0 +1,63 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/navbar.ejs') %>
+<script src="/js/sweetalert2.all.min.js"></script>
+
+<div class="container mt-5">
+  <div class="card p-5 shadow-lg">
+    <input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
+    <form method="POST" action="/register/user" enctype="multipart/form-data">
+      <input type="hidden" name="destination" value="users" />
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              placeholder="Username"
+            />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Password"
+              name="password"
+            />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="exampleInputPassword1">Email</label>
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              placeholder="Email"
+            />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="exampleInputPassword1">User Photo</label>
+            <input type="file" name="image" class="form-control" />
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary btn-sm rounded">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../includes/footer.ejs') %>
+<script>
+  let message = $("#text-alert").val();
+  Swal.fire("Success!", message, "success");
+</script>
