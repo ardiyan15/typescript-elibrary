@@ -9,6 +9,7 @@
     font-size: 12px;
   }
 </style>
+<input type="hidden" id="finalRating" value="<%= finalRating %>" />
 <div class="container mt-3">
   <ol class="breadcrumb" style="background-color: transparent">
     <li class="breadcrumb-item" style="font-size: 12px">
@@ -54,7 +55,7 @@
       <div class="mt-3 text-center">
         <span class="mt-3">
           <i
-            class="fa fa-star"
+            class="fa fa-star rate-star"
             style="font-size: 20px"
             aria-hidden="true"
             data-index="1"
@@ -62,7 +63,7 @@
         </span>
         <span class="mt-3">
           <i
-            class="fa fa-star"
+            class="fa fa-star rate-star"
             style="font-size: 20px"
             aria-hidden="true"
             data-index="1"
@@ -70,7 +71,7 @@
         </span>
         <span class="mt-3">
           <i
-            class="fa fa-star"
+            class="fa fa-star rate-star"
             style="font-size: 20px"
             aria-hidden="true"
             data-index="1"
@@ -78,7 +79,7 @@
         </span>
         <span class="mt-3">
           <i
-            class="fa fa-star"
+            class="fa fa-star rate-star"
             style="font-size: 20px"
             aria-hidden="true"
             data-index="1"
@@ -86,7 +87,7 @@
         </span>
         <span class="mt-3">
           <i
-            class="fa fa-star"
+            class="fa fa-star rate-star"
             style="font-size: 20px"
             aria-hidden="true"
             data-index="1"
@@ -314,4 +315,12 @@
       }
     });
   });
+
+  let rateIcon = $(".rate-star");
+
+  let finalRating = $("#finalRating").val();
+
+  for (let i = 0; i < finalRating; i++) {
+    rateIcon[i].style.color = "#FFA500";
+  }
 </script>

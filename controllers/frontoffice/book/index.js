@@ -42,7 +42,7 @@ exports.showBook = async (req, res, next) => {
 
   let ratings = await Rating.findAll({
     attributes: [
-      ["rate", "category"],
+      ["rate", "rate"],
       [sequelize.fn("COUNT", sequelize.col("rate")), "total"],
     ],
     where: { bookId: id },
@@ -50,9 +50,14 @@ exports.showBook = async (req, res, next) => {
     group: "rate",
   });
 
+  let multiplicationRating = 0;
+  let sumRating = 0;
   ratings.forEach((item, index) => {
-    console.log(item);
+    multiplicationRating += item.rate * item.total;
+    sumRating += item.total;
   });
+
+  let finalRating = Math.round(multiplicationRating / sumRating);
 
   try {
     res.render("frontoffice/home/show", {
@@ -60,6 +65,7 @@ exports.showBook = async (req, res, next) => {
       isLoggedIn,
       result,
       encrypt,
+      finalRating,
     });
   } catch (err) {
     console.log(err);
