@@ -29,17 +29,6 @@ exports.showBook = async (req, res, next) => {
 
   let result = book.toJSON();
 
-  let temp_rate_value = [];
-  let object_rate_value = [
-    {
-      5: 0,
-      4: 0,
-      3: 0,
-      2: 0,
-      1: 0,
-    },
-  ];
-
   let ratings = await Rating.findAll({
     attributes: [
       ["rate", "rate"],

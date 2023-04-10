@@ -4,6 +4,7 @@ const { encrypt, decrypt } = require("../../../util/encrypted");
 const encrypted = require("../../../util/encrypted");
 const Book = require("../../../models/backoffice/books/book");
 const Rating = require("../../../models/frontoffice/rating");
+const sequelize = require("../../../util/database");
 
 exports.getHome = (req, res, next) => {
   let isLoggedIn = false;
@@ -16,9 +17,22 @@ exports.getHome = (req, res, next) => {
   }
 
   Book.findAll({
+    attributes: ["*"],
     raw: true,
+    nest: true,
+    include: [
+      {
+        model: Rating,
+        attributes: [
+          [sequelize.fn("COUNT", sequelize.col("rate")), "total_review"],
+        ],
+        required: true, // true to force to using inner join
+      },
+    ],
+    group: "bookId",
   })
     .then((books) => {
+      console.log(books);
       let results = [];
       let index = 0;
       let idEncrypted = "";
@@ -37,6 +51,7 @@ exports.getHome = (req, res, next) => {
                 description: book.description,
                 image: book.image,
                 createdAt: book.createdAt,
+                totalReview: book.ratings.total_review,
               },
             ],
           });
@@ -49,6 +64,7 @@ exports.getHome = (req, res, next) => {
               description: book.description,
               image: book.image,
               createdAt: book.createdAt,
+              totalReview: book.ratings.total_review,
             });
           } else if (!categories.includes(book.category)) {
             categories.push(book.category);
@@ -62,6 +78,7 @@ exports.getHome = (req, res, next) => {
                   description: book.description,
                   image: book.image,
                   createdAt: book.createdAt,
+                  totalReview: book.ratings.total_review,
                 },
               ],
             });
@@ -78,6 +95,7 @@ exports.getHome = (req, res, next) => {
                     description: book.description,
                     image: book.image,
                     createdAt: book.createdAt,
+                    totalReview: book.ratings.total_review,
                   });
                 }
               });
@@ -85,6 +103,8 @@ exports.getHome = (req, res, next) => {
           }
         }
       });
+
+      console.log(results[0].book);
       res.render("frontoffice/home/index", {
         isLoggedIn,
         results,
@@ -92,6 +112,7 @@ exports.getHome = (req, res, next) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       res.render("frontoffice/error", {
         message: err.stack,
       });
