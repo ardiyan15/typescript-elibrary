@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon app.js"
   },
   "author": "",
@@ -21,6 +21,8 @@
     "sequelize": "^6.26.0"
   },
   "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.20",
     "sequelize-cli": "^6.5.2"
   }

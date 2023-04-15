@@ -2,7 +2,6 @@ $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
-
         console.log('here')
       $('.sidebar .collapse').collapse('hide');
     };
