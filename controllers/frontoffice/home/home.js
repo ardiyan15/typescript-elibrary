@@ -103,8 +103,6 @@ exports.getHome = (req, res, next) => {
           }
         }
       });
-
-      console.log(results[0].book);
       res.render("frontoffice/home/index", {
         isLoggedIn,
         results,
