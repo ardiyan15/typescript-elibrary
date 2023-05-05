@@ -9,11 +9,9 @@ const Banner = sequelize.define("banner", {
     allowNull: false,
     primaryKey: true,
   },
-  username: Sequelize.STRING(60),
-  password: Sequelize.STRING(128),
-  roles: Sequelize.STRING(30),
-  email: Sequelize.STRING(30),
+  title: Sequelize.STRING(60),
   image: Sequelize.STRING(128),
+  type: Sequelize.STRING(30),
 });
 
 module.exports = Banner;

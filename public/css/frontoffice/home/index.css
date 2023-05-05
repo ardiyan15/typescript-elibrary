@@ -1,3 +1,7 @@
+#borrow-book:hover {
+    text-decoration: none;
+}
+
 .checked {
     color: orange;
 }

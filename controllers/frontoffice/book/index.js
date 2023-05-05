@@ -9,10 +9,17 @@ exports.showBook = async (req, res, next) => {
   let user = "";
   let isLoggedIn = false;
   let bookIdEncrypted = "";
+  let haveRating = false;
 
-  if (req.session.user) {
+  if (req.session.frontOffice) {
     isLoggedIn = true;
-    user = req.session.user;
+    user = req.session.frontOffice.user;
+    let userId = decrypt(user.id.toString());
+    let rating = Rating.findOne({ where: { id: userId } });
+
+    if (rating != null) {
+      haveRating = true;
+    }
   }
 
   let book = await Book.findByPk(id, {
@@ -47,7 +54,7 @@ exports.showBook = async (req, res, next) => {
   });
 
   let finalRating = Math.round(multiplicationRating / sumRating);
-
+  console.log(haveRating);
   try {
     res.render("frontoffice/home/show", {
       user,
@@ -55,6 +62,7 @@ exports.showBook = async (req, res, next) => {
       result,
       encrypt,
       finalRating,
+      haveRating,
     });
   } catch (err) {
     console.log(err);

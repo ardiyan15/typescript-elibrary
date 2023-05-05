@@ -1,0 +1,109 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/navbar.ejs') %>
+<link rel="stylesheet" href="/public/css/frontoffice/home/index.css" />
+<div class="container mt-3 pb-5">
+  <div class="row">
+    <% let i = 1; %> <% results.forEach(result => { %>
+    <div class="col-md-12 mt-5">
+      <div class="row d-flex justify-content-between">
+        <h4 class="mb-4"><%= result.category %></h4>
+        <!-- <a
+          href="/categories/<%= encrypt(result.category) %>"
+          class="see-all text-primary"
+          >See All
+          </a> -->
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <% for(let j = 0; j < result.book.length; j++){ %>
+        <div class="col-md-3">
+          <a
+            href="/show/<%= result.book[j].id %>"
+            class="card-title text-decoration-none text-dark font-weight-bold shadow-lg"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="<%= result.book[j].title %>"
+          >
+            <div class="card shadow-lg">
+              <img
+                src="/<%= result.book[j].image %>"
+                height="250"
+                width="180"
+                class="mx-auto"
+                alt="<%= result.book[j].title %>"
+              />
+              <div class="card-body">
+                <p
+                  style="
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
+                >
+                  <%= result.book[j].title %>
+                </p>
+                <div class="row">
+                  <div class="col-md-12"></div>
+                  <div class="col-md-6">
+                    <span><%= result.book[j].stock %> in Stock</span>
+                  </div>
+                  <div class="col-md-6">
+                    <button
+                      type="button"
+                      class="button-request btn btn-sm btn-primary rounded"
+                      data-toggle="modal"
+                      data-target="#exampleModal"
+                    >
+                      Request Book
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../includes/footer.ejs') %>
+
+<script>
+  $(".button-request").on("click", function (e) {
+    e.preventDefault();
+  });
+</script>

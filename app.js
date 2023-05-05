@@ -24,6 +24,7 @@ const errorController = require("./controllers/backoffice/404/index");
 const authFrontController = require("./routes/frontoffice/auth/index");
 const homeUserRoutes = require("./routes/frontoffice/home/home");
 const frontUserRoutes = require("./routes/frontoffice/user/index");
+const borrowRoutes = require("./routes/frontoffice/borrow/index");
 
 // API Routes
 const test = require("./routes/api/test");
@@ -44,12 +45,11 @@ app.use(
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const { destination } = req.body;
-    console.log(req.body);
     const userDir = `./images/${destination}`;
     if (!fs.existsSync(userDir)) {
       fs.mkdirSync(userDir, { recursive: true });
     }
-    if (destination == null) {
+    if (destination != null) {
       cb(null, `images/${destination}`);
     } else {
       cb(null, "images");
@@ -92,6 +92,7 @@ app.use("/api/v1", test.router);
 // frontoffice
 app.use("/", homeUserRoutes.router);
 app.use("/", frontUserRoutes.router);
+app.use("/", borrowRoutes.router);
 app.use("/login", authFrontController.router);
 app.use("/register", authFrontController.router);
 

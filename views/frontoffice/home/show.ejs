@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="text-center">
-        <% if(isLoggedIn) { %>
+        <% if(isLoggedIn) { %> <% if(haveRating == false) { %>
         <button
           class="mt-3 btn btn-sm btn-primary"
           type="button"
@@ -46,7 +46,7 @@
         >
           Reivew This Book
         </button>
-        <% } else { %>
+        <% } %> <% } else { %>
         <a href="/login" class="mt-3 btn btn-sm btn-primary">
           Login to review this book
         </a>

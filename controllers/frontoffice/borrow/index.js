@@ -1,13 +1,9 @@
-const Sequelize = require("sequelize");
-const Op = Sequelize.Op;
-const { encrypt, decrypt } = require("../../../util/encrypted");
-const encrypted = require("../../../util/encrypted");
+const { encrypt } = require("../../../util/encrypted");
 const sequelize = require("../../../util/database");
 const Book = require("../../../models/backoffice/books/book");
 const Rating = require("../../../models/frontoffice/rating");
-const Banner = require("../../../models/backoffice/banners/banner");
 
-exports.getHome = async (req, res, next) => {
+exports.index = async (req, res, next) => {
   let isLoggedIn = false;
   if (req.session.frontOffice) {
     if (req.session.frontOffice.user) {
@@ -34,21 +30,17 @@ exports.getHome = async (req, res, next) => {
       group: "bookId",
     });
 
-    const Banners = await Banner.findAll({
-      raw: true,
-      where: {
-        type: "Website",
-      },
-    });
-
     let results = [];
     let index = 0;
     let idEncrypted = "";
     let categories = [];
+    let stock = 0;
 
     Books.forEach((book) => {
+      stock++;
       idEncrypted = encrypt(book.id.toString());
       if (results.length == 0) {
+        stock++;
         categories.push(book.category);
         results.push({
           category: book.category,
@@ -61,11 +53,14 @@ exports.getHome = async (req, res, next) => {
               image: book.image,
               createdAt: book.createdAt,
               totalReview: book.ratings.total_review,
+              stock,
             },
           ],
         });
       } else {
+        stock = 0;
         if (book.category == results[index].category) {
+          stock++;
           results[index].book.push({
             id: idEncrypted,
             title: book.title,
@@ -74,8 +69,10 @@ exports.getHome = async (req, res, next) => {
             image: book.image,
             createdAt: book.createdAt,
             totalReview: book.ratings.total_review,
+            stock,
           });
         } else if (!categories.includes(book.category)) {
+          stock++;
           categories.push(book.category);
           results.push({
             category: book.category,
@@ -88,11 +85,13 @@ exports.getHome = async (req, res, next) => {
                 image: book.image,
                 createdAt: book.createdAt,
                 totalReview: book.ratings.total_review,
+                stock,
               },
             ],
           });
           index++;
         } else if (categories.includes(book.category)) {
+          stock++;
           categories.forEach((category) => {
             results.find((result) => {
               if (result.category === category && result.book.length == 4) {
@@ -105,6 +104,7 @@ exports.getHome = async (req, res, next) => {
                   image: book.image,
                   createdAt: book.createdAt,
                   totalReview: book.ratings.total_review,
+                  stock,
                 });
               }
             });
@@ -112,10 +112,12 @@ exports.getHome = async (req, res, next) => {
         }
       }
     });
-    res.render("frontoffice/home/index", {
+
+    console.log(results[0].book);
+
+    res.render("frontoffice/borrow/index", {
       isLoggedIn,
       results,
-      Banners,
       encrypt,
     });
   } catch (err) {
@@ -123,90 +125,4 @@ exports.getHome = async (req, res, next) => {
       message: err.stack,
     });
   }
-};
-
-exports.getBookByCategories = (req, res, next) => {
-  const category = decrypt(req.params.category);
-  let isLoggedIn = false;
-
-  if (req.session.user) {
-    isLoggedIn = true;
-    user = req.session.user;
-    user.id = encrypt(user.id.toString());
-  }
-
-  Book.findAll({
-    raw: true,
-    where: { category },
-  })
-    .then((results) => {
-      res.render("frontoffice/home/categories", {
-        isLoggedIn,
-        results,
-      });
-    })
-    .catch((err) => {
-      res.render("frontoffice/error", {
-        message: err.stack,
-      });
-    });
-};
-
-exports.searchBook = (req, res, next) => {
-  const { search } = req.body;
-
-  Book.findAll({
-    raw: true,
-    where: {
-      [Op.or]: [
-        {
-          title: {
-            [Op.like]: `%${search}%`,
-          },
-        },
-        {
-          category: {
-            [Op.like]: `%${search}%`,
-          },
-        },
-      ],
-    },
-  })
-    .then((results) => {
-      res.render("frontoffice/home/search", {
-        search,
-        results,
-      });
-    })
-    .catch((err) => console.log(err));
-};
-
-exports.saveReview = (req, res, next) => {
-  const { rate, review, userId, bookId } = req.body;
-
-  console.log(userId);
-  console.log(bookId);
-
-  let bookIdDecrypted = encrypted.decrypt(bookId);
-  let userIdDecrypted = encrypted.decrypt(userId);
-
-  console.log(userId);
-  console.log(userIdDecrypted);
-
-  Rating.create({
-    rate,
-    review,
-    userId: userIdDecrypted,
-    bookId: bookIdDecrypted,
-  })
-    .then((result) => {
-      req.flash("success", "Successfully submit review");
-      res.redirect("back");
-    })
-    .catch((err) => {
-      console.log(err);
-      res.render("frontoffice/error", {
-        message: err.stack,
-      });
-    });
 };
