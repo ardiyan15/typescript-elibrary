@@ -49,6 +49,8 @@
                   </div>
                   <div class="col-md-6">
                     <button
+                      data-title="<%= result.book[j].title %>"
+                      data-stock="<%= result.book[j].stock %>"
                       type="button"
                       class="button-request btn btn-sm btn-primary rounded"
                       data-toggle="modal"
@@ -90,20 +92,71 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">...</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Close
-        </button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      <form action="/borrow" method="POST">
+        <input type="text" name="title" id="title-book" value="" />
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <label for="qty">Qty</label>
+              <input type="text" name="qty" id="qty" class="form-control" />
+              <span class="text-danger" style="display: none" id="alert-message"
+                >Qty bigger than stock</span
+              >
+            </div>
+            <div class="col-12">
+              <label for="">Address</label>
+              <textarea
+                name="address"
+                class="form-control"
+                cols="30"
+                rows="10"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm rounded"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary btn-sm rounded"
+            id="submitModal"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 <%- include('../includes/footer.ejs') %>
 
 <script>
+  let stock = 0;
+  let qty = 0;
+  let title = "";
   $(".button-request").on("click", function (e) {
     e.preventDefault();
+    stock = $(this).data("stock");
+    title = $(this).data("title");
+
+    $("#title-book").val(title);
+  });
+
+  $("#qty").on("keyup", function () {
+    qty = parseInt($(this).val());
+
+    if (qty > stock) {
+      $("#alert-message").show();
+      $("#submitModal").prop("disabled", true);
+    } else {
+      $("#alert-message").hide();
+      $("#submitModal").prop("disabled", false);
+    }
   });
 </script>

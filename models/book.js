@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Book extends Model {
     /**
@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       heavy: Sequelize.FLOAT,
       width: Sequelize.FLOAT,
       length: Sequelize.FLOAT,
+      isBorrow: Sequelize.BOOLEAN,
     },
     {
       sequelize,

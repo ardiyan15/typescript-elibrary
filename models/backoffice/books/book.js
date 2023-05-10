@@ -22,6 +22,7 @@ const Book = sequelize.define("book", {
   heavy: Sequelize.FLOAT,
   width: Sequelize.FLOAT,
   length: Sequelize.FLOAT,
+  isBorrow: Sequelize.BOOLEAN,
 });
 
 module.exports = Book;
