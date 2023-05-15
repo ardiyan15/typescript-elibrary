@@ -1,0 +1,56 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/navigation.ejs')
+%>
+<div class="container-fluid">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary"><%= formTitle %></h6>
+    </div>
+    <div class="card-body">
+      <% action = ''; %> <% if(category) { %> <% action =
+      `/backoffice/updatecategory/${categoryIdEncrypted}` %> <% } else { %> <%
+      action = '/backoffice/categories'%> <% } %>
+      <form action="<%= action %>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="destination" value="users" />
+        <input
+          type="hidden"
+          name="id"
+          value="<%= category ? categoryIdEncrypted : '' %>"
+        />
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label for="code">Code</label>
+            <input
+              type="text"
+              name="code"
+              id="code"
+              class="form-control"
+              placeholder="Code"
+              required
+              value="<%= category ? category.code : '' %>"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="description">Description</label>
+            <input
+              type="description"
+              name="description"
+              id="description"
+              class="form-control"
+              placeholder="Description"
+              value="<%= category ? category.description :
+            '' %>"
+            />
+          </div>
+        </div>
+        <a
+          href="/backoffice/categories"
+          class="btn btn-secondary btn-sm rounded"
+          >Back</a
+        >
+        <button type="submit" class="btn btn-primary btn-sm rounded">
+          <%= buttonText %>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

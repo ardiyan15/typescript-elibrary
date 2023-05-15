@@ -43,7 +43,9 @@ exports.index = async (req, res, next) => {
       stock++;
       idEncrypted = encrypt(book.id.toString());
       if (results.length == 0) {
-        stock++;
+        if (book.isBorrow == 0) {
+          stock++;
+        }
         categories.push(book.category);
         results.push({
           category: book.category,
@@ -63,7 +65,9 @@ exports.index = async (req, res, next) => {
       } else {
         stock = 0;
         if (book.category == results[index].category) {
-          stock++;
+          if (book.category == results[index].category && book.isBorrow == 0) {
+            stock++;
+          }
           results[index].book.push({
             id: idEncrypted,
             title: book.title,
@@ -75,7 +79,9 @@ exports.index = async (req, res, next) => {
             stock,
           });
         } else if (!categories.includes(book.category)) {
-          stock++;
+          if (book.isBorrow == 0) {
+            stock++;
+          }
           categories.push(book.category);
           results.push({
             category: book.category,
@@ -94,7 +100,9 @@ exports.index = async (req, res, next) => {
           });
           index++;
         } else if (categories.includes(book.category)) {
-          stock++;
+          if (book.isBorrow == 0) {
+            stock++;
+          }
           categories.forEach((category) => {
             results.find((result) => {
               if (result.category === category && result.book.length == 4) {

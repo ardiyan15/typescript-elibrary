@@ -17,6 +17,7 @@ const homeRoutes = require("./routes/backoffice/home/home");
 const userRoutes = require("./routes/backoffice/users/index");
 const bookRoutes = require("./routes/backoffice/books/index");
 const bannerRoutes = require("./routes/backoffice/banners/index");
+const categoriesRoutes = require("./routes/backoffice/categories/index");
 const authController = require("./routes/backoffice/auth/index");
 const errorController = require("./controllers/backoffice/404/index");
 
@@ -111,6 +112,7 @@ app.use("/backoffice", homeRoutes.router);
 app.use("/backoffice", userRoutes.router);
 app.use("/backoffice", bookRoutes.router);
 app.use("/backoffice", bannerRoutes.router);
+app.use("/backoffice", categoriesRoutes.router);
 app.use("/backoffice", authController.router);
 
 app.use(isAuth, errorController.get404);
