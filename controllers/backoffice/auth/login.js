@@ -5,9 +5,11 @@ exports.login = (req, res, next) => {
   if (req.session.isLoggedIn && req.session.user == "admin") {
     return res.redirect("/backoffice/home");
   }
+
   const flashMessage = req.flash("failed");
   res.render("backoffice/auth/index", {
     flashMessage,
+    csrfToken: req.csrfToken(),
   });
 };
 

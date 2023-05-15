@@ -132,6 +132,7 @@
       invalid username or password
     </div>
     <form class="login-form" action="/backoffice/login" method="POST">
+      <input type="hidden" name="csrf" value="<%= csrfToken %>" />
       <input type="text" name="username" placeholder="Username" />
       <input type="password" name="password" placeholder="Password" />
       <button>login</button>

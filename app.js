@@ -4,8 +4,11 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const express = require("express");
 const multer = require("multer");
+const csrf = require("csurf");
 
 const app = express();
+
+const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -42,6 +45,8 @@ app.use(
     resave: true,
   })
 );
+
+app.use(csrfProtection);
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {

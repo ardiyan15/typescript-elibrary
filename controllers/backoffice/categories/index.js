@@ -1,6 +1,7 @@
 const encrypted = require("../../../util/encrypted");
 const Category = require("../../../models/backoffice/categories/category");
 const moment = require("moment");
+const { validationResult } = require("express-validator");
 
 exports.getCategories = (req, res, next) => {
   const flashMessage = req.flash("success");
@@ -21,21 +22,33 @@ exports.getCategories = (req, res, next) => {
 exports.addCategory = (req, res, next) => {
   res.render("backoffice/categories/form", {
     formTitle: "Add Category",
-    user: "",
+    category: "",
     buttonText: "Submit",
+    errors: "",
   });
 };
 
 exports.saveCategory = async (req, res, next) => {
   const { code, description } = req.body;
 
-  await Category.create({
-    code,
-    description,
-  });
+  const results = validationResult(req);
 
-  req.flash("success", "Successfully Add Category");
-  res.redirect("/backoffice/categories");
+  if (results.isEmpty()) {
+    await Category.create({
+      code,
+      description,
+    });
+    req.flash("success", "Successfully Add Category");
+    res.redirect("/backoffice/categories");
+  } else {
+    res.render("backoffice/categories/form", {
+      formTitle: "Add Category",
+      category: "",
+      buttonText: "Submit",
+      category: { code, description },
+      errors: results.array(),
+    });
+  }
 };
 
 exports.deleteCategory = async (req, res, next) => {
@@ -43,7 +56,6 @@ exports.deleteCategory = async (req, res, next) => {
 
   let idCategoryDecrypted = encrypted.decrypt(categoryId);
 
-  console.log(idCategoryDecrypted);
   let category = await Category.findByPk(idCategoryDecrypted);
 
   category.destroy();

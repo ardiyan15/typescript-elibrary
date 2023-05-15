@@ -6,7 +6,7 @@
       <h6 class="m-0 font-weight-bold text-primary"><%= formTitle %></h6>
     </div>
     <div class="card-body">
-      <% action = ''; %> <% if(category) { %> <% action =
+      <% action = ''; %> <% if(category.id) { %> <% action =
       `/backoffice/updatecategory/${categoryIdEncrypted}` %> <% } else { %> <%
       action = '/backoffice/categories'%> <% } %>
       <form action="<%= action %>" method="POST" enctype="multipart/form-data">
@@ -14,7 +14,7 @@
         <input
           type="hidden"
           name="id"
-          value="<%= category ? categoryIdEncrypted : '' %>"
+          value="<%= category.id ? categoryIdEncrypted : '' %>"
         />
         <div class="row">
           <div class="col-md-6 form-group">
@@ -23,11 +23,14 @@
               type="text"
               name="code"
               id="code"
-              class="form-control"
+              class="form-control <%= errors.find(e => e.path === 'code') ? 'is-invalid' : '' %>"
               placeholder="Code"
               required
               value="<%= category ? category.code : '' %>"
             />
+            <% errors.forEach(error => { if(error.path === 'code') { %>
+            <span class="text-danger"><%= error.msg %></span>
+            <% }}) %>
           </div>
           <div class="col-md-6 form-group">
             <label for="description">Description</label>
@@ -35,11 +38,14 @@
               type="description"
               name="description"
               id="description"
-              class="form-control"
+              class="form-control <%= errors.find(e => e.path === 'description') ? 'is-invalid' : '' %>"
               placeholder="Description"
               value="<%= category ? category.description :
             '' %>"
             />
+            <% errors.forEach(error => { if(error.path === 'description') { %>
+            <span class="text-danger"><%= error.msg %></span>
+            <% }}) %>
           </div>
         </div>
         <a
