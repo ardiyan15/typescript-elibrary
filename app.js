@@ -8,7 +8,7 @@ const csrf = require("csurf");
 
 const app = express();
 
-const csrfProtection = csrf();
+// const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -45,8 +45,6 @@ app.use(
     resave: true,
   })
 );
-
-app.use(csrfProtection);
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -101,6 +99,8 @@ app.use("/", frontUserRoutes.router);
 app.use("/", borrowRoutes.router);
 app.use("/login", authFrontController.router);
 app.use("/register", authFrontController.router);
+
+// app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.url.includes("/backoffice")) {

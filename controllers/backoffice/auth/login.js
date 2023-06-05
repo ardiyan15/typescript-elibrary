@@ -9,7 +9,6 @@ exports.login = (req, res, next) => {
   const flashMessage = req.flash("failed");
   res.render("backoffice/auth/index", {
     flashMessage,
-    csrfToken: req.csrfToken(),
   });
 };
 
