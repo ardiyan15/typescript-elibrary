@@ -1,0 +1,93 @@
+<%- include('../includes/head.ejs') %> <%-
+include('../includes/navigation.ejs')%>
+<script src="/js/sweetalert2.all.min.js"></script>
+<div class="container-fluid">
+  <div class="card shadow">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+    </div>
+    <div class="card-body">
+      <input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
+      <table class="table table-bordered dataTable" id="dataTable">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th class="text-center">Transaction Number</th>
+            <th class="text-center">Delivery</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% let i = 1; %> <% results.forEach(result => { %>
+          <tr>
+            <td class="text-center"><%= i++ %></td>
+            <td class="text-center">
+              <a
+                href="/backoffice/transactions/<%= result.transaction_number %>"
+              >
+                <%= result.transaction_number %></a
+              >
+            </td>
+            <td class="text-center"><%= result.address_delivery %></td>
+            <td class="text-center">
+              <% if(result.status == 0){ %>
+              <span>Waiting Process</span>
+              <% } else if(result.status == 1){ %>
+              <span>On Process</span>
+              <% } else if(result.status == 2) { %>
+              <span>Delivery</span>
+              <% } else { %>
+              <span>Complete</span>
+              <% } %>
+            </td>
+            <td class="text-center">
+              <form action="/backoffice/transactions/process" method="POST">
+                <input
+                  type="hidden"
+                  name="transaction_number"
+                  value="<%= result.transaction_number %>"
+                />
+                <input
+                  type="hidden"
+                  name="status"
+                  value="<%= result.status %>"
+                />
+                <% if(result.status == 0) {%>
+                <button class="btn btn-sm btn-primary rounded">Process</button>
+                <% } else if(result.status == 1) { %>
+                <button class="btn btn-sm btn-info rounded">Deliver</button>
+                <% } %>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('../includes/end.ejs') %> <% if(flashMessage.length > 0) { %>
+<script>
+  let message = $("#text-alert").val();
+  Swal.fire("Success!", message, "success");
+</script>
+<% } %>
+<script>
+  $(".delete-confirm").on("click", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "Delete Data",
+      icon: "question",
+      iconHtml: "?",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      showCancelButton: true,
+      showCloseButton: true,
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        $(this).closest("form").submit();
+      }
+    });
+  });
+</script>
