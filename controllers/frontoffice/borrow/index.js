@@ -7,6 +7,7 @@ const Transaction_detail = require("../../../models/backoffice/transaction_detai
 const moment = require("moment");
 
 exports.index = async (req, res, next) => {
+  const flashMessage = req.flash("success");
   let isLoggedIn = false;
   if (req.session.frontOffice) {
     if (req.session.frontOffice.user) {
@@ -128,6 +129,7 @@ exports.index = async (req, res, next) => {
       isLoggedIn,
       results,
       encrypt,
+      flashMessage,
     });
   } catch (err) {
     res.render("frontoffice/error", {
@@ -185,7 +187,6 @@ exports.save = async (req, res, next) => {
       getBook.isBorrow = 1;
       getBook.save();
 
-      // if (book.length != 0) {
       await Transaction_detail.create(
         {
           transaction_id: transaction_inserted.id,
@@ -195,26 +196,13 @@ exports.save = async (req, res, next) => {
           transaction: db_transaction,
         }
       );
-      // }
     }
 
     await db_transaction.commit();
-    res.send("here");
+    req.flash("success", "Successfully Request Book");
+    res.redirect("/borrow");
   } catch (err) {
     console.log(err);
     await db_transaction.rollback();
   }
-
-  // let books = await Book.findAll({
-  //   where: {
-  //     title,
-  //   },
-  //   raw: true,
-  // });
-
-  // let transactions = await Transaction.findAll();
-  // console.log(transactions);
-
-  // console.log(req.body);
-  // res.send("here");
 };

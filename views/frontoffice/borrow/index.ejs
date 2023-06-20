@@ -1,16 +1,13 @@
 <%- include('../includes/head.ejs') %> <%- include('../includes/navbar.ejs') %>
 <link rel="stylesheet" href="/public/css/frontoffice/home/index.css" />
+<script src="/js/sweetalert2.all.min.js"></script>
 <div class="container mt-3 pb-5">
+  <input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
   <div class="row">
     <% let i = 1; %> <% results.forEach(result => { %>
     <div class="col-md-12 mt-5">
       <div class="row d-flex justify-content-between">
         <h4 class="mb-4"><%= result.category %></h4>
-        <!-- <a
-          href="/categories/<%= encrypt(result.category) %>"
-          class="see-all text-primary"
-          >See All
-          </a> -->
       </div>
     </div>
     <div class="col-md-12">
@@ -134,8 +131,12 @@
     </div>
   </div>
 </div>
-<%- include('../includes/footer.ejs') %>
-
+<%- include('../includes/footer.ejs') %> <% if(flashMessage.length > 0) { %>
+<script>
+  let message = $("#text-alert").val();
+  Swal.fire("Success!", message, "success");
+</script>
+<% } %>
 <script>
   let stock = 0;
   let qty = 0;
