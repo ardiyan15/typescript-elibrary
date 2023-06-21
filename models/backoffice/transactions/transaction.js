@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 
 const sequelize = require("../../../util/database");
+const User = require("../users/user");
 
 const Transaction = sequelize.define("transaction", {
   id: {
@@ -17,6 +18,9 @@ const Transaction = sequelize.define("transaction", {
   },
   status: {
     type: Sequelize.BOOLEAN,
+  },
+  created_by: {
+    type: Sequelize.STRING,
   },
 });
 

@@ -30,6 +30,7 @@ const authFrontController = require("./routes/frontoffice/auth/index");
 const homeUserRoutes = require("./routes/frontoffice/home/home");
 const frontUserRoutes = require("./routes/frontoffice/user/index");
 const borrowRoutes = require("./routes/frontoffice/borrow/index");
+const transactionFrontRoutes = require("./routes/frontoffice/transaction/index");
 
 // API Routes
 const test = require("./routes/api/test");
@@ -38,6 +39,8 @@ const sequelize = require("./util/database");
 const Book = require("./models/backoffice/books/book");
 const Rating = require("./models/frontoffice/rating");
 const User = require("./models/backoffice/users/user");
+const Transaction = require("./models/backoffice/transactions/transaction");
+const Transaction_detail = require("./models/backoffice/transaction_details/transaction_details");
 
 app.use(
   session({
@@ -98,6 +101,8 @@ app.use("/api/v1", test.router);
 app.use("/", homeUserRoutes.router);
 app.use("/", frontUserRoutes.router);
 app.use("/", borrowRoutes.router);
+app.use("/", transactionFrontRoutes.router);
+
 app.use("/login", authFrontController.router);
 app.use("/register", authFrontController.router);
 
@@ -134,6 +139,30 @@ User.hasMany(Rating, {
 
 Rating.belongsTo(Book);
 Rating.belongsTo(User);
+
+Transaction.belongsTo(User, {
+  foreignKey: "created_by",
+});
+
+Transaction.hasMany(Transaction_detail, {
+  foreignKey: "transaction_id",
+});
+
+Transaction_detail.belongsTo(Transaction, {
+  foreignKey: "transaction_id",
+});
+
+Transaction_detail.belongsTo(Book, {
+  foreignKey: "book_id",
+});
+
+Book.hasMany(Transaction_detail, {
+  foreignKey: "book_id",
+});
+
+User.hasMany(Transaction, {
+  foreignKey: "created_by",
+});
 
 sequelize
   .sync()

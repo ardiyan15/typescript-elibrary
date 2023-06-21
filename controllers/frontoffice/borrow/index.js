@@ -1,4 +1,4 @@
-const { encrypt } = require("../../../util/encrypted");
+const { encrypt, decrypt } = require("../../../util/encrypted");
 const sequelize = require("../../../util/database");
 const Book = require("../../../models/backoffice/books/book");
 const Rating = require("../../../models/frontoffice/rating");
@@ -144,6 +144,8 @@ exports.save = async (req, res, next) => {
   let date = moment().format("D");
   let month = moment().format("MM");
   let year = moment().format("YY");
+  let userId = decrypt(req.session.frontOffice.user.id.toString());
+  let userIdDecrypted = decrypt(userId);
 
   const db_transaction = await sequelize.transaction();
 
@@ -167,6 +169,7 @@ exports.save = async (req, res, next) => {
         transaction_number: transactionNumber,
         address_delivery: address,
         status: 0,
+        created_by: userIdDecrypted,
       },
       { transaction: db_transaction }
     );
