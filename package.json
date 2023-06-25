@@ -2,10 +2,17 @@
   "name": "elibrary",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
-    "test": "mocha",
-    "start": "nodemon app.js"
+    "clean": "rimraf dist/*",
+    "copy-assets": "ts-node tools/copyAssets.ts",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "tsc": "tsc",
+    "build": "npm-run-all clean lint tsc copy-assets",
+    "dev:start": "npm-run-all build start",
+    "dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
@@ -24,9 +31,20 @@
     "sequelize": "^6.26.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
+    "@types/express": "^4.17.17",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.16.18",
+    "@types/shelljs": "^0.8.12",
     "chai": "^4.3.7",
+    "fs-extra": "^10.1.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20",
-    "sequelize-cli": "^6.5.2"
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "sequelize-cli": "^6.5.2",
+    "shelljs": "^0.8.5",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3"
   }
 }
