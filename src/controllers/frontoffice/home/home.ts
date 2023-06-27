@@ -1,9 +1,37 @@
 import { RequestHandler } from "express";
 
 import Book from "../../../models/backoffice/books/book";
+import Rating from "../../../models/frontoffice/rating";
+import Banner from "../../../models/backoffice/banners/banner";
 
 import { encrypt } from "../../../utils/secure";
 import sequelize from "../../../utils/connection";
+
+interface BookL {
+  id: string;
+  category: string;
+  title: string;
+  author: string;
+  image: string;
+  description: string;
+  createdAt: string;
+  publication_date: string;
+  publisher: string;
+  language: string;
+  number_of_page: string;
+  heavy: string;
+  width: string;
+  length: string;
+  isBorrow: string;
+  ratings: {
+    total_review: string;
+  };
+}
+
+interface ResultL {
+  category: string;
+  book: any;
+}
 
 export const getHome: RequestHandler = async (req, res, next) => {
   let isLoggedIn = false;
@@ -42,14 +70,15 @@ export const getHome: RequestHandler = async (req, res, next) => {
       },
     });
 
-    const results: any[] = [];
+    const results: ResultL[] = [];
     let index = 0;
     let idEncrypted = "";
-    const categories = [];
+    const categories: string[] = [];
 
-    Books.forEach((book) => {
+    Books.forEach((book: any) => {
       idEncrypted = encrypt(book.id.toString());
-      if (results.length == 0) {
+
+      if (results.length === 0) {
         categories.push(book.category);
         results.push({
           category: book.category,
@@ -66,7 +95,7 @@ export const getHome: RequestHandler = async (req, res, next) => {
           ],
         });
       } else {
-        if (book.category == results[index].category) {
+        if (book.category === results[index].category) {
           results[index].book.push({
             id: idEncrypted,
             title: book.title,
@@ -96,7 +125,7 @@ export const getHome: RequestHandler = async (req, res, next) => {
         } else if (categories.includes(book.category)) {
           categories.forEach((category) => {
             results.find((result) => {
-              if (result.category === category && result.book.length == 4) {
+              if (result.category === category && result.book.length === 4) {
                 result.book.pop();
                 result.book.unshift({
                   id: idEncrypted,
@@ -112,6 +141,7 @@ export const getHome: RequestHandler = async (req, res, next) => {
           });
         }
       }
+      return results;
     });
     res.render("frontoffice/home/index", {
       isLoggedIn,
@@ -120,13 +150,9 @@ export const getHome: RequestHandler = async (req, res, next) => {
       encrypt,
     });
   } catch (err) {
+    console.log(err);
     res.render("frontoffice/error", {
       message: err.stack,
     });
   }
-
-  res.render("frontoffice/home/index", {
-    test: "test",
-    isLoggedIn: false,
-  });
 };

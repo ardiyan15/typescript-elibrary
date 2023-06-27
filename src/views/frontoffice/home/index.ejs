@@ -1,6 +1,107 @@
 <%- include('../includes/head.ejs') %> <%- include('../includes/navbar.ejs') %>
 <link rel="stylesheet" href="/public/css/frontoffice/home/index.css" />
 <div class="container mt-3 pb-5">
-  <h3>Hello World</h3>
+  <div id="carouselExampleInterval" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <% let j = 0 %> <% Banners.forEach(banner => { %> <% if(j == 0) { %>
+      <div class="carousel-item active" data-interval="10000">
+        <% } else { %>
+        <div class="carousel-item" data-interval="10000">
+          <% } %>
+          <img
+            loading="lazy"
+            src="/<%= banner.image %>"
+            class="d-block w-100"
+            alt="Image Carousel"
+            height="300"
+          />
+        </div>
+        <% j++ }) %>
+      </div>
+      <a
+        class="carousel-control-prev"
+        href="#carouselExampleInterval"
+        role="button"
+        data-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a
+        class="carousel-control-next"
+        href="#carouselExampleInterval"
+        role="button"
+        data-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+    <div class="row mt-4">
+      <div class="col-4">
+        <a href="/borrow" id="borrow-book" style="color: black">
+          <div class="card shadow">
+            <h5 class="card-body">Borrow Book</h5>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <% let i = 1; %> <% results.forEach(result => { %>
+      <div class="col-md-12 mt-5">
+        <div class="row d-flex justify-content-between">
+          <h4><%= result.category %></h4>
+          <a
+            href="/categories/<%= encrypt(result.category) %>"
+            class="see-all text-primary"
+            >See All</a
+          >
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <% for(let j = 0; j < result.book.length; j++){ %>
+          <div class="col-md-3">
+            <a
+              href="/show/<%= result.book[j].id %>"
+              class="card-title text-decoration-none text-dark font-weight-bold shadow-lg"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="<%= result.book[j].title %>"
+            >
+              <div class="card shadow-lg">
+                <img
+                  src="/<%= result.book[j].image %>"
+                  height="250"
+                  width="180"
+                  class="mx-auto"
+                  alt="<%= result.book[j].title %>"
+                />
+                <div class="card-body">
+                  <p
+                    style="
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    "
+                  >
+                    <%= result.book[j].title %>
+                  </p>
+                  <div class="row">
+                    <div class="col-md-12"></div>
+                    <div class="col-md-12">
+                      <span><%= result.book[j].totalReview %> Review</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+  <%- include('../includes/footer.ejs') %>
 </div>
-<%- include('../includes/footer.ejs') %>
