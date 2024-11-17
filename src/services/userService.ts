@@ -1,6 +1,6 @@
 import userRepository from "../repositories/userRepository";
 import { IUser } from '../models/backoffice/users/user';
-import { encrypt } from "../utils/secure";
+import { decrypt, encrypt } from "../utils/secure";
 import moment from "moment";
 
 class UserService {
@@ -27,8 +27,9 @@ class UserService {
         return encryptedData
     }
 
-    async getUserBydId(id: number | string): Promise<IUser | null> {
-        const user = userRepository.findById(id)
+    async getUserBydId(id: string): Promise<IUser | null> {
+        const userId = decrypt(id)
+        const user = userRepository.findById(userId)
         return user;
     }   
 
@@ -38,11 +39,13 @@ class UserService {
 
     async updateUser(id: string, userData: Partial<IUser>): Promise<[number]> {
         delete userData.id
-        return userRepository.update(id, userData)
+        const userId = decrypt(id)
+        return userRepository.update(userId, userData)
     }
 
     async deleteUser(id: string): Promise<number> {
-        return userRepository.delete(id)
+        const userId = decrypt(id)
+        return userRepository.delete(userId)
     }
 }
 

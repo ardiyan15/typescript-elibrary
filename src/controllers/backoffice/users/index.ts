@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import userService from '../../../services/userService';
-import { decrypt } from "../../../utils/secure";
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   const flashMessage = req.flash("success");
   const users = await userService.getAllUsers()
@@ -27,7 +26,7 @@ export const saveUser = async (req: Request, res: Response, next: NextFunction):
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userId = decrypt(req.body.userId)
+    const userId = req.body.userId
     await userService.deleteUser(userId)
     req.flash("success", "Successfully delete User")
     res.redirect('/backoffice/users')
@@ -39,7 +38,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const url = '/backoffice/users/update'
-    const userId = decrypt(req.params.id)
+    const userId = req.params.id
     const user = await userService.getUserBydId(userId)
     const userIdEncrypted = req.params.id
     res.render("backoffice/users/form", { user, url, userId: userIdEncrypted })
@@ -50,7 +49,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userId = decrypt(req.body.id)
+    const userId = req.body.id
     await userService.updateUser(userId, req.body)
     req.flash("success", "Successfully update User")
     res.redirect('/backoffice/users')
