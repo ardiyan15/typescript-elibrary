@@ -1,0 +1,95 @@
+<%- include('../includes/head.ejs') %> <%-
+include('../includes/navigation.ejs')%>
+<script src="/js/sweetalert2.all.min.js"></script>
+<input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
+<div class="container-fluid">
+  <a href="/backoffice/users/form" class="btn btn-primary btn-sm mb-3 rounded"
+    >Add User</a
+  >
+  <div class="card shadow">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Master User</h6>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered dataTable" id="dataTable">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th class="text-center">Username</th>
+            <th class="text-center">Email</th>
+            <th class="text-center">Role</th>
+            <th class="text-center">Photo Profile</th>
+            <th class="text-center">Created Date</th>
+            <th class="text-center">Updated Date</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% let i = 1; %> <% users.forEach(user => { %>
+          <tr>
+            <td class="text-center"><%= i++ %></td>
+            <td class="text-center"><%- user.username %></td>
+            <td class="text-center"><%= user.email %></td>
+            <td class="text-center"><%= user.roles %></td>
+            <td class="text-center">
+              <img
+                width="80"
+                height="30"
+                src="/<%= user.image %>"
+                alt="<%= user.title %>"
+              />
+            </td>
+            <td class="text-center"><%= user.createdAt %></td>
+            <td class="text-center"><%= user.updatedAt %></td>
+            <td class="text-center">
+              <form method="POST" action="/backoffice/users/delete">
+                <a
+                  href="/backoffice/users/<%= user.id %>"
+                  class="text-center btn btn-info btn-sm rounded"
+                  >Edit
+                </a>
+                <input
+                  type="hidden"
+                  value="<%= user.id %>"
+                  name="userId"
+                  id="userId"
+                />
+                <button
+                  class="text-center btn btn-danger btn-sm rounded delete-confirm"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../includes/end.ejs') %> <% if(flashMessage.length > 0) { %>
+<script>
+  let message = $("#text-alert").val();
+  Swal.fire("Success!", message, "success");
+</script>
+<% } %>
+<script>
+  $(".delete-confirm").on("click", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "Delete Data",
+      icon: "question",
+      iconHtml: "?",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      showCancelButton: true,
+      showCloseButton: true,
+    }).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        $(this).closest("form").submit();
+      }
+    });
+  });
+</script>

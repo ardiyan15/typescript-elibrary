@@ -6,4 +6,11 @@ const encrypt = (data: string) => {
   return encodeURIComponent(cipherText.toString());
 };
 
-export { encrypt };
+const decrypt = (data: string) => {
+  const bytes = CryptoJs.AES.decrypt(decodeURIComponent(data), password);
+  const originalText = bytes.toString(CryptoJs.enc.Utf8);
+
+  return originalText;
+};
+
+export { encrypt, decrypt };

@@ -1,0 +1,80 @@
+<%- include('../includes/head.ejs') %> <%-
+include('../includes/navigation.ejs')%>
+
+<div class="container-fluid">
+  <a href="/backoffice/users" class="btn btn-primary btn-sm mb-3 rounded"
+    >Back</a
+  >
+  <div class="card shadow">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Add User</h6>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="<%= url %>">
+        <input type="hidden" name="id" value="<%= user.id ? userId : '' %>">
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                placeholder="Username"
+                value="<%= user.username ? user.username : '' %>"
+              />
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword1"
+                name="password"
+                placeholder="Password"
+              />
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Email"
+                value="<%= user.email ? user.email : '' %>"
+              />
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select name="roles" id="role" class="form-control">
+                <option value="">-- Select Role --</option>
+                <option value="admin" <%= user.roles == 'admin' ? "selected" : "" %>>Admin</option>
+                <option value="admin" <%= user.roles == 'user' ? "selected" : "" %>>User</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="profile">Photo Profile</label>
+              <input
+                type="file"
+                name="profile"
+                id="profile"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

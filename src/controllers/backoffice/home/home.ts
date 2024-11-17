@@ -1,5 +1,4 @@
-import { RequestHandler } from "express";
-
-export const getHome: RequestHandler = (req, res, next) => {
+import { Request, Response, NextFunction } from "express";
+export const getHome = (req: Request, res: Response, next: NextFunction) => {
   res.render("backoffice/home/index");
 };

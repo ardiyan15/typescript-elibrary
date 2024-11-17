@@ -1,19 +1,42 @@
-import Sequelize from "sequelize";
+import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../../../utils/connection";
 
-const User = sequelize.define("user", {
+export interface IUser {
+  id?: number | string;
+  username: string;
+  password: string
+  roles: string;
+  email: string;
+  image: string;
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+class User extends Model<IUser> implements IUser {
+  public id!: number;
+  public username!: string;
+  public password!: string;
+  public roles!: string;
+  public email!: string;
+  public image!: string
+}
+
+User.init({
   id: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  username: Sequelize.STRING(60),
-  password: Sequelize.STRING(128),
-  roles: Sequelize.STRING(30),
-  email: Sequelize.STRING(30),
-  image: Sequelize.STRING(128),
+  username: DataTypes.STRING(60),
+  password: DataTypes.STRING(128),
+  roles: DataTypes.STRING(30),
+  email: DataTypes.STRING(30),
+  image: DataTypes.STRING(128),
+}, {
+  sequelize,
+  modelName: "user",
 });
 
 export default User;
