@@ -1,6 +1,7 @@
 import express from "express";
-
 const router = express.Router();
+
+import { userValidator } from "../../../validators/user";
 
 import {
   getUsers,
@@ -17,7 +18,7 @@ router.get("/users/form", userForm);
 
 router.get("/users/:id", getUser)
 
-router.post("/users/saveuser", saveUser)
+router.post("/users/saveuser", userValidator, saveUser)
 
 router.post("/users/delete", deleteUser)
 

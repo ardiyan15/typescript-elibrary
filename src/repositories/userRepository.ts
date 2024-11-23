@@ -2,7 +2,9 @@ import User, { IUser } from "../models/backoffice/users/user";
 
 class UserRepository {
     async findAll(): Promise<IUser[]> {
-        return User.findAll()
+        return User.findAll({
+            order: [['id', 'DESC']]
+        })
     }
 
     async findById(id: number | string): Promise<IUser | null> {

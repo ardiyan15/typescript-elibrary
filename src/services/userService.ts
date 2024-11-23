@@ -1,7 +1,12 @@
+import { validationResult, ValidationError } from "express-validator";
+import moment from "moment";
+
 import userRepository from "../repositories/userRepository";
 import { IUser } from '../models/backoffice/users/user';
 import { decrypt, encrypt } from "../utils/secure";
-import moment from "moment";
+import { Request } from "express";
+import { CreateUserResult } from '../types/user'
+
 
 class UserService {
     async getAllUsers(): Promise<IUser[]> {
@@ -31,10 +36,29 @@ class UserService {
         const userId = decrypt(id)
         const user = userRepository.findById(userId)
         return user;
-    }   
+    }
 
-    async createUser(userData: IUser): Promise<IUser> {
-        return userRepository.create(userData)
+    async createUser(request: Request): Promise<CreateUserResult> {
+        const errors = validationResult(request)
+        
+        if (!errors.isEmpty()) {
+            const results = {
+                isError: true,
+                errors: errors.array()
+            }
+            return results
+        }
+
+        const userData: Partial<IUser> = request.body;
+        delete userData.id;
+
+        const results = {
+            isError: false,
+            errors: [] as ValidationError[]
+        }
+
+        return results
+
     }
 
     async updateUser(id: string, userData: Partial<IUser>): Promise<[number]> {

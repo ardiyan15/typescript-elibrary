@@ -11,7 +11,7 @@
     "build": "npm-run-all clean lint tsc copy-assets",
     "dev:start": "npm-run-all build start",
     "devOld": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
-     "dev": "nodemon --exec ts-node src/app.ts",
+    "dev": "nodemon --exec ts-node src/app.ts",
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,7 +26,7 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "express-validator": "^7.0.1",
+    "express-validator": "^7.2.0",
     "moment": "^2.29.4",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",

@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import userService from '../../../services/userService';
+import { User } from '../../../types/user'
+import { ValidationError } from "express-validator";
+
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   const flashMessage = req.flash("success");
   const users = await userService.getAllUsers()
@@ -11,14 +14,24 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 export const userForm = (req: Request, res: Response, next: NextFunction) => {
   const url = '/backoffice/users/saveuser'
-  res.render("backoffice/users/form", { url });
+  const user: User[] = [];
+  const errors: ValidationError[] = []
+  res.render("backoffice/users/form", { url, user, errors });
 }
 
 export const saveUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    await userService.createUser(req.body)
-    req.flash("success", "Successfully add User");
-    res.redirect('/backoffice/users')
+    const result = await userService.createUser(req)
+    if (result.isError) {
+      const url = '/backoffice/users/saveuser'
+      const user: User[] = [];
+      const errors = result.errors
+
+      res.render("backoffice/users/form", { errors, url, user });
+    } else {
+      req.flash("success", "Successfully add User");
+      res.redirect('/backoffice/users')
+    }
   } catch (error) {
     res.send(error)
   }

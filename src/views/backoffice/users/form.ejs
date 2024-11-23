@@ -2,9 +2,6 @@
 include('../includes/navigation.ejs')%>
 
 <div class="container-fluid">
-  <a href="/backoffice/users" class="btn btn-primary btn-sm mb-3 rounded"
-    >Back</a
-  >
   <div class="card shadow">
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">Add User</h6>
@@ -18,12 +15,15 @@ include('../includes/navigation.ejs')%>
               <label for="username">Username</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control <%= errors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
                 id="username"
                 name="username"
                 placeholder="Username"
                 value="<%= user.username ? user.username : '' %>"
               />
+              <% errors.forEach(error => { if(error.path === 'username') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
             </div>
           </div>
           <div class="col-6">
@@ -31,11 +31,14 @@ include('../includes/navigation.ejs')%>
               <label for="exampleInputPassword1">Password</label>
               <input
                 type="password"
-                class="form-control"
+                class="form-control <%= errors.find(e => e.path === 'password') ? 'is-invalid' : '' %>"
                 id="exampleInputPassword1"
                 name="password"
                 placeholder="Password"
               />
+              <% errors.forEach(error => { if(error.path === 'password') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
             </div>
           </div>
           <div class="col-6">
@@ -43,22 +46,28 @@ include('../includes/navigation.ejs')%>
               <label for="email">Email</label>
               <input
                 type="email"
-                class="form-control"
+                class="form-control <%= errors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
                 id="email"
                 name="email"
                 placeholder="Email"
                 value="<%= user.email ? user.email : '' %>"
               />
+              <% errors.forEach(error => { if(error.path === 'email') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
             </div>
           </div>
           <div class="col-6">
             <div class="form-group">
               <label for="role">Role</label>
-              <select name="roles" id="role" class="form-control">
+              <select name="roles" id="role" class="form-control <%= errors.find(e => e.path === 'roles') ? 'is-invalid' : '' %>">
                 <option value="">-- Select Role --</option>
                 <option value="admin" <%= user.roles == 'admin' ? "selected" : "" %>>Admin</option>
                 <option value="admin" <%= user.roles == 'user' ? "selected" : "" %>>User</option>
               </select>
+              <% errors.forEach(error => { if(error.path === 'roles') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
             </div>
           </div>
           <div class="col-6">
@@ -73,7 +82,8 @@ include('../includes/navigation.ejs')%>
             </div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="/backoffice/users" class="btn btn-warning btn-sm rounded">Back</a>
+        <button type="submit" class="btn btn-primary btn-sm rounded">Submit</button>
       </form>
     </div>
   </div>
