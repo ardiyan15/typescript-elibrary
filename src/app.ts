@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import fs from "fs";
 import path from "path";
 
@@ -7,6 +8,7 @@ import multer from "multer";
 import flash from "connect-flash";
 
 import sequelize from "./utils/connection";
+import startConsumer from '@utils/consumer';
 
 // Backoffice
 import backHomeRoutes from "./routes/backoffice/home/home";
@@ -89,6 +91,8 @@ Book.hasMany(Rating, {
 });
 
 Rating.belongsTo(Book);
+
+startConsumer()
 
 sequelize
   .sync()

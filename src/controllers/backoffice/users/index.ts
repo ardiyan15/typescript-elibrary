@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import userService from '../../../services/userService';
+import userService from '@services/userService';
 import { User } from '../../../types/user'
 import { ValidationError } from "express-validator";
+import producer from "@utils/producer";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   const flashMessage = req.flash("success");
   const users = await userService.getAllUsers()
+  producer('test_queue')
   res.render("backoffice/users/index", {
     users,
     flashMessage
