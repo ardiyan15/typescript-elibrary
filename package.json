@@ -56,6 +56,9 @@
   },
   "_moduleAliases": {
     "@services": "src/services",
-    "@utils": "src/utils"
+    "@utils": "src/utils",
+    "@repositories": "src/repositories",
+    "@models": "src/models",
+    "@types": "src/types"
   }
 }

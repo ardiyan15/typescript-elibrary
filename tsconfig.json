@@ -11,7 +11,10 @@
     "baseUrl": "./",
     "paths": {
       "@services/*": ["./src/services/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@repositories/*": ["./src/repositories/*"],
+      "@models/*": ["./src/models/*"],
+      "@types/*": ["./src/types/*"],
     },
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },

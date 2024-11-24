@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 
-import sequelize from "../../../utils/connection";
+import sequelize from "@utils/connection";
 
 export interface IUser {
   id?: number | string;
