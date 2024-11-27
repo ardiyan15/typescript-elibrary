@@ -1,38 +1,43 @@
-import fs from 'fs'
 import amqplib from 'amqplib'
+import { importUser } from '../helper/ImportUser'
+import User from "@models/backoffice/users/user";
 
 const RABBIT_URL = 'amqp://localhost'
-const QUEUE_NAME = 'taskQueue'
 
-const startConsumer = async () => {
-    const connection = await amqplib.connect(RABBIT_URL)
-    const channel = await connection.createChannel()
-    await channel.assertQueue(QUEUE_NAME)
+const startConsumer = async (filePath: string) => {
+    try {
+        // Attempt to connect to RabbitMQ
+        const connection = await amqplib.connect(RABBIT_URL);
+        const channel = await connection.createChannel();
 
-    console.log('waiting for message')
-    channel.consume(QUEUE_NAME, (msg) => {
-        if (msg) {
-            const taskData = JSON.parse(msg.content.toString())
-            console.log('Proccessing task:', taskData)
+        const IMPORT_USER = 'IMPORT_USER';
+        await channel.assertQueue(IMPORT_USER);
 
+        await channel.close();
+        await connection.close();
 
-            const filePath = './example.txt'; // Specify the file path
-            const content = 'Hello, this is the content of the file!'; // The content to write to the file
+        try {
+            const result = await importUser(filePath)
+            await User.bulkCreate(result.users)
 
-            // Write the content to the file
-            setTimeout(() => {
-                fs.writeFile(filePath, content, (err) => {
-                    if (err) {
-                        console.error('Error writing to file:', err);
-                        return;
-                    }
-                    console.log(`File created and content written to ${filePath}`);
-                });
-            }, 5000)
-            channel.ack(msg)
-            console.log('Task processed')
+            const response = {
+                'responseCode': 200,
+                'responseMessage': 'Success'
+            };
+
+            return response
+        } catch(err) {
+            const response = {
+                'responseCode': 500,
+                'responseMessage': err
+            }
+
+            return response
         }
-    })
+    } catch (error) {
+        console.log('failed')
+        console.error('RabbitMQ connection error:', error);
+    }
 }
 
 export default startConsumer

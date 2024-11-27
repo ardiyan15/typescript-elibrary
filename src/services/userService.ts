@@ -7,7 +7,7 @@ import userRepository from "@repositories/userRepository";
 import { IUser } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
 import { Request } from "express";
-import { CreateUserResult, TemplateUser } from '../types/user'
+import { CreateUserResult, TemplateUser, Response } from '../types/user'
 
 
 class UserService {
@@ -101,6 +101,10 @@ class UserService {
 
             return result
         }
+    }
+
+    async bulkCreate(path: string): Promise<Response> {
+        return userRepository.bulkCreate(path)
     }
 }
 

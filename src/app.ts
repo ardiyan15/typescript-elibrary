@@ -7,13 +7,13 @@ import session from "express-session";
 import multer from "multer";
 import flash from "connect-flash";
 
-import sequelize from "./utils/connection";
+import sequelize from "@utils/connection";
 import startConsumer from '@utils/consumer';
 
 // Backoffice
 import backHomeRoutes from "./routes/backoffice/home/home";
 import bookRoutes from "./routes/backoffice/books/index";
-import userRoutes from "./routes/backoffice/users/index";
+import userRoutes from "@routes/backoffice/users/index";
 
 // FrontOffice
 // import homeRoutes from "./routes/frontoffice/home/home";
@@ -92,7 +92,8 @@ Book.hasMany(Rating, {
 
 Rating.belongsTo(Book);
 
-startConsumer()
+// startConsumer()
+// startConsumer().catch(console.error)
 
 sequelize
   .sync()

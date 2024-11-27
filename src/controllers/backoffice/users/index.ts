@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import { ValidationError } from "express-validator";
+
 import userService from '@services/userService';
 import { User, TemplateUser } from '../../../types/user'
-import { ValidationError } from "express-validator";
-import producer from "@utils/producer";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   const flashMessage = req.flash("success");
   const users = await userService.getAllUsers()
-  // producer('test_queue')
   res.render("backoffice/users/index", {
     users,
     flashMessage
@@ -80,5 +79,20 @@ export const template = async (req: Request, res: Response, next: NextFunction):
     res.download(result.data, 'user-template.csv');
   } else {
     res.send(result.data)
+  }
+}
+
+export const importUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  res.render("backoffice/users/import")
+}
+
+export const saveImportUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const response = await userService.bulkCreate(req.file.path)
+
+  if(response.responseCode == 200) {
+    req.flash("success", "Successfully import User")
+    res.redirect('/backoffice/users')
+  } else {
+    res.send(response.responseMessage)
   }
 }

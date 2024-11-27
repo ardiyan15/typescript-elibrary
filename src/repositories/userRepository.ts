@@ -1,4 +1,6 @@
-import User, { IUser } from "../models/backoffice/users/user";
+import User, { IUser } from "@models/backoffice/users/user";
+import startConsumer from '@utils/consumer';
+import { Response } from "../types/user";
 
 class UserRepository {
     async findAll(): Promise<IUser[]> {
@@ -22,6 +24,11 @@ class UserRepository {
 
     async delete(id: string): Promise<number> {
         return User.destroy({where: {id}})
+    }
+
+    async bulkCreate(path: string): Promise<Response> {
+        const response = startConsumer(path)
+        return response;
     }
 }
 

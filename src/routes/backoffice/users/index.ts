@@ -1,7 +1,9 @@
 import express from "express";
-const router = express.Router();
+import { userValidator } from "@validators/user";
+import multer from "multer";
 
-import { userValidator } from "../../../validators/user";
+const router = express.Router();
+const upload = multer({dest: 'uploads/'})
 
 import {
   getUsers,
@@ -10,12 +12,16 @@ import {
   deleteUser,
   getUser,
   updateUser,
-  template
-} from "../../../controllers/backoffice/users/index";
+  template,
+  importUser,
+  saveImportUser
+} from "@controllers/backoffice/users/index";
 
 router.get("/users", getUsers);
 
 router.get("/users/form", userForm);
+
+router.get("/users/import", importUser)
 
 router.get("/users/:id", getUser)
 
@@ -26,5 +32,7 @@ router.post("/users/delete", deleteUser)
 router.post("/users/update", updateUser)
 
 router.post("/users/template", template)
+
+router.post("/users/importuser", upload.single('user-csv'), saveImportUser)
 
 export default router;
