@@ -10,10 +10,10 @@
     "tsc": "tsc",
     "build": "npm-run-all clean lint tsc copy-assets",
     "dev:start": "npm-run-all build start",
-    "devOld": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
     "dev": "nodemon --exec ts-node src/app.ts",
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "worker": "nodemon --exec ts-node src/worker/worker.ts"
   },
   "author": "",
   "license": "ISC",
@@ -54,8 +54,9 @@
     "rimraf": "^3.0.2",
     "sequelize-cli": "^6.5.2",
     "shelljs": "^0.8.5",
-    "ts-node": "^10.9.1",
-    "tslint": "^6.1.3"
+    "ts-node": "^10.9.2",
+    "tslint": "^6.1.3",
+    "typescript": "^5.7.2"
   },
   "_moduleAliases": {
     "@services": "src/services",

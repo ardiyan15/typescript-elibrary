@@ -9,7 +9,6 @@ export type User = {
 }
 
 export type CreateUserResult = { isError: boolean, errors: ValidationError[] }
-
 export type TemplateUser = {
     responseCode: number
     responseMessage: string
@@ -19,4 +18,9 @@ export type TemplateUser = {
 export type Response = {
     responseCode: number
     responseMessage: string
+}
+
+export type MessageType = {
+    messageType: string
+    path: string
 }

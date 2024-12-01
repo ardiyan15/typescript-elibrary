@@ -9,11 +9,9 @@ import sequelize from "@utils/connection";
 
 // Backoffice
 import backHomeRoutes from "./routes/backoffice/home/home";
-import bookRoutes from "./routes/backoffice/books/index";
 import userRoutes from "@routes/backoffice/users/index";
 
-import Book from "./models/backoffice/books/book";
-import Rating from "./models/frontoffice/rating";
+import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
 
 const app = express();
 
@@ -37,20 +35,19 @@ app.set("views", path.join(__dirname, "views"));
 
 // Backoffice
 app.use("/backoffice", backHomeRoutes);
-app.use("/backoffice", bookRoutes);
 app.use("/backoffice", userRoutes)
-
-Book.hasMany(Rating, {
-  foreignKey: "bookId",
-});
-
-Rating.belongsTo(Book);
 
 sequelize
   .sync()
-  .then(() => {
+  .then(async () => {
+    await connectRabbitMQ()
     app.listen(3000, () => console.log("Server is running"));
   })
   .catch((err) => {
     console.log(err);
   });
+
+process.on('SIGINT', async () => {
+  await closeRabbitMQ()
+  process.exit(0)
+})

@@ -1,6 +1,6 @@
 import User, { IUser } from "@models/backoffice/users/user";
-import startConsumer from '@utils/consumer';
-import { Response } from "../types/user";
+import { MessageType, Response } from "../types/user";
+import { getRabbitChannel } from "@utils/rabbitmq";
 
 class UserRepository {
     async findAll(): Promise<IUser[]> {
@@ -23,12 +23,35 @@ class UserRepository {
     }
 
     async delete(id: string): Promise<number> {
-        return User.destroy({where: {id}})
+        return User.destroy({ where: { id } })
     }
 
     async bulkCreate(path: string): Promise<Response> {
-        const response = startConsumer(path)
-        return response;
+        const channel = getRabbitChannel()
+        await channel.assertQueue('IMPORT_USER')
+
+        let message: MessageType = {
+            'messageType': 'Import User',
+            'path': path
+        }
+
+        let messageData = JSON.stringify(message)
+
+        try {
+            channel.sendToQueue('IMPORT_USER', Buffer.from(messageData))
+            let response = {
+                'responseCode': 200,
+                'responseMessage': 'Success'
+            }
+            return response
+        } catch(error) {
+            let response = {
+                'responseCode': 500,
+                'responseMessage': error
+            }
+
+            return response
+        }
     }
 }
 

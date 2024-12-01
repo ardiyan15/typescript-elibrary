@@ -3,6 +3,7 @@ import { ValidationError } from "express-validator";
 
 import userService from '@services/userService';
 import { User, TemplateUser } from '../../../types/user'
+import { getRabbitChannel } from "@utils/rabbitmq";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   const flashMessage = req.flash("success");
