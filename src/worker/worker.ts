@@ -18,7 +18,7 @@ const startWorker = async () => {
             if(data.messageType === 'Import User') {
                 console.log("Proccessing Import User")
                 console.time("Processing Time");
-                const result = await importUser(data.path)
+                const result = await importUser(data.path) 
                 User.bulkCreate(result.users)
                 console.timeEnd("Processing Time");
                 console.log("Finished Import User")
