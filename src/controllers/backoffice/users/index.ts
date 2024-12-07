@@ -3,13 +3,26 @@ import { ValidationError } from "express-validator";
 
 import userService from '@services/userService';
 import { User, TemplateUser } from '../../../types/user'
-import { getRabbitChannel } from "@utils/rabbitmq";
+
+export const getUsersDataTable = async (req: Request, res: Response, next: NextFunction) => {
+  const start = parseInt(req.query.start as string) || 0
+  const length = parseInt(req.query.length as string) || 0
+  const search = req.query.search as { value: string, regex: string }
+
+  const results = await userService.getAllUsers(start, length, search)
+
+  res.json({
+    draw: req.query.draw,
+    recordsTotal: results.recordsTotal,
+    recordsFiltered: results.recordsFiltered,
+    data: results.data
+  })
+}
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   const flashMessage = req.flash("success");
-  const users = await userService.getAllUsers()
+
   res.render("backoffice/users/index", {
-    users,
     flashMessage
   });
 };
@@ -90,7 +103,7 @@ export const importUser = async (req: Request, res: Response, next: NextFunction
 export const saveImportUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const response = await userService.bulkCreate(req.file.path)
 
-  if(response.responseCode == 200) {
+  if (response.responseCode == 200) {
     req.flash("success", "Successfully import User")
     res.redirect('/backoffice/users')
   } else {

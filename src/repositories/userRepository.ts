@@ -1,12 +1,27 @@
+import { Op } from "sequelize";
 import User, { IUser } from "@models/backoffice/users/user";
+import { IDataTableResponse } from "@generals/Interfaces"
 import { MessageType, Response } from "../types/user";
 import { getRabbitChannel } from "@utils/rabbitmq";
 
 class UserRepository {
-    async findAll(): Promise<IUser[]> {
-        return User.findAll({
-            order: [['id', 'DESC']]
+    async findAll(start: number, length: number, search: { value: string, regex: string }): Promise<IDataTableResponse<IUser>> {
+        const searchValue = search?.value || '';
+
+        const whereCondition = searchValue ? { username: { [Op.like]: `%${searchValue}%` } } : {}
+
+
+        const { rows, count } = await User.findAndCountAll({
+            where: whereCondition,
+            offset: start,
+            limit: length
         })
+
+        return {
+            data: rows,
+            recordsTotal: count,
+            recordsFiltered: count,
+        };
     }
 
     async findById(id: number | string): Promise<IUser | null> {
@@ -44,7 +59,7 @@ class UserRepository {
                 'responseMessage': 'Success'
             }
             return response
-        } catch(error) {
+        } catch (error) {
             let response = {
                 'responseCode': 500,
                 'responseMessage': error

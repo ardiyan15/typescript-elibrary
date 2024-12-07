@@ -66,6 +66,7 @@
     "@models": "src/models",
     "@controllers": "src/controllers",
     "@validators": "src/validators",
-    "@routes": "src/routes"
+    "@routes": "src/routes",
+    "@generals": "src/generals"
   }
 }

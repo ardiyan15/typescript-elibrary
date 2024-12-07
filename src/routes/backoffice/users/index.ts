@@ -14,10 +14,13 @@ import {
   updateUser,
   template,
   importUser,
-  saveImportUser
+  saveImportUser,
+  getUsersDataTable
 } from "@controllers/backoffice/users/index";
 
 router.get("/users", getUsers);
+
+router.get("/usersTable", getUsersDataTable)
 
 router.get("/users/form", userForm);
 

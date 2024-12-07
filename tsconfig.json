@@ -18,6 +18,7 @@
       "@controllers/*": ["./src/controllers/*"],
       "@validators/*": ["./src/validators/*"],
       "@routes/*": ["./src/routes/*"],
+      "@generals/*": ["src/generals/*"]
     },
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },

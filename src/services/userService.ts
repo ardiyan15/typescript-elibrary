@@ -4,17 +4,17 @@ import { validationResult, ValidationError } from "express-validator";
 import moment from "moment";
 
 import userRepository from "@repositories/userRepository";
-import { IUser } from '@models/backoffice/users/user';
+import { IUser, IUserResponse } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
 import { Request } from "express";
 import { CreateUserResult, TemplateUser, Response } from '../types/user'
 
 
 class UserService {
-    async getAllUsers(): Promise<IUser[]> {
-        const users = await userRepository.findAll()
+    async getAllUsers(start: number, length: number, search: {value: string, regex: string}): Promise<IUserResponse> {
+        const {data, recordsTotal, recordsFiltered} = await userRepository.findAll(start, length, search)
 
-        const encryptedData = users.map(user => {
+        const encryptedData = data.map(user => {
             const encryptedId = encrypt(user.id.toString());
             const createdAt = moment(user.createdAt).format("D MMMM YYYY");
             const updatedAt = moment(user.updatedAt).format("D MMMM YYYY");
@@ -37,7 +37,11 @@ class UserService {
             }
         })
 
-        return encryptedData
+        return {
+            data: encryptedData,
+            recordsTotal,
+            recordsFiltered
+        }
     }
 
     async getUserBydId(id: string): Promise<IUser | null> {

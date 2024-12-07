@@ -15,7 +15,7 @@ include('../includes/navigation.ejs')%>
       </div>
     </div>
     <div class="card-body">
-      <table class="table table-bordered dataTable" id="dataTable">
+      <table class="table table-bordered dataTable" id="userTable">
         <thead>
           <tr>
             <th class="text-center">No</th>
@@ -29,45 +29,6 @@ include('../includes/navigation.ejs')%>
           </tr>
         </thead>
         <tbody>
-          <% let i = 1; %> <% users.forEach(user => { %>
-          <tr>
-            <td class="text-center"><%= i++ %></td>
-            <td class="text-center"><%- user.username %></td>
-            <td class="text-center"><%= user.email %></td>
-            <td class="text-center"><%= user.roles %></td>
-            <td class="text-center">
-              <img
-                loading="lazy"
-                width="80"
-                height="30"
-                src="/<%= user.image %>"
-                alt="<%= user.title %>"
-              />
-            </td>
-            <td class="text-center"><%= user.createdAt %></td>
-            <td class="text-center"><%= user.updatedAt %></td>
-            <td class="text-center">
-              <form method="POST" action="/backoffice/users/delete">
-                <a
-                  href="/backoffice/users/<%= user.id %>"
-                  class="text-center btn btn-info btn-sm rounded"
-                  >Edit
-                </a>
-                <input
-                  type="hidden"
-                  value="<%= user.id %>"
-                  name="userId"
-                  id="userId"
-                />
-                <button
-                  class="text-center btn btn-danger btn-sm rounded delete-confirm"
-                >
-                  Delete
-                </button>
-              </form>
-            </td>
-          </tr>
-          <% }) %>
         </tbody>
       </table>
     </div>
@@ -81,6 +42,42 @@ include('../includes/navigation.ejs')%>
 </script>
 <% } %>
 <script>
+  $(document).ready(function(){
+    $("#userTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "/backoffice/usersTable",
+      columns: [
+        {
+            data: null,
+            className: 'text-center',
+            render: function(data, type, row, meta) {
+                return meta.row + 1
+            }
+        },
+        { data: 'username', searchable: true, className: 'text-center' },
+        { data: 'email', className: 'text-center' },
+        { data: 'roles', className: 'text-center' },
+        { data: 'image', className: 'text-center', render: function(data, type, row) {
+            return `<img loading="lazy" width="80" height="30" src="/${row.image}" alt="${row.title}">`
+        }},
+        { data: 'createdAt', className: 'text-center' },
+        { data: 'updatedAt', className: 'text-center' },
+        {
+            data: null,
+            render: function(data, type, row) {
+                return `<form method="POST" action="/backoffice/users/delete/${row.id}" class="d-inline">
+                            <div class='d-flex justify-content-center'>
+                                <a href="/backoffice/users/${row.id}" class="mr-2 text-center btn btn-info btn-sm rounded">Edit</a>
+                                <button type="submit" class="btn btn-danger btn-sm delete-confirm">Delete</button>
+                            </div>
+                         </form>`
+            }
+        }
+      ]
+    })
+  })
+
   $(".delete-confirm").on("click", function (e) {
     e.preventDefault();
     Swal.fire({

@@ -13,6 +13,12 @@ export interface IUser {
   updatedAt?: Date | string
 }
 
+export interface IUserResponse {
+  data: IUser[]
+  recordsTotal: number
+  recordsFiltered: number
+}
+
 class User extends Model<IUser> implements IUser {
   public id!: number;
   public username!: string;
