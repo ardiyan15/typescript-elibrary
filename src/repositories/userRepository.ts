@@ -7,9 +7,7 @@ import { getRabbitChannel } from "@utils/rabbitmq";
 class UserRepository {
     async findAll(start: number, length: number, search: { value: string, regex: string }): Promise<IDataTableResponse<IUser>> {
         const searchValue = search?.value || '';
-
         const whereCondition = searchValue ? { username: { [Op.like]: `%${searchValue}%` } } : {}
-
 
         const { rows, count } = await User.findAndCountAll({
             where: whereCondition,
