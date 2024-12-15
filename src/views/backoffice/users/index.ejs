@@ -4,13 +4,13 @@ include('../includes/navigation.ejs')%>
 <input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
 <div class="container-fluid">
   <form action="/backoffice/users/template" method="POST">
-    <a href="/backoffice/users/form" class="btn btn-primary btn-sm mb-3 rounded">Add User</a>
-    <button type="submit" class="btn btn-success btn-sm mb-3 rounded">Download Template</button>
+    <a href="/backoffice/users/form" class="btn btn-primary btn-sm mb-3 rounded"><%= translate('add user') %></a>
+    <button type="submit" class="btn btn-success btn-sm mb-3 rounded"><%= translate('download template') %></button>
   </form>
   <div class="card shadow">
     <div class="card-header py-3">
       <div class="d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold text-primary">Master User</h6>
+        <h6 class="m-0 font-weight-bold text-primary"><%= translate('master user') %></h6>
         <a href="/backoffice/users/import" class="btn btn-primary btn-sm rounded">Import User</a>
       </div>
     </div>
@@ -19,13 +19,13 @@ include('../includes/navigation.ejs')%>
         <thead>
           <tr>
             <th class="text-center">No</th>
-            <th class="text-center">Username</th>
-            <th class="text-center">Email</th>
-            <th class="text-center">Role</th>
-            <th class="text-center">Photo Profile</th>
-            <th class="text-center">Created Date</th>
-            <th class="text-center">Updated Date</th>
-            <th class="text-center">Action</th>
+            <th class="text-center"><%= translate('username') %></th>
+            <th class="text-center"><%= translate('email') %></th>
+            <th class="text-center"><%= translate('role') %></th>
+            <th class="text-center"><%= translate('photo profile') %></th>
+            <th class="text-center"><%= translate('created date') %></th>
+            <th class="text-center"><%= translate('updated date') %></th>
+            <th class="text-center"><%= translate('action') %></th>
           </tr>
         </thead>
         <tbody>
@@ -68,10 +68,10 @@ include('../includes/navigation.ejs')%>
             render: function(data, type, row) {
                 return `<form method="POST" action="/backoffice/users/delete/${row.id}" class="d-inline">
                             <div class='d-flex justify-content-center'>
-                                <a href="/backoffice/users/${row.id}" class="mr-2 text-center btn btn-info btn-sm rounded">Edit</a>
-                                <button type="submit" class="btn btn-danger btn-sm delete-confirm">Delete</button>
+                                <a href="/backoffice/users/${row.id}" class="mr-2 text-center btn btn-info btn-sm rounded"><%= translate('edit') %></a>
+                                <button type="submit" class="btn btn-danger btn-sm delete-confirm"><%=  translate('delete') %></button>
                             </div>
-                         </form>`
+                        </form>`
             }
         }
       ]

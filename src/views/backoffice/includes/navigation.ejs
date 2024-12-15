@@ -30,7 +30,7 @@
       aria-controls="collapseTwo"
     >
       <i class="fas fa-fw fa-cog"></i>
-      <span>Master Data</span>
+      <span><%= translate('master data') %></span>
     </a>
     <div
       id="collapseTwo"
@@ -39,10 +39,10 @@
       data-parent="#accordionSidebar"
     >
       <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Master Data</h6>
-        <a class="collapse-item" href="/backoffice/users">Users</a>
-        <a class="collapse-item" href="/backoffice/Books">Books</a>
-        <a class="collapse-item" href="/backoffice/categories">Categories</a>
+        <h6 class="collapse-header"><%= translate('master data') %></h6>
+        <a class="collapse-item" href="/backoffice/users"><%= translate('users') %></a>
+        <a class="collapse-item" href="/backoffice/Books"><%= translate('books') %></a>
+        <a class="collapse-item" href="/backoffice/categories"><%= translate('categories') %></a>
       </div>
     </div>
   </li>
@@ -56,7 +56,7 @@
       aria-controls="collapseUtilities"
     >
       <i class="fas fa-fw fa-cog"></i>
-      <span>Content Setting</span>
+      <span><%= translate('content setting') %></span>
     </a>
     <div
       id="collapseUtilities"
@@ -65,8 +65,9 @@
       data-parent="#accordionSidebar"
     >
       <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Content Setting</h6>
+        <h6 class="collapse-header"><%= translate('content setting') %></h6>
         <a class="collapse-item" href="/backoffice/banners">Banner</a>
+        <a class="collapse-item" href="/backoffice/language"><%= translate('language') %></a>
       </div>
     </div>
   </li>

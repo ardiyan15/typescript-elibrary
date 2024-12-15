@@ -1,19 +1,38 @@
 import 'module-alias/register';
 import path from "path";
 
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import flash from "connect-flash";
 
 import sequelize from "@utils/connection";
 
+import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
+import { redisClient } from '@utils/redis'
+import language from '@utils/language';
+
 // Backoffice
 import backHomeRoutes from "./routes/backoffice/home/home";
 import userRoutes from "@routes/backoffice/users/index";
-
-import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
+import languageRoutes from '@routes/backoffice/language/index'
 
 const app = express();
+
+app.use(language())
+
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  const result = await redisClient.get('language')
+  let language = 'en'
+
+  if (result) {
+    const languageSetting = JSON.parse(result)
+    language = languageSetting.language
+  }
+
+  res.cookie('i18next', language)
+  res.locals.translate = req.t;
+  next();
+});
 
 app.use(
   session({
@@ -23,6 +42,7 @@ app.use(
   })
 );
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(flash());
@@ -36,6 +56,7 @@ app.set("views", path.join(__dirname, "views"));
 // Backoffice
 app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)
+app.use("/backoffice", languageRoutes)
 
 sequelize
   .sync()
