@@ -4,7 +4,7 @@
 >
   <a
     class="sidebar-brand d-flex align-items-center justify-content-center"
-    href="index.html"
+    href="/backoffice"
   >
     <div class="sidebar-brand-icon rotate-n-15">
       <i class="fas fa-book"></i>
@@ -12,100 +12,45 @@
     <div class="sidebar-brand-text mx-3">eLibrary</div>
   </a>
   <hr class="sidebar-divider my-0" />
+
   <li class="nav-item active">
-    <a class="nav-link" href="index.html">
+    <a class="nav-link" href="/backoffice">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>Dashboard</span></a
     >
   </li>
   <hr class="sidebar-divider" />
   <div class="sidebar-heading">Administration</div>
+  <% menus.forEach(menu => { %>
   <li class="nav-item">
     <a
       class="nav-link collapsed"
       href="#"
       data-toggle="collapse"
-      data-target="#collapseTwo"
+      data-target="#collapse<%= menu.id %>"
       aria-expanded="true"
-      aria-controls="collapseTwo"
+      aria-controls="collapse<%= menu.id %>"
     >
-      <i class="fas fa-fw fa-cog"></i>
-      <span><%= translate('master data') %></span>
+      <i class="<%= menu.icon %>"></i>
+      <span><%= translate(menu.name) %></span>
     </a>
-    <div
-      id="collapseTwo"
-      class="collapse"
-      aria-labelledby="headingTwo"
-      data-parent="#accordionSidebar"
-    >
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header"><%= translate('master data') %></h6>
-        <a class="collapse-item" href="/backoffice/users"><%= translate('users') %></a>
-        <a class="collapse-item" href="/backoffice/Books"><%= translate('books') %></a>
-        <a class="collapse-item" href="/backoffice/categories"><%= translate('categories') %></a>
-      </div>
-    </div>
-  </li>
-  <li class="nav-item">
-    <a
-      class="nav-link collapsed"
-      href="#"
-      data-toggle="collapse"
-      data-target="#collapseUtilities"
-      aria-expanded="true"
-      aria-controls="collapseUtilities"
-    >
-      <i class="fas fa-fw fa-cog"></i>
-      <span><%= translate('content setting') %></span>
-    </a>
-    <div
-      id="collapseUtilities"
-      class="collapse"
-      aria-labelledby="headingTwo"
-      data-parent="#accordionSidebar"
-    >
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header"><%= translate('content setting') %></h6>
-        <a class="collapse-item" href="/backoffice/banners">Banner</a>
-        <a class="collapse-item" href="/backoffice/language"><%= translate('language') %></a>
-      </div>
-    </div>
-  </li>
-  <li class="nav-item">
-    <a
-      class="nav-link collapsed"
-      href="#"
-      data-toggle="collapse"
-      data-target="#transactionsd"
-      aria-expanded="true"
-      aria-controls="transactionsd"
-    >
-      <i class="fas fa-fw fa-cog"></i>
-      <span>Transactions</span>
-    </a>
-    <div
-      id="transactionsd"
-      class="collapse"
-      aria-labelledby="headingTwo"
-      data-parent="#accordionSidebar"
-    >
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Transactions</h6>
-        <a class="collapse-item" href="/backoffice/transactions">Order</a>
-      </div>
-    </div>
-  </li>
-  <hr class="sidebar-divider" />
-  <li class="nav-item">
-    <form action="/backoffice/logout" method="POST">
-      <button
-        class="btn btn-link"
-        style="text-decoration: none; color: rgba(255, 255, 255, 0.8)"
+    <% menu.submenus.forEach(subMenu => { %>
+      <div
+        id="collapse<%= menu.id %>"
+        class="collapse <%= basePath == subMenu.url ? 'show' : '' %>"
+        aria-labelledby="headingTwo"
+        data-parent="#accordionSidebar"
       >
-        Logout
-      </button>
-    </form>
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header"><%= translate(menu.name) %></h6>
+          <a class="collapse-item <%= basePath == subMenu.url ? 'active' : '' %>" href="<%= subMenu.url %>"
+            ><%= translate(subMenu.name) %></a
+          >
+        </div>
+      </div>
+    <% }) %>
   </li>
+  <% }) %>
   <hr class="sidebar-divider d-none d-md-block" />
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>

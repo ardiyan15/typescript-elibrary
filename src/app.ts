@@ -1,38 +1,26 @@
 import 'module-alias/register';
 import path from "path";
 
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import session from "express-session";
 import flash from "connect-flash";
 
-import sequelize from "@utils/connection";
+import { sequelize } from '@models/index'
 
 import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
-import { redisClient } from '@utils/redis'
 import language from '@utils/language';
 
 // Backoffice
-import backHomeRoutes from "./routes/backoffice/home/home";
+import backHomeRoutes from "@routes/backoffice/home/home";
 import userRoutes from "@routes/backoffice/users/index";
 import languageRoutes from '@routes/backoffice/language/index'
+
+import menuMiddleware from '@middleware/menuMiddleware';
+import languageMiddleware from '@middleware/languageMiddleware';
 
 const app = express();
 
 app.use(language())
-
-app.use(async (req: Request, res: Response, next: NextFunction) => {
-  const result = await redisClient.get('language')
-  let language = 'en'
-
-  if (result) {
-    const languageSetting = JSON.parse(result)
-    language = languageSetting.language
-  }
-
-  res.cookie('i18next', language)
-  res.locals.translate = req.t;
-  next();
-});
 
 app.use(
   session({
@@ -42,8 +30,11 @@ app.use(
   })
 );
 
+app.use(languageMiddleware);
+app.use(menuMiddleware)
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
@@ -59,7 +50,7 @@ app.use("/backoffice", userRoutes)
 app.use("/backoffice", languageRoutes)
 
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(async () => {
     await connectRabbitMQ()
     app.listen(3000, () => console.log("Server is running"));

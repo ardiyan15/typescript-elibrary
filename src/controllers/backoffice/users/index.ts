@@ -3,6 +3,7 @@ import { ValidationError } from "express-validator";
 
 import userService from '@services/userService';
 import { User, TemplateUser } from '../../../types/user'
+import subMenuService from "@services/subMenuService";
 
 export const getUsersDataTable = async (req: Request, res: Response, next: NextFunction) => {
   const start = parseInt(req.query.start as string) || 0
@@ -27,11 +28,13 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
   });
 };
 
-export const userForm = (req: Request, res: Response, next: NextFunction) => {
+export const userForm = async (req: Request, res: Response, next: NextFunction) => {
   const url = '/backoffice/users/saveuser'
   const user: User[] = [];
   const errors: ValidationError[] = []
-  res.render("backoffice/users/form", { url, user, errors });
+  const subMenus = await subMenuService.getAllSubMenus()
+  const basePath = '/backoffice/users'
+  res.render("backoffice/users/form", { url, user, errors, subMenus, basePath });
 }
 
 export const saveUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -41,8 +44,9 @@ export const saveUser = async (req: Request, res: Response, next: NextFunction):
       const url = '/backoffice/users/saveuser'
       const user: User[] = [];
       const errors = result.errors
+      const subMenus = await subMenuService.getAllSubMenus()
 
-      res.render("backoffice/users/form", { errors, url, user });
+      res.render("backoffice/users/form", { errors, url, user, subMenus });
     } else {
       req.flash("success", "Successfully add User");
       res.redirect('/backoffice/users')
@@ -69,7 +73,8 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
     const userId = req.params.id
     const user = await userService.getUserBydId(userId)
     const userIdEncrypted = req.params.id
-    res.render("backoffice/users/form", { user, url, userId: userIdEncrypted })
+    const errors: ValidationError[] = []
+    res.render("backoffice/users/form", { user, url, errors, userId: userIdEncrypted })
   } catch (error) {
     res.send(error)
   }

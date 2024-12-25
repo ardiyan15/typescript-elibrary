@@ -73,6 +73,7 @@
     "@controllers": "src/controllers",
     "@validators": "src/validators",
     "@routes": "src/routes",
-    "@generals": "src/generals"
+    "@generals": "src/generals",
+    "@middleware": "src/middleware"
   }
 }

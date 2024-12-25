@@ -3,6 +3,8 @@ import User, { IUser } from "@models/backoffice/users/user";
 import { IDataTableResponse } from "@generals/Interfaces"
 import { MessageType, Response } from "../types/user";
 import { getRabbitChannel } from "@utils/rabbitmq";
+import Privilege from "@models/backoffice/privileges/privileges";
+import sequelize from "@utils/connection";
 
 class UserRepository {
     async findAll(start: number, length: number, search: { value: string, regex: string }): Promise<IDataTableResponse<IUser>> {
@@ -12,7 +14,8 @@ class UserRepository {
         const { rows, count } = await User.findAndCountAll({
             where: whereCondition,
             offset: start,
-            limit: length
+            limit: length,
+            order: [['id', 'DESC']],
         })
 
         return {
@@ -27,7 +30,34 @@ class UserRepository {
     }
 
     async create(userData: IUser): Promise<User> {
-        return User.create(userData)
+        let { privileges, ...userDetails } = userData
+
+        const transaction = await sequelize.transaction()
+
+        let newPrivileges: Array<number> = []
+
+        if(typeof privileges == 'string') {
+            newPrivileges.push(privileges)
+        } else {
+            newPrivileges = privileges
+        }
+
+        try {
+            const user = await User.create(userDetails, { transaction });
+            const submenuIds = newPrivileges.map((id) => Number(id))
+            await Privilege.bulkCreate(
+                submenuIds.map((submenuId) => ({
+                    userId: user.id,
+                    submenuId
+                })),
+                { transaction }
+            )
+            await transaction.commit()
+            return user
+        } catch (error) {
+            await transaction.rollback()
+            throw error
+        }
     }
 
     async update(id: string, userData: Partial<IUser>): Promise<[number]> {

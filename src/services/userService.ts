@@ -22,7 +22,7 @@ class UserService {
             let userImage = user.image
 
             if (!user.image) {
-                userImage = `img/default-profile.jpg`
+                userImage = `default-profile.jpg`
             }
 
             return {
@@ -61,8 +61,14 @@ class UserService {
             return results
         }
 
+        let image = request.file.filename
+        
+        request.body.image = image
+
         const userData: Partial<IUser> = request.body;
         delete userData.id;
+
+        userRepository.create(request.body)
 
         const results = {
             isError: false,

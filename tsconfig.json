@@ -18,7 +18,8 @@
       "@controllers/*": ["./src/controllers/*"],
       "@validators/*": ["./src/validators/*"],
       "@routes/*": ["./src/routes/*"],
-      "@generals/*": ["src/generals/*"]
+      "@generals/*": ["src/generals/*"],
+      "@middleware/*": ["src/middleware/*"]
     },
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },

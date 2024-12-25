@@ -59,7 +59,7 @@ include('../includes/navigation.ejs')%>
         { data: 'email', className: 'text-center' },
         { data: 'roles', className: 'text-center' },
         { data: 'image', className: 'text-center', render: function(data, type, row) {
-            return `<img loading="lazy" width="80" height="30" src="/${row.image}" alt="${row.title}">`
+            return `<img loading="lazy" width="80" height="30" src="/img/users/${row.image}" alt="${row.title}">`
         }},
         { data: 'createdAt', className: 'text-center' },
         { data: 'updatedAt', className: 'text-center' },

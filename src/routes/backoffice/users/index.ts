@@ -17,6 +17,7 @@ import {
   saveImportUser,
   getUsersDataTable
 } from "@controllers/backoffice/users/index";
+import { uploadImage } from "@utils/upload";
 
 router.get("/users", getUsers);
 
@@ -28,7 +29,7 @@ router.get("/users/import", importUser)
 
 router.get("/users/:id", getUser)
 
-router.post("/users/saveuser", userValidator, saveUser)
+router.post("/users/saveuser", uploadImage, userValidator, saveUser)
 
 router.post("/users/delete", deleteUser)
 

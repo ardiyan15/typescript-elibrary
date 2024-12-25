@@ -1,12 +1,8 @@
 import { RequestHandler } from "express";
-import Book from "../../../models/backoffice/books/book";
+import Book from "@models/backoffice/books/book";
 
-import { encrypt } from "../../../utils/secure";
-import sequelize from "../../../utils/connection";
-
-interface MulterRequest extends Request {
-  file: any;
-}
+import { encrypt } from "@utils/secure";
+import sequelize from "@utils/connection";
 
 export const getBook: RequestHandler = async (req, res, next) => {
   const flashMessage = req.flash();

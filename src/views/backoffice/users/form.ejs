@@ -7,7 +7,7 @@ include('../includes/navigation.ejs')%>
       <h6 class="m-0 font-weight-bold text-primary">Add User</h6>
     </div>
     <div class="card-body">
-      <form method="POST" action="<%= url %>">
+      <form method="POST" action="<%= url %>" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<%= user.id ? userId : '' %>">
         <div class="row">
           <div class="col-6">
@@ -75,12 +75,36 @@ include('../includes/navigation.ejs')%>
               <label for="profile">Photo Profile</label>
               <input
                 type="file"
-                name="profile"
+                name="user-image"
                 id="profile"
                 class="form-control"
               />
             </div>
           </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Parent Menu</th>
+                <th scope="col">Code</th>
+                <th scope="col">
+                  <input type="checkbox" class="all-privileges" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% let no = 1; subMenus.forEach(subMenu => { %>
+                <tr>
+                  <th scope="row"><%= no++ %></th>
+                  <td><%= subMenu.name %></td>
+                  <td><%= subMenu.menu.name %></td>
+                  <td><%= subMenu.code %></td>
+                  <td><input type="checkbox" name="privileges" value="<%= subMenu.id %>" class="privilege-item" /></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
         </div>
         <a href="/backoffice/users" class="btn btn-warning btn-sm rounded">Back</a>
         <button type="submit" class="btn btn-primary btn-sm rounded">Submit</button>
@@ -88,3 +112,17 @@ include('../includes/navigation.ejs')%>
     </div>
   </div>
 </div>
+
+<%- include('../includes/end.ejs') %>
+<script>
+  $(document).ready(function(){
+    $('.all-privileges').on('change', function () {
+      $('.privilege-item').prop('checked', $(this).prop('checked'));
+    });
+
+    $('.privilege-item').on('change', function () {
+      const allChecked = $('.privilege-item').length === $('.privilege-item:checked').length;
+      $('.all-privileges').prop('checked', allChecked);
+    });
+  })
+</script>
