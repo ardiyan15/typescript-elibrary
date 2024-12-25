@@ -7,6 +7,7 @@ Build Web Application using Express Typescript
    - Localization / Multi Language (English, Bahasa Indonesia)
    - Import User Data
    - Datatable Serverside
+   - User Role Management
 
 2. Tech Stack
    - ExpressJs
@@ -15,11 +16,11 @@ Build Web Application using Express Typescript
    - Sequelize
    - Redis
    - RabbitMQ
+   - MVC and Repository Pattern
    - Sweetalert 2
    - SB Admin 2 Template
    - Bootstrap
    - Jquery
-   - MVC and Repository Pattern
 
 
 3. Screeshot
