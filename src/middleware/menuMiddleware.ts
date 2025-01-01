@@ -3,6 +3,7 @@ import Menu from '@models/backoffice/menus/menu'
 import Submenu from '@models/backoffice/submenus/submenu'
 import User from '@models/backoffice/users/user';
 import AuthService from '@services/authService';
+import Privilege from '@models/backoffice/privileges/privileges';
 
 const menuMiddleware = async(req: Request, res: Response, next: NextFunction) => {
     const excludedPaths = ["/public", "/img", "/backoffice/img", "/backoffice/usersTable", "/js", "/css", "/vendor"];
@@ -38,8 +39,13 @@ const menuMiddleware = async(req: Request, res: Response, next: NextFunction) =>
             ]
         })
 
+        const subMenu = await Submenu.findOne({where: {url: basePath}, attributes: ['id'], raw: true})
+        const privileges = await Privilege.findAll({where: {userId: userId}, raw: true})
+
         res.locals.basePath = basePath
         res.locals.menus = menus
+        res.locals.subMenu = subMenu
+        res.locals.privileges = privileges
 
         next()
     } catch(error) {

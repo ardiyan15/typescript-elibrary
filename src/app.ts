@@ -19,6 +19,7 @@ import authRoutes from '@routes/backoffice/auth/index'
 import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
+import isAuthorized from '@middleware/authorizedMiddleware';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use(isAuthenticated)
 
 app.use(languageMiddleware);
 app.use(menuMiddleware)
+app.use(isAuthorized)
 // Backoffice
 app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)

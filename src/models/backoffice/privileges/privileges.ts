@@ -1,6 +1,15 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
-class Privilege extends Model {
+interface IPrivilege {
+    userId: number
+    submenuId: number
+}
+
+class Privilege extends Model implements IPrivilege {
+
+    public userId!: number;
+    public submenuId!: number;
+
     static initModel(sequelize: Sequelize) {
         Privilege.init(
             {
