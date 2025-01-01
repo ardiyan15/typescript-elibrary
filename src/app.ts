@@ -14,9 +14,11 @@ import language from '@utils/language';
 import backHomeRoutes from "@routes/backoffice/home/home";
 import userRoutes from "@routes/backoffice/users/index";
 import languageRoutes from '@routes/backoffice/language/index'
+import authRoutes from '@routes/backoffice/auth/index'
 
 import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
+import { isAuthenticated } from '@middleware/authMiddleware';
 
 const app = express();
 
@@ -30,8 +32,6 @@ app.use(
   })
 );
 
-app.use(languageMiddleware);
-app.use(menuMiddleware)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,6 +44,12 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use("/backoffice", authRoutes)
+
+app.use(isAuthenticated)
+
+app.use(languageMiddleware);
+app.use(menuMiddleware)
 // Backoffice
 app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)

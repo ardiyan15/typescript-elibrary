@@ -1,7 +1,8 @@
+import bcrypt from 'bcrypt'
 import { Op } from "sequelize";
 import User, { IUser } from "@models/backoffice/users/user";
 import { IDataTableResponse } from "@generals/Interfaces"
-import { MessageType, Response } from "../types/user";
+import { MessageType, ResponseData } from "../types/user";
 import { getRabbitChannel } from "@utils/rabbitmq";
 import Privilege from "@models/backoffice/privileges/privileges";
 import sequelize from "@utils/connection";
@@ -29,6 +30,10 @@ class UserRepository {
         return User.findByPk(id)
     }
 
+    async findByUsername(username: string): Promise<IUser | null> {
+        return User.findOne({ where: { username } })
+    }
+
     async create(userData: IUser): Promise<User> {
         let { privileges, ...userDetails } = userData
 
@@ -36,11 +41,13 @@ class UserRepository {
 
         let newPrivileges: Array<number> = []
 
-        if(typeof privileges == 'string') {
+        if (typeof privileges == 'string') {
             newPrivileges.push(privileges)
         } else {
             newPrivileges = privileges
         }
+
+        userDetails.password = await bcrypt.hash(userDetails.password, 10)
 
         try {
             const user = await User.create(userDetails, { transaction });
@@ -69,7 +76,7 @@ class UserRepository {
         return User.destroy({ where: { id } })
     }
 
-    async bulkCreate(path: string): Promise<Response> {
+    async bulkCreate(path: string): Promise<ResponseData> {
         const channel = getRabbitChannel()
         await channel.assertQueue('IMPORT_USER')
 

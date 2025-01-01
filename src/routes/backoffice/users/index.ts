@@ -18,6 +18,7 @@ import {
   getUsersDataTable
 } from "@controllers/backoffice/users/index";
 import { uploadImage } from "@utils/upload";
+import { isAuthenticated } from "@middleware/authMiddleware";
 
 router.get("/users", getUsers);
 

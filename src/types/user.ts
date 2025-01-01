@@ -15,7 +15,7 @@ export type TemplateUser = {
     data?: any
 }
 
-export type Response = {
+export type ResponseData = {
     responseCode: number
     responseMessage: string
 }

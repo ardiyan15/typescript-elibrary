@@ -51,6 +51,17 @@
     <% }) %>
   </li>
   <% }) %>
+  <hr class="sidebar-divider" />
+  <li class="nav-item">
+    <form action="/backoffice/logout" method="POST">
+      <button
+        class="btn btn-link"
+        style="text-decoration: none; color: rgba(255, 255, 255, 0.8)"
+      >
+        Logout
+      </button>
+    </form>
+  </li>
   <hr class="sidebar-divider d-none d-md-block" />
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>

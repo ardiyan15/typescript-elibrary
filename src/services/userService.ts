@@ -2,17 +2,26 @@ import { promises as fsPromises } from "fs";
 import path from "path";
 import { validationResult, ValidationError } from "express-validator";
 import moment from "moment";
+import bcrypt from 'bcrypt'
 
 import userRepository from "@repositories/userRepository";
 import { IUser, IUserResponse } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
-import { Request } from "express";
-import { CreateUserResult, TemplateUser, Response } from '../types/user'
+import { Request, Response } from "express";
+import { CreateUserResult, TemplateUser, ResponseData } from '../types/user'
+import { IUserLogin } from '@generals/Interfaces'
+import { generateToken } from '@utils/jwt'
+import AuthService from '@services/authService'
 
+declare module 'express-session' {
+    interface SessionData {
+        jwt?: string
+    }
+}
 
 class UserService {
-    async getAllUsers(start: number, length: number, search: {value: string, regex: string}): Promise<IUserResponse> {
-        const {data, recordsTotal, recordsFiltered} = await userRepository.findAll(start, length, search)
+    async getAllUsers(start: number, length: number, search: { value: string, regex: string }): Promise<IUserResponse> {
+        const { data, recordsTotal, recordsFiltered } = await userRepository.findAll(start, length, search)
 
         const encryptedData = data.map(user => {
             const encryptedId = encrypt(user.id.toString());
@@ -50,6 +59,26 @@ class UserService {
         return user;
     }
 
+    async verifyUser(username: string, password: string): Promise<IUserLogin> {
+        const user = await userRepository.findByUsername(username)
+        let result: IUserLogin
+
+        if (user) {
+            const isPasswordValid = await bcrypt.compare(password, user.password)
+            if (isPasswordValid) {
+                return result = {
+                    isUserValid: true,
+                    data: user
+                }
+            }
+        }
+
+        return {
+            isUserValid: false,
+            data: null
+        }
+    }
+
     async createUser(request: Request): Promise<CreateUserResult> {
         const errors = validationResult(request)
 
@@ -62,7 +91,7 @@ class UserService {
         }
 
         let image = request.file.filename
-        
+
         request.body.image = image
 
         const userData: Partial<IUser> = request.body;
@@ -113,8 +142,21 @@ class UserService {
         }
     }
 
-    async bulkCreate(path: string): Promise<Response> {
+    async bulkCreate(path: string): Promise<ResponseData> {
         return userRepository.bulkCreate(path)
+    }
+
+    async generateJwtToken(dataId: string | number, dataUsername: string): Promise<string> {
+        let id = encrypt(dataId.toString())
+        let username = encrypt(dataUsername)
+
+        const payload = { id, username }
+        const token = generateToken(payload)
+        return token
+    }
+
+    async storeJwtToken(req: Request, res: Response, token: string): Promise<void> {
+        req.session.jwt = token
     }
 }
 
