@@ -9,6 +9,7 @@ Build Web Application using Express Typescript
    - Datatable Serverside
    - User Role Management
    - Authentication Login
+   - User Authorization
 
 2. Tech Stack
    - ExpressJs
@@ -40,5 +41,8 @@ Build Web Application using Express Typescript
    ![{D612D036-CD68-4E9C-A04F-765AC9F8827C}](https://github.com/user-attachments/assets/7886b57d-3ad2-4b51-b4f1-ff4eb7da665f)
 
    ![{75FA1512-5473-437D-9227-F8CC4A159FAC}](https://github.com/user-attachments/assets/b6ffb6e8-bbac-4244-a5e1-c7740866ce84)
+
+   ![{016D7C01-0A73-4D23-8D2F-0E54B6EBAD8C}](https://github.com/user-attachments/assets/a924e1bb-8f9a-400c-b121-ffce368a4087)
+
 
 
