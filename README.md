@@ -8,6 +8,7 @@ Build Web Application using Express Typescript
    - Import User Data
    - Datatable Serverside
    - User Role Management
+   - Authentication Login
 
 2. Tech Stack
    - ExpressJs
@@ -16,6 +17,7 @@ Build Web Application using Express Typescript
    - Sequelize
    - Redis
    - RabbitMQ
+   - JWT
    - MVC and Repository Pattern
    - Sweetalert 2
    - SB Admin 2 Template
@@ -24,6 +26,9 @@ Build Web Application using Express Typescript
 
 
 3. Screeshot
+   
+   ![{53FF336F-1468-4021-BD95-ABE601BA0870}](https://github.com/user-attachments/assets/32edb962-4e74-4fa2-8ff6-9e61700855bf)
+
    ![{E6E4D9CD-4D4A-4F6D-8693-41280243E2C1}](https://github.com/user-attachments/assets/2c799eab-0eec-482f-81b6-7615e8bba9f0)
 
    ![{038A31ED-B20C-45AF-A6D1-9CF78B180272}](https://github.com/user-attachments/assets/941bc55e-8650-463a-9e6b-2c022d3d9b46)
