@@ -1,7 +1,7 @@
 import 'module-alias/register';
 import path from "path";
 
-import express from "express";
+import express, {Request, Response, NextFunction} from "express";
 import session from "express-session";
 import flash from "connect-flash";
 
@@ -56,6 +56,18 @@ app.use(isAuthorized)
 app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)
 app.use("/backoffice", languageRoutes)
+
+app.use((req, res, next) => {
+  const menus = res.locals.menus ? [...res.locals.menus] : []
+  res.render('backoffice/NotFound', {
+    menus
+  })
+});
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  const menus = res.locals.menus ? [...res.locals.menus] : []
+  res.render("backoffice/Error", {menus})
+});
 
 sequelize
   .sync({ alter: true })
