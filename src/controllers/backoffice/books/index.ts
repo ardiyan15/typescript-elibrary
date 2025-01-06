@@ -4,7 +4,7 @@ import Book from "@models/backoffice/books/book";
 import { encrypt } from "@utils/secure";
 import sequelize from "@utils/connection";
 
-export const getBook: RequestHandler = async (req, res, next) => {
+export const getBook: RequestHandler = async (req, res) => {
   const flashMessage = req.flash();
 
   const books = await Book.findAll({
@@ -38,7 +38,7 @@ export const getBook: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const getAddBook: RequestHandler = (req, res, next) => {
+export const getAddBook: RequestHandler = (_, res) => {
   res.render("backoffice/books/form", {
     formTitle: "Add Book",
     buttonText: "Submit",
@@ -49,10 +49,7 @@ export const getAddBook: RequestHandler = (req, res, next) => {
 export const saveBook: RequestHandler = async (
   req,
   res,
-  next
 ): Promise<any> => {
-  console.log(req.body);
-  return;
   const {
     title,
     category,

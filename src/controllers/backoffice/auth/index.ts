@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
 import userService from '@services/userService'
 
-export const index = async (req: Request, res: Response, next: NextFunction) => {
+export const index = async (req: Request, res: Response) => {
     const flashMessage = req.flash("failed");
 
     if(req.session.jwt) {
@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response) => {
 
     if (result.isUserValid) {
         const token = await userService.generateJwtToken(result.data.id, result.data.username)
-        await userService.storeJwtToken(req, res, token)
+        await userService.storeJwtToken(req, token)
         res.redirect('/backoffice/home')
     } else {
         req.flash("failed", "Invalid Username or Password")

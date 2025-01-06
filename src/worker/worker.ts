@@ -13,12 +13,12 @@ const startWorker = async () => {
 
     channel.consume(QUEUE, async (msg) => {
         if (msg) {
-            let data = JSON.parse(msg.content.toString())
+            const data = JSON.parse(msg.content.toString())
 
             if(data.messageType === 'Import User') {
                 console.log("Proccessing Import User")
                 console.time("Processing Time");
-                const result = await importUser(data.path) 
+                const result = await importUser(data.path)
                 User.bulkCreate(result.users)
                 console.timeEnd("Processing Time");
                 console.log("Finished Import User")

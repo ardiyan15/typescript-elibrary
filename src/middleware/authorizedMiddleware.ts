@@ -8,7 +8,7 @@ interface SubMenu {
     id: number
 }
 
-const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
+const isAuthorized = (_: Request, res: Response, next: NextFunction) => {
     const subMenu: SubMenu = res.locals.subMenu
     const privileges: Privilege[] = res.locals.privileges
 

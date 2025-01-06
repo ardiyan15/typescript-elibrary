@@ -7,11 +7,10 @@ import bcrypt from 'bcrypt'
 import userRepository from "@repositories/userRepository";
 import { IUser, IUserResponse } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
-import { Request, Response } from "express";
+import { Request } from "express";
 import { CreateUserResult, TemplateUser, ResponseData } from '../types/user'
 import { IUserLogin } from '@generals/Interfaces'
 import { generateToken } from '@utils/jwt'
-import AuthService from '@services/authService'
 
 declare module 'express-session' {
     interface SessionData {
@@ -66,10 +65,12 @@ class UserService {
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password)
             if (isPasswordValid) {
-                return result = {
+                result = {
                     isUserValid: true,
                     data: user
                 }
+
+                return result
             }
         }
 
@@ -82,15 +83,16 @@ class UserService {
     async createUser(request: Request): Promise<CreateUserResult> {
         const errors = validationResult(request)
 
+        let results: CreateUserResult
         if (!errors.isEmpty()) {
-            const results = {
+            results = {
                 isError: true,
                 errors: errors.array()
             }
             return results
         }
 
-        let image = request.file.filename
+        const image = request.file.filename
 
         request.body.image = image
 
@@ -99,7 +101,7 @@ class UserService {
 
         userRepository.create(request.body)
 
-        const results = {
+        results = {
             isError: false,
             errors: [] as ValidationError[]
         }
@@ -142,20 +144,20 @@ class UserService {
         }
     }
 
-    async bulkCreate(path: string): Promise<ResponseData> {
-        return userRepository.bulkCreate(path)
+    async bulkCreate(filePath: string): Promise<ResponseData> {
+        return userRepository.bulkCreate(filePath)
     }
 
     async generateJwtToken(dataId: string | number, dataUsername: string): Promise<string> {
-        let id = encrypt(dataId.toString())
-        let username = encrypt(dataUsername)
+        const id = encrypt(dataId.toString())
+        const username = encrypt(dataUsername)
 
         const payload = { id, username }
         const token = generateToken(payload)
         return token
     }
 
-    async storeJwtToken(req: Request, res: Response, token: string): Promise<void> {
+    async storeJwtToken(req: Request, token: string): Promise<void> {
         req.session.jwt = token
     }
 }

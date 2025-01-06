@@ -13,8 +13,8 @@ const menuMiddleware = async(req: Request, res: Response, next: NextFunction) =>
 
     const token = req.session.jwt
     const Auth = new AuthService(token)
-        
-    let userId = Auth.getUser().id
+
+    const userId = Auth.getUser().id
     const basePath = req.originalUrl.split("?")[0];
 
     try {
@@ -29,7 +29,7 @@ const menuMiddleware = async(req: Request, res: Response, next: NextFunction) =>
                             model: User,
                             as: 'user',
                             through: {
-                                where: {userId: userId},
+                                where: {userId},
                                 attributes: []
                             },
                             required: true
@@ -40,7 +40,7 @@ const menuMiddleware = async(req: Request, res: Response, next: NextFunction) =>
         })
 
         const subMenu = await Submenu.findOne({where: {url: basePath}, attributes: ['id'], raw: true})
-        const privileges = await Privilege.findAll({where: {userId: userId}, raw: true})
+        const privileges = await Privilege.findAll({where: {userId}, raw: true})
 
         res.locals.basePath = basePath
         res.locals.menus = menus

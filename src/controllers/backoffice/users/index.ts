@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { ValidationError } from "express-validator";
 
 import userService from '@services/userService';
 import { User, TemplateUser } from '../../../types/user'
 import subMenuService from "@services/subMenuService";
 
-export const getUsersDataTable = async (req: Request, res: Response, next: NextFunction) => {
-  const start = parseInt(req.query.start as string) || 0
-  const length = parseInt(req.query.length as string) || 0
+export const getUsersDataTable = async (req: Request, res: Response) => {
+  const start = parseInt(req.query.start as string, 10) || 0
+  const length = parseInt(req.query.length as string, 10) || 0
   const search = req.query.search as { value: string, regex: string }
 
   const results = await userService.getAllUsers(start, length, search)
@@ -20,7 +20,7 @@ export const getUsersDataTable = async (req: Request, res: Response, next: NextF
   })
 }
 
-export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsers = async (req: Request, res: Response) => {
   const flashMessage = req.flash("success");
 
   res.render("backoffice/users/index", {
@@ -28,7 +28,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
   });
 };
 
-export const userForm = async (req: Request, res: Response, next: NextFunction) => {
+export const userForm = async (_: Request, res: Response) => {
   const url = '/backoffice/users/saveuser'
   const user: User[] = [];
   const errors: ValidationError[] = []
@@ -37,7 +37,7 @@ export const userForm = async (req: Request, res: Response, next: NextFunction) 
   res.render("backoffice/users/form", { url, user, errors, subMenus, basePath });
 }
 
-export const saveUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const saveUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await userService.createUser(req)
     if (result.isError) {
@@ -56,7 +56,7 @@ export const saveUser = async (req: Request, res: Response, next: NextFunction):
   }
 }
 
-export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.body.userId
     await userService.deleteUser(userId)
@@ -67,7 +67,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   }
 }
 
-export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const url = '/backoffice/users/update'
     const userId = req.params.id
@@ -80,7 +80,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
   }
 }
 
-export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.body.id
     await userService.updateUser(userId, req.body)
@@ -91,7 +91,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
   }
 }
 
-export const template = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const template = async (_: Request, res: Response): Promise<void> => {
   const result: TemplateUser = await userService.download('user-template.csv')
 
   if (result.responseCode === 200) {
@@ -101,14 +101,14 @@ export const template = async (req: Request, res: Response, next: NextFunction):
   }
 }
 
-export const importUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const importUser = async (_: Request, res: Response): Promise<void> => {
   res.render("backoffice/users/import")
 }
 
-export const saveImportUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const saveImportUser = async (req: Request, res: Response): Promise<void> => {
   const response = await userService.bulkCreate(req.file.path)
 
-  if (response.responseCode == 200) {
+  if (response.responseCode === 200) {
     req.flash("success", "Successfully import User")
     res.redirect('/backoffice/users')
   } else {

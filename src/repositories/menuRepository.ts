@@ -1,5 +1,4 @@
 import Menu, { IMenu } from "@models/backoffice/menus/menu";
-import Submenu from "@models/backoffice/submenus/submenu";
 
 class MenuRepository {
     async findAll(): Promise<IMenu[]> {
@@ -7,4 +6,4 @@ class MenuRepository {
     }
 }
 
-export default new MenuRepository
+export default new MenuRepository()

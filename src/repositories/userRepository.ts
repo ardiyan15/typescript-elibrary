@@ -35,13 +35,13 @@ class UserRepository {
     }
 
     async create(userData: IUser): Promise<User> {
-        let { privileges, ...userDetails } = userData
+        const { privileges, ...userDetails } = userData
 
         const transaction = await sequelize.transaction()
 
-        let newPrivileges: Array<number> = []
+        let newPrivileges: number[] = []
 
-        if (typeof privileges == 'string') {
+        if (typeof privileges === 'string') {
             newPrivileges.push(privileges)
         } else {
             newPrivileges = privileges
@@ -80,22 +80,22 @@ class UserRepository {
         const channel = getRabbitChannel()
         await channel.assertQueue('IMPORT_USER')
 
-        let message: MessageType = {
+        const message: MessageType = {
             'messageType': 'Import User',
             'path': path
         }
 
-        let messageData = JSON.stringify(message)
+        const messageData = JSON.stringify(message)
 
         try {
             channel.sendToQueue('IMPORT_USER', Buffer.from(messageData))
-            let response = {
+            const response = {
                 'responseCode': 200,
                 'responseMessage': 'Success'
             }
             return response
         } catch (error) {
-            let response = {
+            const response = {
                 'responseCode': 500,
                 'responseMessage': error
             }

@@ -14,4 +14,4 @@ class SubMenuRepository {
     }
 }
 
-export default new SubMenuRepository
+export default new SubMenuRepository()

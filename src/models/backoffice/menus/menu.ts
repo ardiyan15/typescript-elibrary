@@ -9,8 +9,8 @@ export interface IMenu {
 class Menu extends Model implements IMenu {
     public id: number;
     public name: string
-    public order: number 
-    
+    public order: number
+
     static initModel(sequelize: Sequelize) {
         Menu.init({
             id: {

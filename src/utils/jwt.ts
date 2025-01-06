@@ -12,4 +12,4 @@ export const verifyToken = (token: string): JwtPayload | null => {
     } catch (error) {
         return null
     }
-} 
+}

@@ -1,7 +1,8 @@
+require('dotenv').config();
 import 'module-alias/register';
 import path from "path";
 
-import express, {Request, Response, NextFunction} from "express";
+import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import flash from "connect-flash";
 
@@ -20,6 +21,9 @@ import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
+import { sendMessage } from '@utils/telegram';
+
+const port = process.env.PORT || 3000;
 
 const app = express();
 
@@ -57,23 +61,24 @@ app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)
 app.use("/backoffice", languageRoutes)
 
-app.use((req, res, next) => {
+app.use((_, res) => {
   const menus = res.locals.menus ? [...res.locals.menus] : []
   res.render('backoffice/NotFound', {
     menus
   })
 });
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _: Request, res: Response, _next: NextFunction) => {
+  sendMessage(err.message)
   const menus = res.locals.menus ? [...res.locals.menus] : []
-  res.render("backoffice/Error", {menus})
+  res.status(500).render("backoffice/Error", { menus })
 });
 
 sequelize
   .sync({ alter: true })
   .then(async () => {
     await connectRabbitMQ()
-    app.listen(3000, () => console.log("Server is running"));
+    app.listen(port, () => console.log("Server is running"));
   })
   .catch((err) => {
     console.log(err);

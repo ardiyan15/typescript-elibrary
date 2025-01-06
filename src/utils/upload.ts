@@ -2,10 +2,10 @@ import multer from 'multer'
 import path from 'path'
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (_, _file, cb) => {
         cb(null, path.join(__dirname, '../public/img/users'))
     },
-    filename: (req, file, cb) => {
+    filename: (_, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`)
     }
 })

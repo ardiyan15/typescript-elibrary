@@ -1,5 +1,4 @@
-import { DataTypes, HasManyAddAssociationMixin, Model, Sequelize } from "sequelize";
-import Submenu from "@models/backoffice/submenus/submenu";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
 export interface IUser {
   id?: number | string;
