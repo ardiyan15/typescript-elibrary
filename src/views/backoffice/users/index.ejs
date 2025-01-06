@@ -4,8 +4,14 @@ include('../includes/navigation.ejs')%>
 <input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
 <div class="container-fluid">
   <form action="/backoffice/users/template" method="POST">
-    <a href="/backoffice/users/form" class="btn btn-primary btn-sm mb-3 rounded"><%= translate('add user') %></a>
-    <button type="submit" class="btn btn-success btn-sm mb-3 rounded"><%= translate('download template') %></button>
+    <a href="/backoffice/users/form" class="btn btn-primary btn-sm mb-3 rounded">
+      <i class="fas fa-user"></i>
+      <%= translate('add user') %>
+    </a>
+    <button type="submit" class="btn btn-success btn-sm mb-3 rounded">
+      <i class="fas fa-download"></i>
+      <%= translate('download template') %>
+    </button>
   </form>
   <div class="card shadow">
     <div class="card-header py-3">
@@ -68,8 +74,12 @@ include('../includes/navigation.ejs')%>
             render: function(data, type, row) {
                 return `<form method="POST" action="/backoffice/users/delete/${row.id}" class="d-inline">
                             <div class='d-flex justify-content-center'>
-                                <a href="/backoffice/users/${row.id}" class="mr-2 text-center btn btn-info btn-sm rounded"><%= translate('edit') %></a>
-                                <button type="submit" class="btn btn-danger btn-sm delete-confirm"><%=  translate('delete') %></button>
+                                <a href="/backoffice/users/${row.id}" class="mr-2 text-center btn btn-info btn-sm rounded">
+                                  <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <button type="submit" class="btn btn-danger btn-sm delete-confirm">
+                                  <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
                             </div>
                         </form>`
             }

@@ -106,8 +106,14 @@ include('../includes/navigation.ejs')%>
             </tbody>
           </table>
         </div>
-        <a href="/backoffice/users" class="btn btn-warning btn-sm rounded">Back</a>
-        <button type="submit" class="btn btn-primary btn-sm rounded">Submit</button>
+        <a href="/backoffice/users" class="btn btn-warning btn-sm rounded">
+          <i class="fa fa-arrow-left"></i>
+          <%= translate('back') %>
+        </a>
+        <button type="submit" class="btn btn-primary btn-sm rounded">
+          <i class="fa fa-file" aria-hidden="true"></i>
+          <%= translate('save') %>
+        </button>
       </form>
     </div>
   </div>
