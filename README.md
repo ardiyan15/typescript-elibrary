@@ -12,6 +12,7 @@ Build Web Application using Express Typescript
    - User Authorization
    - 404 Page
    - Error Page
+   - Telegram Notification
 
 2. Tech Stack
    - ExpressJs
