@@ -10,6 +10,8 @@ Build Web Application using Express Typescript
    - User Role Management
    - Authentication Login
    - User Authorization
+   - 404 Page
+   - Error Page
 
 2. Tech Stack
    - ExpressJs
@@ -44,5 +46,8 @@ Build Web Application using Express Typescript
 
    ![{016D7C01-0A73-4D23-8D2F-0E54B6EBAD8C}](https://github.com/user-attachments/assets/a924e1bb-8f9a-400c-b121-ffce368a4087)
 
+   ![{0D7239E4-F453-4666-9FB1-CFD85235F25F}](https://github.com/user-attachments/assets/0a6ee7ea-da5e-4697-80d1-a53096f7408d)
+
+   ![{9F76FC28-1415-465F-9E01-58A989B85D5A}](https://github.com/user-attachments/assets/2693818b-158e-4c84-a251-39b20fd1818d)
 
 
