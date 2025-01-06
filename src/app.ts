@@ -1,4 +1,4 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
 import 'module-alias/register';
 import path from "path";
 
@@ -23,6 +23,7 @@ import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
 import { sendMessage } from '@utils/telegram';
 
+dotenv.config();
 const port = process.env.PORT || 3000;
 
 const app = express();
