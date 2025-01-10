@@ -1,11 +1,12 @@
 import bcrypt from 'bcrypt'
 import { Op } from "sequelize";
+import sequelize from "@utils/connection";
 import User, { IUser } from "@models/backoffice/users/user";
 import { IDataTableResponse } from "@generals/Interfaces"
 import { MessageType, ResponseData } from "../types/user";
 import { getRabbitChannel } from "@utils/rabbitmq";
 import Privilege from "@models/backoffice/privileges/privileges";
-import sequelize from "@utils/connection";
+import Submenu from '@models/backoffice/submenus/submenu';
 
 class UserRepository {
     async findAll(start: number, length: number, search: { value: string, regex: string }): Promise<IDataTableResponse<IUser>> {
@@ -27,7 +28,14 @@ class UserRepository {
     }
 
     async findById(id: number | string): Promise<IUser | null> {
-        return User.findByPk(id)
+        return User.findByPk(id, {
+            include: [
+                {
+                    model: Submenu,
+                    as: 'submenu'
+                }
+            ]
+        })
     }
 
     async findByUsername(username: string): Promise<IUser | null> {
@@ -36,8 +44,6 @@ class UserRepository {
 
     async create(userData: IUser): Promise<User> {
         const { privileges, ...userDetails } = userData
-
-        const transaction = await sequelize.transaction()
 
         let newPrivileges: number[] = []
 
@@ -48,6 +54,8 @@ class UserRepository {
         }
 
         userDetails.password = await bcrypt.hash(userDetails.password, 10)
+
+        const transaction = await sequelize.transaction()
 
         try {
             const user = await User.create(userDetails, { transaction });
@@ -68,8 +76,52 @@ class UserRepository {
     }
 
     async update(id: string, userData: Partial<IUser>): Promise<[number]> {
-        delete userData.id
-        return User.update(userData, { where: { id } });
+        const { privileges, ...userDetails } = userData
+
+        let newPrivileges: number[] = []
+        if (typeof privileges === 'string') {
+            newPrivileges.push(privileges)
+        } else {
+            newPrivileges = privileges
+        }
+        const submenuIds = newPrivileges.map((id) => Number(id))
+
+        const updateData: IUser = {
+            username: userDetails.username,
+            email: userDetails.email,
+            roles: userDetails.roles
+        }
+
+        if (userDetails.password) {
+            updateData.password = await bcrypt.hash(userDetails.password, 10)
+        }
+
+        if (userDetails.image) {
+            updateData.image = userDetails.image
+        }
+
+        const transaction = await sequelize.transaction()
+
+        try {
+            const user = await User.update(updateData, { where: { id }, transaction });
+            await Privilege.destroy({
+                where: { userId: id },
+                transaction
+            });
+
+            await Privilege.bulkCreate(
+                submenuIds.map((submenuId) => ({
+                    userId: id,
+                    submenuId
+                })),
+                { transaction }
+            )
+            await transaction.commit()
+            return user
+        } catch (error) {
+            await transaction.rollback()
+            return error
+        }
     }
 
     async delete(id: string): Promise<number> {

@@ -8,7 +8,7 @@ import userRepository from "@repositories/userRepository";
 import { IUser, IUserResponse } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
 import { Request } from "express";
-import { CreateUserResult, TemplateUser, ResponseData } from '../types/user'
+import { UserResult, TemplateUser, ResponseData } from '../types/user'
 import { IUserLogin } from '@generals/Interfaces'
 import { generateToken } from '@utils/jwt'
 
@@ -54,7 +54,7 @@ class UserService {
 
     async getUserBydId(id: string): Promise<IUser | null> {
         const userId = decrypt(id)
-        const user = userRepository.findById(userId)
+        const user = await userRepository.findById(userId)
         return user;
     }
 
@@ -80,10 +80,10 @@ class UserService {
         }
     }
 
-    async createUser(request: Request): Promise<CreateUserResult> {
-        const errors = validationResult(request)
+    async createUser(req: Request): Promise<UserResult> {
+        const errors = validationResult(req)
 
-        let results: CreateUserResult
+        let results: UserResult
         if (!errors.isEmpty()) {
             results = {
                 isError: true,
@@ -92,14 +92,14 @@ class UserService {
             return results
         }
 
-        const image = request.file.filename
+        const image = req.file.filename
 
-        request.body.image = image
+        req.body.image = image
 
-        const userData: Partial<IUser> = request.body;
+        const userData: Partial<IUser> = req.body;
         delete userData.id;
 
-        userRepository.create(request.body)
+        userRepository.create(req.body)
 
         results = {
             isError: false,
@@ -110,10 +110,27 @@ class UserService {
 
     }
 
-    async updateUser(id: string, userData: Partial<IUser>): Promise<[number]> {
-        delete userData.id
-        const userId = decrypt(id)
-        return userRepository.update(userId, userData)
+    async updateUser(req: Request): Promise<[number] | UserResult> {
+        const errors = validationResult(req)
+
+        let results: UserResult
+
+        if (!errors.isEmpty()) {
+            results = {
+                isError: true,
+                errors: errors.array()
+            }
+            return results
+        }
+
+        if(req.file) {
+            const image = req.file.filename
+            req.body.image = image
+        }
+
+        const userId = decrypt(req.body.id)
+        delete req.body.id
+        return userRepository.update(userId, req.body)
     }
 
     async deleteUser(id: string): Promise<number> {

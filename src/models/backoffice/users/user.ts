@@ -3,12 +3,15 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 export interface IUser {
   id?: number | string;
   username: string;
-  password: string
+  password?: string
   roles: string;
   email: string;
-  image: string;
+  image?: string;
   createdAt?: Date | string
   updatedAt?: Date | string
+  submenu?: {
+    id: number
+  }[]
   privileges?: []
 }
 

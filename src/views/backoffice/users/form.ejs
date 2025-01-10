@@ -12,7 +12,7 @@ include('../includes/navigation.ejs')%>
         <div class="row">
           <div class="col-6">
             <div class="form-group">
-              <label for="username">Username</label>
+              <label for="username"><%= translate('username') %></label>
               <input
                 type="text"
                 class="form-control <%= errors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
@@ -81,7 +81,15 @@ include('../includes/navigation.ejs')%>
               />
             </div>
           </div>
-          <table class="table">
+          <% if(formType === 'update') { %>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Current Photo</label>
+            </div>
+            <img src="/img/users/<%= user.image %>" alt="" width="100">
+          </div>
+          <% } %>
+          <table class="table mt-3">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -100,7 +108,7 @@ include('../includes/navigation.ejs')%>
                   <td><%= subMenu.name %></td>
                   <td><%= subMenu.menu.name %></td>
                   <td><%= subMenu.code %></td>
-                  <td><input type="checkbox" name="privileges" value="<%= subMenu.id %>" class="privilege-item" /></td>
+                  <td><input type="checkbox" name="privileges" value="<%= subMenu.id %>" class="privilege-item" <%= userSubMenus.includes(subMenu.id) == true ? "checked" : "" %> /></td>
                 </tr>
               <% }) %>
             </tbody>

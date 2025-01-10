@@ -8,7 +8,7 @@ export type User = {
     photo: string
 }
 
-export type CreateUserResult = { isError: boolean, errors: ValidationError[] }
+export type UserResult = { isError: boolean, errors: ValidationError[] }
 export type TemplateUser = {
     responseCode: number
     responseMessage: string

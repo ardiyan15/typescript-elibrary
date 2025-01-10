@@ -33,8 +33,10 @@ export const userForm = async (_: Request, res: Response) => {
   const user: User[] = [];
   const errors: ValidationError[] = []
   const subMenus = await subMenuService.getAllSubMenus()
+  const userSubMenus: number[] = []
+  const formType = 'create'
   const basePath = '/backoffice/users'
-  res.render("backoffice/users/form", { url, user, errors, subMenus, basePath });
+  res.render("backoffice/users/form", { url, user, errors, subMenus, basePath, userSubMenus, formType });
 }
 
 export const saveUser = async (req: Request, res: Response): Promise<void> => {
@@ -70,11 +72,18 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const url = '/backoffice/users/update'
+    const formType = 'update'
     const userId = req.params.id
     const user = await userService.getUserBydId(userId)
+    const subMenus = await subMenuService.getAllSubMenus()
+    const userSubMenus: number[] = []
+    user.submenu.forEach(submenu => {
+      userSubMenus.push(submenu.id)
+    })
+
     const userIdEncrypted = req.params.id
     const errors: ValidationError[] = []
-    res.render("backoffice/users/form", { user, url, errors, userId: userIdEncrypted })
+    res.render("backoffice/users/form", { user, url, errors, userId: userIdEncrypted, subMenus, userSubMenus, formType })
   } catch (error) {
     res.send(error)
   }
@@ -82,8 +91,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.body.id
-    await userService.updateUser(userId, req.body)
+    await userService.updateUser(req)
     req.flash("success", "Successfully update User")
     res.redirect('/backoffice/users')
   } catch (error) {

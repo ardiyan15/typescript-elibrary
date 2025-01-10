@@ -1,5 +1,5 @@
 import express from "express";
-import { userValidator } from "@validators/user";
+import { userValidator, userUpdateValidator } from "@validators/user";
 import multer from "multer";
 
 const router = express.Router();
@@ -31,9 +31,9 @@ router.get("/users/:id", getUser)
 
 router.post("/users/saveuser", uploadImage, userValidator, saveUser)
 
-router.post("/users/delete", deleteUser)
+router.post("/users/update", uploadImage, userUpdateValidator, updateUser)
 
-router.post("/users/update", updateUser)
+router.post("/users/delete", deleteUser)
 
 router.post("/users/template", template)
 
