@@ -16,11 +16,12 @@
   <li class="nav-item active">
     <a class="nav-link" href="/backoffice">
       <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>Dashboard</span></a
-    >
+      <span>Dashboard</span>
+    </a>
   </li>
   <hr class="sidebar-divider" />
   <div class="sidebar-heading">Administration</div>
+
   <% menus.forEach(menu => { %>
   <li class="nav-item">
     <a
@@ -34,23 +35,28 @@
       <i class="<%= menu.icon %>"></i>
       <span><%= translate(menu.name) %></span>
     </a>
-    <% menu.submenus.forEach(subMenu => { %>
-      <div
-        id="collapse<%= menu.id %>"
-        class="collapse <%= basePath == subMenu.url ? 'show' : '' %>"
-        aria-labelledby="headingTwo"
-        data-parent="#accordionSidebar"
-      >
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header"><%= translate(menu.name) %></h6>
-          <a class="collapse-item <%= basePath == subMenu.url ? 'active' : '' %>" href="<%= subMenu.url %>"
-            ><%= translate(subMenu.name) %></a
-          >
-        </div>
+
+    <div
+      id="collapse<%= menu.id %>"
+      class="collapse <%= menu.submenus.some(subMenu => basePath === subMenu.url) ? 'show' : '' %>"
+      aria-labelledby="heading<%= menu.id %>"
+      data-parent="#accordionSidebar"
+    >
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 class="collapse-header"><%= translate(menu.name) %></h6>
+        <% menu.submenus.forEach(subMenu => { %>
+        <a
+          class="collapse-item <%= basePath === subMenu.url ? 'active' : '' %>"
+          href="<%= subMenu.url %>"
+        >
+          <%= translate(subMenu.name) %>
+        </a>
+        <% }) %>
       </div>
-    <% }) %>
+    </div>
   </li>
   <% }) %>
+
   <hr class="sidebar-divider" />
   <li class="nav-item">
     <form action="/backoffice/logout" method="POST">
