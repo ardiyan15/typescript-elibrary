@@ -15,13 +15,14 @@ import language from '@utils/language';
 import backHomeRoutes from "@routes/backoffice/home/home";
 import userRoutes from "@routes/backoffice/users/index";
 import languageRoutes from '@routes/backoffice/language/index'
+import profileRoutes from '@routes/backoffice/profiles/index'
 import authRoutes from '@routes/backoffice/auth/index'
 
 import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
-import { sendMessage } from '@utils/telegram';
+// import { sendMessage } from '@utils/telegram';
 
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -60,6 +61,7 @@ app.use(isAuthorized)
 app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)
 app.use("/backoffice", languageRoutes)
+app.use('/backoffice', profileRoutes)
 
 app.use((_, res) => {
   const menus = res.locals.menus ? [...res.locals.menus] : []
@@ -68,9 +70,10 @@ app.use((_, res) => {
   })
 });
 
-app.use((err: Error, _: Request, res: Response, _next: NextFunction) => {
-  sendMessage(err.message)
+app.use((_err: Error, _: Request, res: Response, _next: NextFunction) => {
+  // sendMessage(err.message)
   const menus = res.locals.menus ? [...res.locals.menus] : []
+  console.log(_err)
   res.status(500).render("backoffice/Error", { menus })
 });
 

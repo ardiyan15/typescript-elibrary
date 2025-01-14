@@ -52,8 +52,12 @@ class UserService {
         }
     }
 
-    async getUserBydId(id: string): Promise<IUser | null> {
-        const userId = decrypt(id)
+    async getUserBydId(id: string, isEncrypt: boolean = true): Promise<IUser | null> {
+        let userId = id
+        if (isEncrypt) {
+            userId = decrypt(id)
+        }
+        
         const user = await userRepository.findById(userId)
         return user;
     }

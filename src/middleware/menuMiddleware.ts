@@ -46,6 +46,7 @@ const menuMiddleware = async(req: Request, res: Response, next: NextFunction) =>
         res.locals.menus = menus
         res.locals.subMenu = subMenu
         res.locals.privileges = privileges
+        res.locals.auth = Auth
 
         next()
     } catch(error) {

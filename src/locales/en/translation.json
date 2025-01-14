@@ -23,5 +23,7 @@
     "master user": "Master User",
     "edit": "Edit",
     "delete": "Delete",
-    "back": "Back"
+    "back": "Back",
+    "profile": "Profile",
+    "setting": "Setting"
 }

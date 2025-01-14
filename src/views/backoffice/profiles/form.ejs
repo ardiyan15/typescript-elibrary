@@ -1,0 +1,104 @@
+<%- include('../includes/head.ejs') %> <%-
+include('../includes/navigation.ejs')%>
+
+<div class="container-fluid">
+  <div class="card shadow">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Edit Profile</h6>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="/backoffice/profile" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<%= user.id ? user.id : '' %>">
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="username"><%= translate('username') %></label>
+              <input
+                type="text"
+                class="form-control <%= errors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
+                id="username"
+                name="username"
+                placeholder="Username"
+                value="<%= user.username ? user.username : '' %>"
+              />
+              <% errors.forEach(error => { if(error.path === 'username') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input
+                type="password"
+                class="form-control <%= errors.find(e => e.path === 'password') ? 'is-invalid' : '' %>"
+                id="exampleInputPassword1"
+                name="password"
+                placeholder="Password"
+              />
+              <% errors.forEach(error => { if(error.path === 'password') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                class="form-control <%= errors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
+                id="email"
+                name="email"
+                placeholder="Email"
+                value="<%= user.email ? user.email : '' %>"
+              />
+              <% errors.forEach(error => { if(error.path === 'email') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select name="roles" id="role" class="form-control <%= errors.find(e => e.path === 'roles') ? 'is-invalid' : '' %>">
+                <option value="">-- Select Role --</option>
+                <option value="admin" <%= user.roles == 'admin' ? "selected" : "" %>>Admin</option>
+                <option value="user" <%= user.roles == 'user' ? "selected" : "" %>>User</option>
+              </select>
+              <% errors.forEach(error => { if(error.path === 'roles') { %>
+                <span class="text-danger"><%= error.msg %></span> <br />
+              <% }}) %>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="profile">Photo Profile</label>
+              <input
+                type="file"
+                name="user-image"
+                id="profile"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Current Photo</label>
+            </div>
+            <img src="/img/users/<%= user.image %>" alt="" width="100">
+          </div>
+        </div>
+        <a href="/backoffice/profile" class="btn btn-warning btn-sm rounded">
+          <i class="fa fa-arrow-left"></i>
+          <%= translate('back') %>
+        </a>
+        <button type="submit" class="btn btn-primary btn-sm rounded">
+          <i class="fa fa-file" aria-hidden="true"></i>
+          <%= translate('save') %>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../includes/end.ejs') %>
