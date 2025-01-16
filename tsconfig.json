@@ -16,14 +16,15 @@
       "@utils/*": ["./src/utils/*"],
       "@repositories/*": ["./src/repositories/*"],
       "@models/*": ["./src/models/*"],
-      "@types/*": ["./src/types/*"],
+      "@types/*": ["src/customTypes/*"],
       "@controllers/*": ["./src/controllers/*"],
       "@validators/*": ["./src/validators/*"],
       "@routes/*": ["./src/routes/*"],
       "@generals/*": ["src/generals/*"],
-      "@middleware/*": ["src/middleware/*"]
+      "@middleware/*": ["src/middleware/*"],
+      "@customTypes/*": ["src/customTypes/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "src/customTypes"]
   },
   "include": ["src/**/*"]
 }

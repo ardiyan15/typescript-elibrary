@@ -2,71 +2,28 @@
 include('../includes/navigation.ejs')%>
 <script src="/js/sweetalert2.all.min.js"></script>
 <div class="container-fluid">
-  <a href="/backoffice/books/form" class="btn btn-primary btn-sm mb-3 rounded"
-    >Add Book</a
+  <a href="/backoffice/books/create" class="btn btn-primary btn-sm mb-3 rounded"
+    ><%= translate('add book') %></a
   >
   <div class="card shadow">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Master Book</h6>
+      <h6 class="m-0 font-weight-bold text-primary"><%= translate('master book') %></h6>
     </div>
     <div class="card-body">
       <input type="hidden" id="text-alert" value="<%= flashMessage[0] %>" />
-      <table class="table table-bordered dataTable" id="dataTable">
+      <table class="table table-bordered dataTable" id="bookTable">
         <thead>
           <tr>
             <th class="text-center">No</th>
-            <th class="text-center">Title</th>
-            <th class="text-center">Author</th>
-            <th class="text-center">Image</th>
-            <th class="text-center">Created Date</th>
-            <th class="text-center">Updated Date</th>
-            <th class="text-center">Action</th>
+            <th class="text-center"><%= translate('title') %></th>
+            <th class="text-center"><%= translate('image') %></th>
+            <th class="text-center"><%= translate("created date") %></th>
+            <th class="text-center"><%= translate('updated date') %></th>
+            <th class="text-center"><%= translate('action') %></th>
           </tr>
         </thead>
         <tbody>
-          <% let i = 1; %> <% books.forEach(book => { %>
-          <tr>
-            <td class="text-center"><%= i++ %></td>
-            <td class="text-center"><%= book.title %></td>
-            <td class="text-center"><%= book.author %></td>
-            <td class="text-center">
-              <img
-                width="80"
-                height="30"
-                src="/<%= book.image %>"
-                alt="<%= book.title %>"
-              />
-            </td>
-            <td class="text-center"><%= book.createdAt %></td>
-            <td class="text-center"><%= book.updatedAt %></td>
-            <td class="text-center">
-              <div class="row">
-                <div class="col-md-6 text-right">
-                  <a
-                    href="/backoffice/books/<%= encrypt(book.id.toString(), book.id.toString()) %>"
-                    class="text-center btn btn-info btn-sm rounded"
-                    >Edit
-                  </a>
-                </div>
-                <div class="col-md-6 text-left">
-                  <form method="POST" action="/backoffice/bookdelete">
-                    <input
-                      type="hidden"
-                      value="<%= encrypt(book.id.toString()) %>"
-                      name="bookId"
-                      id="bookId"
-                    />
-                    <button
-                      class="text-center btn btn-danger btn-sm rounded delete-confirm"
-                    >
-                      Delete
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <% }) %>
+          
         </tbody>
       </table>
     </div>
@@ -79,20 +36,58 @@ include('../includes/navigation.ejs')%>
 </script>
 <% } %>
 <script>
-  $(".delete-confirm").on("click", function (e) {
-    e.preventDefault();
-    Swal.fire({
-      title: "Delete Data",
-      icon: "question",
-      iconHtml: "?",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      showCancelButton: true,
-      showCloseButton: true,
-    }).then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        $(this).closest("form").submit();
-      }
+  $(document).ready(function(){
+    $("#bookTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "/backoffice/booksTable",
+      columns: [
+        {
+            data: null,
+            className: 'text-center',
+            render: function(data, type, row, meta) {
+                return meta.row + 1
+            }
+        },
+        { data: 'title', searchable: true, className: 'text-center' },
+        { data: 'image', className: 'text-center', render: function(data, type, row) {
+            return `<img loading="lazy" width="80" height="30" src="/img/books/${row.image}" alt="${row.title}">`
+        }},
+        { data: 'createdAt', className: 'text-center' },
+        { data: 'updatedAt', className: 'text-center' },
+        {
+            data: null,
+            render: function(data, type, row) {
+                return `<form method="POST" action="/backoffice/books/delete/${row.id}" class="d-inline">
+                            <div class='d-flex justify-content-center'>
+                                <a href="/backoffice/books/${row.id}" class="mr-2 text-center btn btn-info btn-sm rounded">
+                                  <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <button type="submit" class="btn btn-danger btn-sm delete-confirm">
+                                  <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </form>`
+            }
+        }
+      ]
+    })
+
+    $(document).on("click", ".delete-confirm", function (e) {
+      e.preventDefault();
+      Swal.fire({
+        title: "Delete Data",
+        icon: "question",
+        iconHtml: "?",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        showCancelButton: true,
+        showCloseButton: true,
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          $(this).closest("form").submit();
+        }
+      });
     });
-  });
+  })
 </script>

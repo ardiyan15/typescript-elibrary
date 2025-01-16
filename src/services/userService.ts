@@ -8,7 +8,7 @@ import userRepository from "@repositories/userRepository";
 import { IUser, IUserResponse } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
 import { Request } from "express";
-import { UserResult, TemplateUser, ResponseData } from '../types/user'
+import { UserResult, TemplateUser, ResponseData } from '@customTypes/user'
 import { IUserLogin } from '@generals/Interfaces'
 import { generateToken } from '@utils/jwt'
 
@@ -57,7 +57,7 @@ class UserService {
         if (isEncrypt) {
             userId = decrypt(id)
         }
-        
+
         const user = await userRepository.findById(userId)
         return user;
     }

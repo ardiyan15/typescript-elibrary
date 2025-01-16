@@ -6,14 +6,11 @@
       <h6 class="m-0 font-weight-bold text-primary"><%= formTitle %></h6>
     </div>
     <div class="card-body">
-      <% action = ''; %> <% if(book.id) { %> <% action =
-      `/backoffice/updatebook/${bookIdEncrypted}` %> <% } else { %> <% action =
-      '/backoffice/books'%> <% } %>
       <form action="<%= action %>" method="POST" enctype="multipart/form-data">
         <input
           type="hidden"
           name="id"
-          value="<%= book.id ? bookIdEncrypted : '' %>"
+          value="<%= book.id ? bookId : '' %>"
         />
         <div class="row">
           <div class="col-md-4 form-group">
@@ -29,108 +26,14 @@
             />
           </div>
           <div class="col-md-4 form-group">
-            <label for="password">Author</label>
-            <input
-              type="text"
-              name="author"
-              id="author"
-              class="form-control"
-              placeholder="Author"
-              value="<%= book.author ? book.author : '' %>"
-            />
-          </div>
-          <div class="col-md-4 form-group">
             <label for="category">Category</label>
             <select name="category" class="form-control" required>
               <option value="">-- Select Category --</option>
-              <option value="Self Development">Self Development</option>
-              <option value="Fiction">Fiction</option>
-              <option value="History">History</option>
-              <option value="Economy">Economy</option>
+              <option value="Self Development" <%= book.category == 'Self Development' ? "selected" : "" %>>Self Development</option>
+              <option value="Fiction" <%= book.category == 'Fiction' ? "selected" : "" %>>Fiction</option>
+              <option value="History" <%= book.category == 'History' ? "selected" : "" %>>History</option>
+              <option value="Economy" <%= book.category == 'Economy' ? "selected" : "" %>>Economy</option>
             </select>
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="text">ISBN</label>
-            <input
-              type="text"
-              name="isbn"
-              id="isbn"
-              class="form-control"
-              placeholder="ISBN"
-              required
-              value="<%= book.ISBN ? book.ISBN : '' %>"
-            />
-          </div>
-          <div class="col-md-2 form-group">
-            <label for="text">Publication Date</label>
-            <input
-              type="date"
-              name="publication_date"
-              id="publication_date"
-              class="form-control datepicker"
-              required
-              value="<%= book.publication_date ? book.publication_date : '' %>"
-            />
-          </div>
-          <div class="col-md-6 form-group">
-            <label for="text">Language</label>
-            <input
-              type="text"
-              name="language"
-              id="language"
-              class="form-control"
-              placeholder="Language"
-              required
-              value="<%= book.language ? book.language : '' %>"
-            />
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="text">Publisher</label>
-            <input
-              type="text"
-              name="publisher"
-              id="publisher"
-              class="form-control"
-              placeholder="Publisher"
-              required
-              value="<%= book.publisher ? book.publisher : '' %>"
-            />
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="text">Number Of Pages</label>
-            <input
-              type="text"
-              name="number_of_pages"
-              id="number_of_pages"
-              class="form-control"
-              placeholder="Number Of Pages"
-              required
-              value="<%= book.number_of_pages ? book.number_of_pages : '' %>"
-            />
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="text">Heavy <small>(kg)</small></label>
-            <input
-              type="text"
-              name="heavy"
-              id="heavy"
-              class="form-control"
-              placeholder="1.0"
-              required
-              value="<%= book.heavy ? book.heavy : '' %>"
-            />
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="text">Width <small>(cm)</small></label>
-            <input
-              type="number"
-              name="width"
-              id="width"
-              class="form-control"
-              placeholder="1.0"
-              required
-              value="<%= book.width ? book.width : '' %>"
-            />
           </div>
           <div class="col-md-4 form-group">
             <% if(book.id) { %>
@@ -139,7 +42,8 @@
                 <img
                   width="100%"
                   height="100"
-                  src="/<%= book.image %>"
+                  loading="lazy"
+                  src="/img/books/<%= book.image %>"
                   alt="<%= book.title %>"
                 />
               </div>
@@ -147,7 +51,7 @@
                 <label for="image">Upload New Image</label>
                 <input
                   type="file"
-                  name="image"
+                  name="book-image"
                   id="image"
                   class="form-control"
                 />
@@ -155,20 +59,8 @@
             </div>
             <% } else { %>
             <label for="image">Image</label>
-            <input type="file" name="image" id="image" class="form-control" />
+            <input type="file" name="book-image" id="image" class="form-control" />
             <% } %>
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="text">Length <small>(cm)</small></label>
-            <input
-              type="number"
-              name="length"
-              id="length"
-              class="form-control"
-              placeholder="1.0"
-              required
-              value="<%= book.length ? book.length : '' %>"
-            />
           </div>
           <div class="col-md-8 form-group">
             <label for="text">Description</label>
@@ -178,26 +70,18 @@
               id="description"
               cols="30"
               rows="5"
-              placeholder="Some Description"
-            >
-<%= book.description
- ? book.description
- : '' %></textarea
-            >
+              placeholder="Some Description"><%= book.description ? book.description : '' %>
+          </textarea>
           </div>
         </div>
-        <a href="/backoffice/books" class="btn btn-secondary btn-sm rounded"
-          >Back</a
+        <a href="/backoffice/books" class="btn btn-warning btn-sm rounded"
+          ><%= translate('back') %>></a
         >
         <button type="submit" class="btn btn-primary btn-sm rounded">
-          <%= buttonText %>
+          Save
         </button>
       </form>
     </div>
   </div>
 </div>
 <%- include('../includes/end.ejs') %>
-
-<script>
-  $(".datepicker").datepicker();
-</script>

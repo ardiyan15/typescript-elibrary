@@ -86,22 +86,22 @@ include('../includes/navigation.ejs')%>
         }
       ]
     })
-  })
 
-  $(".delete-confirm").on("click", function (e) {
-    e.preventDefault();
-    Swal.fire({
-      title: "Delete Data",
-      icon: "question",
-      iconHtml: "?",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      showCancelButton: true,
-      showCloseButton: true,
-    }).then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        $(this).closest("form").submit();
-      }
+    $(document).on("click", ".delete-confirm", function (e) {
+      e.preventDefault();
+      Swal.fire({
+        title: "Delete Data",
+        icon: "question",
+        iconHtml: "?",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        showCancelButton: true,
+        showCloseButton: true,
+      }).then(({ isConfirmed }) => {
+        if (isConfirmed) {
+          $(this).closest("form").submit();
+        }
+      });
     });
-  });
+  })
 </script>

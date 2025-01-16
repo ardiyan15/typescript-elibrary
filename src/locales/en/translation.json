@@ -11,7 +11,7 @@
     "language": "Language",
     "master data": "Master Data",
     "users": "Users",
-    "books": "Buku",
+    "books": "Books",
     "categories": "Categories",
     "username": "Username",
     "email": "Email",
@@ -25,5 +25,9 @@
     "delete": "Delete",
     "back": "Back",
     "profile": "Profile",
-    "setting": "Setting"
+    "setting": "Setting",
+    "title": "Title",
+    "image": "Image",
+    "add book": "Add Book",
+    "master book": "Master Book"
 }

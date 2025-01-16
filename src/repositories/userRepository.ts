@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import sequelize from "@utils/connection";
 import User, { IUser } from "@models/backoffice/users/user";
 import { IDataTableResponse } from "@generals/Interfaces"
-import { MessageType, ResponseData } from "../types/user";
+import { MessageType, ResponseData } from "../customTypes/user";
 import { getRabbitChannel } from "@utils/rabbitmq";
 import Privilege from "@models/backoffice/privileges/privileges";
 import Submenu from '@models/backoffice/submenus/submenu';

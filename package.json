@@ -82,6 +82,7 @@
     "@validators": "src/validators",
     "@routes": "src/routes",
     "@generals": "src/generals",
-    "@middleware": "src/middleware"
+    "@middleware": "src/middleware",
+    "@customTypes": "src/customTypes"
   }
 }

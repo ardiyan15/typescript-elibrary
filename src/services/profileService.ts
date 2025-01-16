@@ -1,7 +1,7 @@
 import { validationResult } from "express-validator";
 
 import { Request } from "express";
-import { UserResult } from '../types/user'
+import { UserResult } from '../customTypes/user'
 import profileRepository from "@repositories/profileRepository";
 
 class ProfileService {
@@ -10,7 +10,6 @@ class ProfileService {
 
         let results: UserResult
 
-        console.log(errors)
         if (!errors.isEmpty()) {
             results = {
                 isError: true,
@@ -23,7 +22,6 @@ class ProfileService {
             const image = req.file.filename
             req.body.image = image
         }
-        console.log(req.body)
 
         const userId = req.body.id
         delete req.body.id

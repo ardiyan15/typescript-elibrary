@@ -1,27 +1,43 @@
-import Sequelize from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 
-import sequelize from "../../../utils/connection";
+export interface IBook {
+  id?: number | string
+  title: string
+  category: string
+  image?: string
+  description: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
 
-const Book = sequelize.define("book", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  title: Sequelize.STRING(60),
-  author: Sequelize.STRING(100),
-  category: Sequelize.STRING(50),
-  description: Sequelize.TEXT,
-  image: Sequelize.STRING(128),
-  publication_date: Sequelize.DATEONLY,
-  publisher: Sequelize.STRING(100),
-  language: Sequelize.STRING(80),
-  number_of_page: Sequelize.STRING(10),
-  heavy: Sequelize.FLOAT,
-  width: Sequelize.FLOAT,
-  length: Sequelize.FLOAT,
-  isBorrow: Sequelize.BOOLEAN,
-});
+export interface IBookResponse {
+  data: IBook[]
+  recordsTotal: number
+  recordsFiltered: number
+}
+class Book extends Model<IBook> implements IBook {
+  public id: number
+  public title: string
+  public category: string
+  public image: string
+  public description: string
+  static initModel(sequelize: Sequelize) {
+    Book.init({
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+      },
+      title: DataTypes.STRING(60),
+      category: DataTypes.STRING(60),
+      image: DataTypes.STRING(128),
+      description: DataTypes.TEXT,
+    }, {
+      sequelize,
+      modelName: 'book'
+    })
+  }
+}
 
-export default Book;
+export default Book

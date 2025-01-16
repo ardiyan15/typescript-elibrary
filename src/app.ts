@@ -14,6 +14,7 @@ import language from '@utils/language';
 // Backoffice
 import backHomeRoutes from "@routes/backoffice/home/home";
 import userRoutes from "@routes/backoffice/users/index";
+import bookRoutes from "@routes/backoffice/books/index";
 import languageRoutes from '@routes/backoffice/language/index'
 import profileRoutes from '@routes/backoffice/profiles/index'
 import authRoutes from '@routes/backoffice/auth/index'
@@ -22,6 +23,7 @@ import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
+import Book from '@models/backoffice/books/book';
 // import { sendMessage } from '@utils/telegram';
 
 dotenv.config();
@@ -60,6 +62,7 @@ app.use(isAuthorized)
 // Backoffice
 app.use("/backoffice", backHomeRoutes);
 app.use("/backoffice", userRoutes)
+app.use("/backoffice", bookRoutes)
 app.use("/backoffice", languageRoutes)
 app.use('/backoffice', profileRoutes)
 
@@ -80,6 +83,7 @@ app.use((_err: Error, _: Request, res: Response, _next: NextFunction) => {
 sequelize
   .sync({ alter: true })
   .then(async () => {
+    Book.sync({ alter: true })
     await connectRabbitMQ()
     app.listen(port, () => console.log("Server is running"));
   })

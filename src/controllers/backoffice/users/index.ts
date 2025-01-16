@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ValidationError } from "express-validator";
 
 import userService from '@services/userService';
-import { User, TemplateUser } from '../../../types/user'
+import { User, TemplateUser } from '../../../customTypes/user'
 import subMenuService from "@services/subMenuService";
 
 export const getUsersDataTable = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ export const getUsersDataTable = async (req: Request, res: Response) => {
   })
 }
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = (req: Request, res: Response) => {
   const flashMessage = req.flash("success");
 
   res.render("backoffice/users/index", {
@@ -60,7 +60,7 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.body.userId
+    const userId = req.params.id
     await userService.deleteUser(userId)
     req.flash("success", "Successfully delete User")
     res.redirect('/backoffice/users')

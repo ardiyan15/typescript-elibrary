@@ -1,94 +1,85 @@
-import { RequestHandler } from "express";
-import Book from "@models/backoffice/books/book";
+import bookService from '@services/bookService';
+import { Request, Response } from 'express'
 
-import { encrypt } from "@utils/secure";
-import sequelize from "@utils/connection";
+export const getBookssDataTable = async (req: Request, res: Response) => {
+  const start = parseInt(req.query.start as string, 10) || 0
+  const length = parseInt(req.query.length as string, 10) || 0
+  const search = req.query.search as { value: string, regex: string }
 
-export const getBook: RequestHandler = async (req, res) => {
-  const flashMessage = req.flash();
+  const results = await bookService.getBooks(start, length, search)
 
-  const books = await Book.findAll({
-    attributes: {
-      include: [
-        [
-          sequelize.fn(
-            "date_format",
-            sequelize.col("createdAt"),
-            "%d %M %Y %H:%i"
-          ),
-          "createdAt",
-        ],
-        [
-          sequelize.fn(
-            "date_format",
-            sequelize.col("updatedAt"),
-            "%d %M %Y %H:%i"
-          ),
-          "createdAt",
-        ],
-      ],
-    },
-    order: [["id", "DESC"]],
-  });
+  res.json({
+    draw: req.query.draw,
+    recordsTotal: results.recordsTotal,
+    recordsFiltered: results.recordsFiltered,
+    data: results.data
+  })
+}
 
-  res.render("backoffice/books/index", {
-    books,
+export const index = (req: Request, res: Response) => {
+  const flashMessage = req.flash("success");
+  const basePath = '/backoffice/books'
+
+
+  res.render('backoffice/books/index', {
     flashMessage,
-    encrypt,
-  });
-};
+    basePath
+  })
+}
 
-export const getAddBook: RequestHandler = (_, res) => {
-  res.render("backoffice/books/form", {
-    formTitle: "Add Book",
-    buttonText: "Submit",
-    book: [],
-  });
-};
+export const create = (_: Request, res: Response) => {
+  const formTitle = "Create Book"
+  const book: [] = []
+  const basePath = '/backoffice/books'
+  const action = "/backoffice/store"
 
-export const saveBook: RequestHandler = async (
-  req,
-  res,
-): Promise<any> => {
-  const {
-    title,
-    category,
-    author,
-    description,
-    publication_date,
-    isbn,
-    language,
-    publisher,
-    number_of_pages,
-    heavy,
-    width,
-    length,
-  } = req.body;
+  res.render('backoffice/books/form', {
+    formTitle,
+    book,
+    basePath,
+    action
+  })
+}
 
-  const image = req.file;
-
-  const imageUrl = image.path;
-
-  const book = await Book.create({
-    title,
-    author,
-    category,
-    description,
-    publication_date,
-    isbn,
-    language,
-    publisher,
-    number_of_pages,
-    heavy,
-    width,
-    length,
-    image: imageUrl,
-  });
-
-  if (book) {
-    req.flash("success", "Successfully add Book");
-    res.redirect("/backoffice/books");
-  } else {
-    res.render("/backoffice/404/error");
+export const store = async (req: Request, res: Response) => {
+  try {
+    await bookService.createUser(req)
+    res.redirect('/backoffice/books')
+  } catch (error) {
+    throw error
   }
-};
+}
+
+export const deleteBook = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const bookId = req.params.id
+    await bookService.deleteBook(bookId)
+    req.flash("success", "Successfully delete User")
+    res.redirect('/backoffice/books')
+  } catch (error) {
+    res.send(error)
+  }
+}
+
+export const getBook = async (req: Request, res: Response) => {
+  const formTitle = "Update Book"
+  const bookId = req.params.id
+  const book = await bookService.getBook(bookId)
+  const action = "/backoffice/books/update"
+  res.render("backoffice/books/form", {
+    book,
+    bookId,
+    formTitle,
+    action
+  })
+}
+
+export const update = async (req: Request, res: Response) => {
+  try {
+    await bookService.updateBook(req)
+    req.flash("success", "Successfully update Book")
+    res.redirect('/backoffice/books')
+  } catch (error) {
+    throw error
+  }
+}

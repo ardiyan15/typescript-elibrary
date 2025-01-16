@@ -2,14 +2,22 @@ import express from "express";
 
 const router = express.Router();
 
-import {
-  getBook,
-  getAddBook,
-  saveBook,
-} from "../../../controllers/backoffice/books/index";
+import { index, create, store, getBookssDataTable, deleteBook, getBook, update } from '@controllers/backoffice/books'
+import { uploadImage } from "@utils/upload";
+import { bookUpdateValidator, bookValidator } from "@validators/book";
 
-router.get("/books", getBook);
-router.get("/books/form", getAddBook);
-router.post("/books", saveBook);
+router.get("/booksTable", getBookssDataTable)
+
+router.get("/books", index);
+
+router.get('/books/create', create)
+
+router.get('/books/:id', getBook)
+
+router.post('/books', uploadImage('book-image'), bookValidator, store)
+
+router.post('/books/update', uploadImage('book-image'), bookUpdateValidator, update)
+
+router.post("/books/delete/:id", deleteBook)
 
 export default router;

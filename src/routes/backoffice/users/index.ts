@@ -29,11 +29,11 @@ router.get("/users/import", importUser)
 
 router.get("/users/:id", getUser)
 
-router.post("/users/saveuser", uploadImage, userValidator, saveUser)
+router.post("/users/saveuser", uploadImage('user-image'), userValidator, saveUser)
 
-router.post("/users/update", uploadImage, userUpdateValidator, updateUser)
+router.post("/users/update", uploadImage('user-image'), userUpdateValidator, updateUser)
 
-router.post("/users/delete", deleteUser)
+router.post("/users/delete/:id", deleteUser)
 
 router.post("/users/template", template)
 

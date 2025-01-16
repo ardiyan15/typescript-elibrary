@@ -25,5 +25,9 @@
     "delete": "Hapus",
     "back": "Kembali",
     "profile": "Profil",
-    "setting": "Pengaturan"
+    "setting": "Pengaturan",
+    "title": "Judul",
+    "image": "Gambar",
+    "add book": "Tambah Buku",
+    "master book": "Master Buku"
 }
