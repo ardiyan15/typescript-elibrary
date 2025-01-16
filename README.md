@@ -4,6 +4,7 @@ Build Web Application using Express Typescript
 
 1. Feature's
    - Master Data User (Create, Read, Update, Delete)
+   - Master Book (Create Read. Update Delete)
    - Localization / Multi Language (English, Bahasa Indonesia)
    - Import User Data
    - Datatable Serverside
