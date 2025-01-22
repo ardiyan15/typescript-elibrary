@@ -5,11 +5,13 @@ import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import flash from "connect-flash";
+import morgan from 'morgan'
 
 import { sequelize } from '@models/index'
 
 import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
 import language from '@utils/language';
+import { logStream, logger } from '@utils/log';
 
 // Backoffice
 import backHomeRoutes from "@routes/backoffice/home/home";
@@ -23,13 +25,14 @@ import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
-import Book from '@models/backoffice/books/book';
 // import { sendMessage } from '@utils/telegram';
 
 dotenv.config();
 const port = process.env.PORT || 3000;
 
 const app = express();
+
+app.use(morgan("combined", { stream: logStream}));
 
 app.use(language())
 
@@ -77,13 +80,13 @@ app.use((_err: Error, _: Request, res: Response, _next: NextFunction) => {
   // sendMessage(err.message)
   const menus = res.locals.menus ? [...res.locals.menus] : []
   console.log(_err)
+  logger.error(_err.stack)
   res.status(500).render("backoffice/Error", { menus })
 });
 
 sequelize
   .sync({ alter: true })
   .then(async () => {
-    Book.sync({ alter: true })
     await connectRabbitMQ()
     app.listen(port, () => console.log("Server is running"));
   })

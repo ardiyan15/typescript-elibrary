@@ -39,10 +39,10 @@ class UserRepository {
     }
 
     async findByUsername(username: string): Promise<IUser | null> {
-        return User.findOne({ where: { username } })
+        return (await User.findOne({ where: { username } })).get({plain: true})
     }
 
-    async create(userData: IUser): Promise<User> {
+    async create(userData: IUser): Promise<Record<string, any>> {
         const { privileges, ...userDetails } = userData
 
         let newPrivileges: number[] = []
@@ -68,7 +68,7 @@ class UserRepository {
                 { transaction }
             )
             await transaction.commit()
-            return user
+            return user.get({plain: true})
         } catch (error) {
             await transaction.rollback()
             throw error

@@ -11,6 +11,7 @@ import { Request } from "express";
 import { UserResult, TemplateUser, ResponseData } from '@customTypes/user'
 import { IUserLogin } from '@generals/Interfaces'
 import { generateToken } from '@utils/jwt'
+import { logger, logFormatter } from "@utils/log";
 
 declare module 'express-session' {
     interface SessionData {
@@ -69,6 +70,7 @@ class UserService {
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password)
             if (isPasswordValid) {
+                delete user.password
                 result = {
                     isUserValid: true,
                     data: user
@@ -85,14 +87,24 @@ class UserService {
     }
 
     async createUser(req: Request): Promise<UserResult> {
+        let logData = logFormatter("Receive Create User Input!", { data: {} }, req.originalUrl)
+        logger.info(logData)
+
         const errors = validationResult(req)
 
         let results: UserResult
         if (!errors.isEmpty()) {
             results = {
                 isError: true,
-                errors: errors.array()
+                errors: errors.array(),
+                data: req.body
             }
+
+            const data = { results }
+
+            let logData = logFormatter("Error User Validation", data, req.originalUrl)
+            logger.error(logData)
+
             return results
         }
 
@@ -103,18 +115,27 @@ class UserService {
         const userData: Partial<IUser> = req.body;
         delete userData.id;
 
-        userRepository.create(req.body)
+        const user = await userRepository.create(req.body)
 
         results = {
             isError: false,
-            errors: [] as ValidationError[]
+            errors: [] as ValidationError[],
+            data: user
         }
+
+        const data = { results }
+
+        logData = logFormatter("Create User Successfully!", data, req.originalUrl)
+        logger.info(logData)
 
         return results
 
     }
 
     async updateUser(req: Request): Promise<[number] | UserResult> {
+        let logData = logFormatter("Receive User Input Update!", { data: {} }, req.originalUrl)
+        logger.info(logData)
+
         const errors = validationResult(req)
 
         let results: UserResult
@@ -122,24 +143,41 @@ class UserService {
         if (!errors.isEmpty()) {
             results = {
                 isError: true,
-                errors: errors.array()
+                errors: errors.array(),
+                data: []
             }
+
+            const data = { results }
+
+            let logData = logFormatter("Error User Validation Update", data, req.originalUrl)
+            logger.error(logData)
+
             return results
         }
 
-        if(req.file) {
+        if (req.file) {
             const image = req.file.filename
             req.body.image = image
         }
 
         const userId = decrypt(req.body.id)
         delete req.body.id
-        return userRepository.update(userId, req.body)
+        const result = await userRepository.update(userId, req.body)
+
+        logData = logFormatter("Update User Successfully!", results, req.originalUrl)
+        logger.info(logData)
+        
+        return result
+
     }
 
     async deleteUser(id: string): Promise<number> {
         const userId = decrypt(id)
-        return userRepository.delete(userId)
+        const result = await userRepository.delete(userId)
+        const logData = logFormatter("Delete User Successfully!", { data: result })
+        logger.info(logData)
+
+        return result
     }
 
     async download(templateName: string): Promise<TemplateUser> {
@@ -153,6 +191,9 @@ class UserService {
                 data: filePath
             }
 
+            const logData = logFormatter("Download Successfully!", { data: result })
+            logger.info(logData)
+
             return result
         } catch (err) {
             const result = {
@@ -160,6 +201,9 @@ class UserService {
                 responseMessage: 'Not Found',
                 data: err
             }
+
+            const logData = logFormatter("Download failed!", { data: result })
+            logger.error(logData)
 
             return result
         }

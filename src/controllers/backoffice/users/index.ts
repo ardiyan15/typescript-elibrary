@@ -4,6 +4,7 @@ import { ValidationError } from "express-validator";
 import userService from '@services/userService';
 import { User, TemplateUser } from '../../../customTypes/user'
 import subMenuService from "@services/subMenuService";
+import { logger } from "@utils/log";
 
 export const getUsersDataTable = async (req: Request, res: Response) => {
   const start = parseInt(req.query.start as string, 10) || 0
@@ -44,16 +45,19 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
     const result = await userService.createUser(req)
     if (result.isError) {
       const url = '/backoffice/users/saveuser'
-      const user: User[] = [];
+      const user: Object = result.data;
       const errors = result.errors
       const subMenus = await subMenuService.getAllSubMenus()
+      const formType = 'create'
+      const userSubMenus: number[] = []
 
-      res.render("backoffice/users/form", { errors, url, user, subMenus });
+      res.render("backoffice/users/form", { errors, url, user, subMenus, formType, userSubMenus });
     } else {
       req.flash("success", "Successfully add User");
       res.redirect('/backoffice/users')
     }
   } catch (error) {
+    logger.info("Create User Failed", error)
     res.send(error)
   }
 }

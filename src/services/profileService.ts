@@ -13,7 +13,8 @@ class ProfileService {
         if (!errors.isEmpty()) {
             results = {
                 isError: true,
-                errors: errors.array()
+                errors: errors.array(),
+                data: []
             }
             return results
         }

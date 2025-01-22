@@ -15,7 +15,7 @@ include('../includes/navigation.ejs')%>
               <label for="username"><%= translate('username') %></label>
               <input
                 type="text"
-                class="form-control <%= errors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
+                class="form-control <%= errors.find(e => e.path === 'username') ? 'is-invalid' : '' %>"
                 id="username"
                 name="username"
                 placeholder="Username"
@@ -35,6 +35,7 @@ include('../includes/navigation.ejs')%>
                 id="exampleInputPassword1"
                 name="password"
                 placeholder="Password"
+                value=""
               />
               <% errors.forEach(error => { if(error.path === 'password') { %>
                 <span class="text-danger"><%= error.msg %></span> <br />
