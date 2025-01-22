@@ -15,6 +15,7 @@ Build Web Application using Express Typescript
    - Error Page
    - Telegram Notification
    - Profile Setting
+   - Log Activity
 
 2. Tech Stack
    - ExpressJs
