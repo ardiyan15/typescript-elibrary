@@ -6,6 +6,7 @@ import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import flash from "connect-flash";
 import morgan from 'morgan'
+import helmet from 'helmet';
 
 import { sequelize } from '@models/index'
 
@@ -31,6 +32,8 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 
 const app = express();
+
+app.use(helmet())
 
 app.use(morgan("combined", { stream: logStream}));
 
