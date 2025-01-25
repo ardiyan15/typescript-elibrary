@@ -5,8 +5,8 @@ import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import flash from "connect-flash";
-import morgan from 'morgan'
-import helmet from 'helmet';
+import morgan from 'morgan';
+// import helmet from 'helmet';
 
 import { sequelize } from '@models/index'
 
@@ -14,28 +14,42 @@ import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
 import language from '@utils/language';
 import { logStream, logger } from '@utils/log';
 
-// Backoffice
-import backHomeRoutes from "@routes/backoffice/home/home";
-import userRoutes from "@routes/backoffice/users/index";
-import bookRoutes from "@routes/backoffice/books/index";
-import languageRoutes from '@routes/backoffice/language/index'
-import profileRoutes from '@routes/backoffice/profiles/index'
-import authRoutes from '@routes/backoffice/auth/index'
-
 import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
+import { setupSwagger } from '@utils/swagger';
 // import { sendMessage } from '@utils/telegram';
+
+// API
+import apiRoutes from '@routes/api'
+
+// backiffice
+import authRoutes from '@routes/backoffice/auth/index'
+import backofficeRoutes from '@routes/backoffice'
+import Order from '@models/backoffice/orders';
+import OrderDetails from '@models/backoffice/orderDetails';
 
 dotenv.config();
 const port = process.env.PORT || 3000;
 
 const app = express();
 
-app.use(helmet())
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(morgan("combined", { stream: logStream}));
+// app.use(helmet.contentSecurityPolicy({
+//   directives: {
+//     defaultSrc: ["'self'"],
+//     scriptSrc: ["'self'", "https://cdn.datatables.net"]
+//   }
+// }))
+
+app.use(morgan("combined", { stream: logStream }));
+
+setupSwagger(app)
+
+app.use("/api/v1", apiRoutes)
 
 app.use(language())
 
@@ -46,9 +60,6 @@ app.use(
     resave: true,
   })
 );
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
@@ -65,12 +76,9 @@ app.use(isAuthenticated)
 app.use(languageMiddleware);
 app.use(menuMiddleware)
 app.use(isAuthorized)
+
 // Backoffice
-app.use("/backoffice", backHomeRoutes);
-app.use("/backoffice", userRoutes)
-app.use("/backoffice", bookRoutes)
-app.use("/backoffice", languageRoutes)
-app.use('/backoffice', profileRoutes)
+app.use("/backoffice", backofficeRoutes);
 
 app.use((_, res) => {
   const menus = res.locals.menus ? [...res.locals.menus] : []

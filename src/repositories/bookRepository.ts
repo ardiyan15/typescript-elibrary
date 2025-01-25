@@ -48,7 +48,8 @@ class BookRepository {
         const updateData: IBook = {
             title: book.title,
             category: book.category,
-            description: book.description
+            description: book.description,
+            price: book.price
         }
 
         if (book.image) {

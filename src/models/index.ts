@@ -6,13 +6,17 @@ import Submenu from "@models/backoffice/submenus/submenu";
 import relation from "./relation";
 import Privilege from "./backoffice/privileges/privileges";
 import Book from "./backoffice/books/book";
+import OrderDetails from "./backoffice/orderDetails";
+import Order from "./backoffice/orders";
 
 const models = {
     Menu: Menu.initModel(sequelize),
     Submenu: Submenu.initModel(sequelize),
     User: User.initModel(sequelize),
     Privilege: Privilege.initModel(sequelize),
-    Book: Book.initModel(sequelize)
+    Book: Book.initModel(sequelize),
+    Order: Order.initModel(sequelize),
+    OrderDetails: OrderDetails.initModel(sequelize)
 }
 
 relation()

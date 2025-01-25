@@ -28,6 +28,7 @@ class BookService {
                 id: encryptedId,
                 title: book.title,
                 description: book.description,
+                price: book.price,
                 image: bookImage,
                 category: book.category,
                 createdAt,

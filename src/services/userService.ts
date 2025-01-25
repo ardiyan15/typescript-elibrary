@@ -102,7 +102,7 @@ class UserService {
 
             const data = { results }
 
-            let logData = logFormatter("Error User Validation", data, req.originalUrl)
+            const logData = logFormatter("Error User Validation", data, req.originalUrl)
             logger.error(logData)
 
             return results
@@ -149,7 +149,7 @@ class UserService {
 
             const data = { results }
 
-            let logData = logFormatter("Error User Validation Update", data, req.originalUrl)
+            const logData = logFormatter("Error User Validation Update", data, req.originalUrl)
             logger.error(logData)
 
             return results
@@ -166,7 +166,7 @@ class UserService {
 
         logData = logFormatter("Update User Successfully!", results, req.originalUrl)
         logger.info(logData)
-        
+
         return result
 
     }

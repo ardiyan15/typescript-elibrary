@@ -71,7 +71,17 @@
               cols="30"
               rows="5"
               placeholder="Some Description"><%= book.description ? book.description : '' %>
-          </textarea>
+            </textarea>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="text">Price</label>
+            <input
+              class="form-control"
+              name="price"
+              id="price"
+              required
+              value="<%= book.price ? book.price : '' %>"
+            />
           </div>
         </div>
         <a href="/backoffice/books" class="btn btn-warning btn-sm rounded"
