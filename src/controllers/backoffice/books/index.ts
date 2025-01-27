@@ -31,7 +31,7 @@ export const create = (_: Request, res: Response) => {
   const formTitle = "Create Book"
   const book: [] = []
   const basePath = '/backoffice/books'
-  const action = "/backoffice/store"
+  const action = "/backoffice/books/store"
 
   res.render('backoffice/books/form', {
     formTitle,
@@ -43,7 +43,7 @@ export const create = (_: Request, res: Response) => {
 
 export const store = async (req: Request, res: Response) => {
   try {
-    await bookService.createUser(req)
+    await bookService.createBook(req)
     res.redirect('/backoffice/books')
   } catch (error) {
     throw error

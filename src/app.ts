@@ -27,8 +27,6 @@ import apiRoutes from '@routes/api'
 // backiffice
 import authRoutes from '@routes/backoffice/auth/index'
 import backofficeRoutes from '@routes/backoffice'
-import Order from '@models/backoffice/orders';
-import OrderDetails from '@models/backoffice/orderDetails';
 
 dotenv.config();
 const port = process.env.PORT || 3000;

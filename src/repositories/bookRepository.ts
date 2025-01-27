@@ -68,6 +68,20 @@ class BookRepository {
             return error
         }
     }
+
+    async findBookById(ids: Array<string>) {
+        const books = await Book.findAll({
+            attributes: ['id', 'price', 'title'],
+            where: {
+                id: {
+                    [Op.in]: ids
+                }
+            },
+        })
+
+        return books
+    }
+
 }
 
 export default new BookRepository()

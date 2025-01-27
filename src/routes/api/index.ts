@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import userApiRoutes from "@routes/api/user";
-import transactionRoutes from "@routes/api/transaction"
+import transactionRoutes from "@routes/api/order"
 
 const router = Router()
 

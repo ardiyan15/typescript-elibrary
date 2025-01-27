@@ -13,6 +13,18 @@ class Order extends Model {
                 allowNull: false,
                 primaryKey: true
             },
+            fullname: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+            },
+            address: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            transactionId: {
+                type: DataTypes.STRING(128),
+                allowNull: false,
+            },
             quantity: {
                 type: DataTypes.INTEGER,
                 allowNull: false

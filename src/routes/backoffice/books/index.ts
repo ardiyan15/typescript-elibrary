@@ -14,7 +14,7 @@ router.get('/books/create', create)
 
 router.get('/books/:id', getBook)
 
-router.post('/books', uploadImage('book-image'), bookValidator, store)
+router.post('/books/store', uploadImage('book-image'), bookValidator, store)
 
 router.post('/books/update', uploadImage('book-image'), bookUpdateValidator, update)
 

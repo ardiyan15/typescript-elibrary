@@ -94,6 +94,7 @@
     "@routes": "src/routes",
     "@generals": "src/generals",
     "@middleware": "src/middleware",
-    "@customTypes": "src/customTypes"
+    "@customTypes": "src/customTypes",
+    "@helper" : "src/helper"
   }
 }

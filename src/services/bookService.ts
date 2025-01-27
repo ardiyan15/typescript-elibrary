@@ -6,6 +6,7 @@ import { BookResult } from '@customTypes/book';
 import bookRepository from '@repositories/bookRepository';
 import { IBook, IBookResponse } from '@models/backoffice/books/book';
 import { encrypt, decrypt } from "@utils/secure";
+import { logger, logFormatter } from "@utils/log";
 
 
 class BookService {
@@ -49,7 +50,9 @@ class BookService {
         return book
     }
 
-    createUser(req: Request) {
+    createBook(req: Request) {
+        let logData = logFormatter("Receive Order Input!", { data: {} }, req.originalUrl)
+        logger.info(logData)
         const errors = validationResult(req)
 
         let results: BookResult
@@ -59,6 +62,12 @@ class BookService {
                 isError: true,
                 errors: errors.array()
             }
+            
+            const data = { results }
+            
+            const logData = logFormatter("Error User Validation", data, req.originalUrl)
+            logger.error(logData)
+
             return results
         }
 
