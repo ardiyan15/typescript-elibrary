@@ -8,7 +8,7 @@ class OrderService {
     async createOrder(req: Request) {
         try {
 
-            let logData = logFormatter("Receive Order Input!", { data: {} }, req.originalUrl)
+            let logData = logFormatter("Receive Order Input!", { data: req.body }, req.originalUrl)
             logger.info(logData)
 
             const fullname = req.body.fullname

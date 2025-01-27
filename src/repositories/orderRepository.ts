@@ -1,11 +1,8 @@
 import OrderDetails from "@models/backoffice/orderDetails"
 import Order from "@models/backoffice/orders"
 import sequelize from "@utils/connection"
-
-interface Book {
-    id: number;
-    price: number;
-}
+import { OrderData } from "@customTypes/order"
+import { Book } from '@customTypes/book'
 
 class OrderRepository {
 
@@ -17,7 +14,7 @@ class OrderRepository {
         })
         return order.get({ plain: true })
     }
-    async create(data: any) {
+    async create(data: OrderData) {
         const {orderDetails, ...orderInfo} = data
         const { books } = orderDetails
         
