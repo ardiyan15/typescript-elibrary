@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { orderBook } from "@controllers/api/order"
+import { order } from "@controllers/api/order"
 
 const router = Router()
 
 /**
  * @swagger
- * /api/v1/order-book:
+ * /api/v1/order:
  *   post:
- *     summary: Books
+ *     summary: Order
  *     tags:
- *       - Books
+ *       - Order
  *     requestBody:
  *       required: true
  *       content:
@@ -87,7 +87,7 @@ const router = Router()
  *                                      default: 1
  *                                    title:
  *                                      type: string
- *                                      default: Filosofi Teras
+ *                                      default: Atomic Habit
  *                                    price:
  *                                      type: integer
  *                                      default: 99999
@@ -131,7 +131,6 @@ const router = Router()
  *                       default: Internal Server Error
  */
 
-
-router.post('/order-book', orderBook)
+router.post('/order', order)
 
 export default router
