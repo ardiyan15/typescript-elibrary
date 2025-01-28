@@ -56,4 +56,4 @@ Build Web Application using Express Typescript
 
    ![{9F76FC28-1415-465F-9E01-58A989B85D5A}](https://github.com/user-attachments/assets/2693818b-158e-4c84-a251-39b20fd1818d)
 
-   ![{7F663AA6-208D-47F8-AFCD-68AEF108E312}](https://github.com/user-attachments/assets/d103352b-9ae6-422d-a4e4-14199d200899)
+   ![{308848DF-E750-4938-BA5D-A1E302F944DD}](https://github.com/user-attachments/assets/81e4e8b0-5c96-40ad-9615-7b31e2dd43c5)
