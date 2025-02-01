@@ -17,6 +17,7 @@ Build Web Application using Express Typescript
    - Profile Setting
    - Log Activity
    - Open API Documentation
+   - Unit Test
 
 2. Tech Stack
    - ExpressJs
@@ -26,12 +27,16 @@ Build Web Application using Express Typescript
    - Redis
    - RabbitMQ
    - JWT
-   - MVC and Repository Pattern
+   - MVC (Model View Controller)
+   - Repository Pattern
    - Sweetalert 2
    - SB Admin 2 Template
    - Bootstrap
    - Jquery
    - Open API Swagger
+   - Jest Testing
+   - Supertest
+   - Ejs Template Engine
 
 
 3. Screeshot
