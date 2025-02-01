@@ -6,3 +6,4 @@ images/
 .env
 src/public/img
 src/logs
+coverage/

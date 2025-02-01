@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { ValidationError } from "express-validator";
+import puppeteer from "puppeteer";
 
 import userService from '@services/userService';
-import { User, TemplateUser } from '../../../customTypes/user'
+import { User, TemplateUser } from '@customTypes/user'
 import subMenuService from "@services/subMenuService";
 import { logger } from "@utils/log";
 
@@ -126,4 +127,18 @@ export const saveImportUser = async (req: Request, res: Response): Promise<void>
   } else {
     res.send(response.responseMessage)
   }
+}
+
+export const exportUser = async (req: Request, res: Response) => {
+  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  const page = await browser.newPage()
+
+  await page.setContent('<h1>Test PDF</h1>')
+  const pdfBuffer = await page.pdf({format: 'A4'})
+
+  await browser.close()
+
+  res.setHeader('Content-Disposition', 'attachment; filename=output.pdf')
+  res.setHeader('Content-Type', 'application/pdf')
+  res.end(pdfBuffer)
 }

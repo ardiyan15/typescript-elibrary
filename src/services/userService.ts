@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { promises as fsPromises } from "fs";
 import path from "path";
 import { validationResult, ValidationError } from "express-validator";
@@ -7,7 +8,6 @@ import bcrypt from 'bcrypt'
 import userRepository from "@repositories/userRepository";
 import { IUser, IUserResponse } from '@models/backoffice/users/user';
 import { decrypt, encrypt } from "@utils/secure";
-import { Request } from "express";
 import { UserResult, TemplateUser, ResponseData } from '@customTypes/user'
 import { IUserLogin } from '@generals/Interfaces'
 import { generateToken } from '@utils/jwt'

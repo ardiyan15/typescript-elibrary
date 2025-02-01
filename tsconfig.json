@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",

@@ -15,7 +15,8 @@ import {
   template,
   importUser,
   saveImportUser,
-  getUsersDataTable
+  getUsersDataTable,
+  exportUser
 } from "@controllers/backoffice/users/index";
 import { uploadImage } from "@utils/upload";
 
@@ -29,6 +30,8 @@ router.get("/users/import", importUser)
 
 router.get("/users/:id", getUser)
 
+router.post("/users/exportuser", exportUser)
+
 router.post("/users/saveuser", uploadImage('user-image'), userValidator, saveUser)
 
 router.post("/users/update", uploadImage('user-image'), userUpdateValidator, updateUser)
@@ -38,5 +41,6 @@ router.post("/users/delete/:id", deleteUser)
 router.post("/users/template", template)
 
 router.post("/users/importuser", upload.single('user-csv'), saveImportUser)
+
 
 export default router;

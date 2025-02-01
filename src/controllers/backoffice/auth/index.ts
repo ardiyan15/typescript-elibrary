@@ -6,7 +6,7 @@ export const index = async (req: Request, res: Response) => {
     const flashMessage = req.flash("failed");
 
     if (req.session.jwt) {
-        return res.redirect('/backoffice')
+        return res.redirect('/backoffice/home')
     }
 
     res.render('backoffice/auth', {
@@ -39,7 +39,7 @@ export const logout = (req: Request, res: Response) => {
         if (err) {
             const logData = logFormatter("Logout Failed!", { data: err.message })
             logger.info(logData)
-            console.error("Failed to destroy session", err)
+            console.log('test')
             return res.send("Failed to destroy session")
         }
 

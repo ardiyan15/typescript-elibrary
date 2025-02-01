@@ -16,8 +16,15 @@ include('../includes/navigation.ejs')%>
   <div class="card shadow">
     <div class="card-header py-3">
       <div class="d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold text-primary"><%= translate('master user') %></h6>
-        <a href="/backoffice/users/import" class="btn btn-primary btn-sm rounded">Import User</a>
+        <div class="col-6">
+          <h6 class="m-0 font-weight-bold text-primary"><%= translate('master user') %></h6>
+        </div>
+        <div class="col-6 text-right">
+            <form action="/backoffice/users/exportuser" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-warning btn-sm rounded">Export User</button>
+            </form>
+            <a href="/backoffice/users/import" class="btn btn-primary btn-sm rounded">Import User</a>
+        </div>
       </div>
     </div>
     <div class="card-body">
