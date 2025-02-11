@@ -129,7 +129,7 @@ export const saveImportUser = async (req: Request, res: Response): Promise<void>
   }
 }
 
-export const exportUser = async (req: Request, res: Response) => {
+export const exportUser = async (_: Request, res: Response) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage()
 

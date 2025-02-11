@@ -14,9 +14,9 @@ import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
 import language from '@utils/language';
 import { logStream, logger } from '@utils/log';
 
-import menuMiddleware from '@middleware/menuMiddleware';
+// import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
-import { isAuthenticated } from '@middleware/authMiddleware';
+// import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
 import { setupSwagger } from '@utils/swagger';
 // import { sendMessage } from '@utils/telegram';
@@ -27,6 +27,7 @@ import apiRoutes from '@routes/api'
 // backiffice
 import authRoutes from '@routes/backoffice/auth/index'
 import backofficeRoutes from '@routes/backoffice'
+import frontOfficeRoutes from '@routes/frontoffice'
 
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -69,14 +70,17 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use("/backoffice", authRoutes)
 
-app.use(isAuthenticated)
+// app.use(isAuthenticated)
 
 app.use(languageMiddleware);
-app.use(menuMiddleware)
+// app.use(menuMiddleware)
 app.use(isAuthorized)
 
 // Backoffice
 app.use("/backoffice", backofficeRoutes);
+
+// Frontoffice
+app.use("/", frontOfficeRoutes)
 
 app.use((_, res) => {
   const menus = res.locals.menus ? [...res.locals.menus] : []

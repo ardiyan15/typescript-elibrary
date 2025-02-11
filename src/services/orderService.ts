@@ -1,4 +1,4 @@
-import { Request, response } from "express";
+import { Request } from "express";
 import { logger, logFormatter } from "@utils/log";
 import orderRepository from "@repositories/orderRepository";
 import bookRepository from "@repositories/bookRepository";
