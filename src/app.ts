@@ -79,15 +79,19 @@ app.use(isAuthorized)
 // Backoffice
 app.use("/backoffice", backofficeRoutes);
 
-// Frontoffice
-app.use("/", frontOfficeRoutes)
-
-app.use((_, res) => {
+app.use("/backoffice", (_, res) => {
   const menus = res.locals.menus ? [...res.locals.menus] : []
   res.render('backoffice/NotFound', {
     menus
   })
 });
+
+// Frontoffice
+app.use("/", frontOfficeRoutes)
+
+app.use((_, res) => {
+  res.render('frontoffice/errors/NotFound')
+})
 
 app.use((_err: Error, _: Request, res: Response, _next: NextFunction) => {
   // sendMessage(err.message)

@@ -1,0 +1,44 @@
+<%- include('../includes/head.ejs') %>
+<%- include('../includes/nav.ejs') %>
+    <div class="container">
+        <h1>Cart Page</h1>
+        <div class="row">
+            <div class="col-8">
+                <div class="d-flex justify-content-between align-items-center px-3 py-0" style="border: 1px solid grey; border-radius: 10px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" id="myCheckbox" class="mt-3">
+                        <label for="myCheckbox" class="mt-1">Semua</label>
+                    </div>
+                    <button class="btn btn-danger btn-sm btn-rounded" style="height: 20%;">Hapus</button>
+                </div>
+                <div class="card mt-4 bg-transparent" style="border: 1px solid grey;">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <input type="checkbox" class="form-check-input align-self-center">
+                            <img src="/public/img/books/atomic-habits.jpg" alt="img" width="80" style="margin-left: 1rem;">
+                            <div class="d-flex flex-column align-self-center" style="margin-left: 1rem;">
+                                <span class="align-self-center" style="font-size: 13px;">Atomic Habits: Perubahan Kecil yang Memberikan Hasil Luar Biasa</span>
+                                <span class="font-weight-bold" style="font-weight: bold;">Rp. 9999</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-4 shadow-lg" style="border: 1px solid grey; border-radius: 10px;">
+                <div class="container mt-4">
+                    <span style="font-weight: bold;">Ringkasan Keranjang</span>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span>Total Harga (1 Barang)</span>
+                        <span style="font-weight: bold;">Rp99099</span>
+                    </div>
+                    <hr style="width: 100%; border: 1px solid grey; margin-top: 1.5rem;">
+                    <div class="d-flex justify-content-between" style="margin-top: -1.5rem;">
+                        <span>Subtotal</span>
+                        <span style="font-weight: bold;">Rp90909</span>
+                    </div>
+                    <button class="btn btn-primary btn-sm btn-rounded w-100" style="height: 20%;">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<%- include('../includes/end.ejs') %>
