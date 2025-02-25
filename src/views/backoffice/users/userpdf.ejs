@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @page {
+          margin-top: 50px; /* Adjust top margin */
+        }
+      </style>
+</head>
+<body style="margin-top: 20px;">
+    <table border="1" cellspacing="0" cellpadding="10">
+        <thead>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">username</th>
+                <th class="text-center">email</th>
+                <th class="text-center">role</th>
+                <th class="text-center">photo profile</th>
+                <th class="text-center">created date</th>
+                <th class="text-center">updated date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (users && users.length > 0) { %>
+                <% users.forEach((user, index) => { %>
+                    <tr>
+                        <td style="text-align: center;"><%= index + 1 %></td>
+                        <td style="text-align: center;"><%= user.username %></td>
+                        <td style="text-align: center;"><%= user.email %></td>
+                        <td style="text-align: center;"><%= user.roles %></td>
+                        <td style="text-align: center;">
+                            <img src="http://localhost:3000/img/users/<%= user.image %>" alt="" width="50">
+                        </td>
+                        <td style="text-align: center;"><%= user.createdAt %></td>
+                        <td style="text-align: center;"><%= user.updatedAt %></td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3">Tidak ada data</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>
+

@@ -1,6 +1,8 @@
+import path from "path";
 import { Request, Response } from "express";
 import { ValidationError } from "express-validator";
 import puppeteer from "puppeteer";
+import ejs from 'ejs'
 
 import userService from '@services/userService';
 import { User, TemplateUser } from '@customTypes/user'
@@ -133,8 +135,19 @@ export const exportUser = async (_: Request, res: Response) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage()
 
-  await page.setContent('<h1>Test PDF</h1>')
-  const pdfBuffer = await page.pdf({format: 'A4'})
+  const url = 'http://localhost:3000/'
+  let start = 0
+  let length = 100
+  let search = { value: '', regex: '' }
+
+  const users = (await userService.getAllUsers(start, length, search)).data
+
+  let pathTemplate = path.resolve('src', 'views', 'backoffice', 'users', 'userpdf.ejs')
+
+  let html = await ejs.renderFile(pathTemplate, { users, url })
+
+  await page.setContent(html)
+  const pdfBuffer = await page.pdf({ format: 'A4' })
 
   await browser.close()
 
