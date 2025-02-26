@@ -32,7 +32,7 @@
                         <td style="text-align: center;"><%= user.email %></td>
                         <td style="text-align: center;"><%= user.roles %></td>
                         <td style="text-align: center;">
-                            <img src="http://localhost:3000/img/users/<%= user.image %>" alt="" width="50">
+                            <img src="<%= url + user.image %>" alt="" width="50">
                         </td>
                         <td style="text-align: center;"><%= user.createdAt %></td>
                         <td style="text-align: center;"><%= user.updatedAt %></td>
@@ -40,7 +40,7 @@
                 <% }); %>
             <% } else { %>
                 <tr>
-                    <td colspan="3">Tidak ada data</td>
+                    <td colspan="3">No Data</td>
                 </tr>
             <% } %>
         </tbody>

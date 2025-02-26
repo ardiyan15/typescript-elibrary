@@ -1,3 +1,4 @@
+require('dotenv').config();
 import path from "path";
 import { Request, Response } from "express";
 import { ValidationError } from "express-validator";
@@ -135,7 +136,7 @@ export const exportUser = async (_: Request, res: Response) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage()
 
-  const url = 'http://localhost:3000/'
+  const url = process.env.APP_URL + process.env.PORT + '/img/users/'
   let start = 0
   let length = 100
   let search = { value: '', regex: '' }
