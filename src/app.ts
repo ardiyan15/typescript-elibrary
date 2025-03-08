@@ -56,7 +56,7 @@ app.use(
   session({
     secret: "123456",
     saveUninitialized: true,
-    resave: true,
+    resave: false,
   })
 );
 

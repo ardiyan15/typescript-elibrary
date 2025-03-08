@@ -5,7 +5,7 @@ import { logger, logFormatter } from "@utils/log";
 export const index = async (req: Request, res: Response) => {
     const flashMessage = req.flash("failed");
 
-    if (req.session.jwt) {
+    if (req.session?.backoffice?.jwt) {
         return res.redirect('/backoffice/home')
     }
 
@@ -34,7 +34,7 @@ export const login = async (req: Request, res: Response) => {
 }
 
 export const logout = (req: Request, res: Response) => {
-    const token = req.session.jwt
+    const token = req.session.backoffice.jwt
     req.session.destroy((err) => {
         if (err) {
             const logData = logFormatter("Logout Failed!", { data: err.message })

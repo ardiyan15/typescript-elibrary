@@ -15,7 +15,12 @@ import { logger, logFormatter } from "@utils/log";
 
 declare module 'express-session' {
     interface SessionData {
-        jwt?: string
+        backoffice: {
+            jwt?: string
+        },
+        frontoffice: {
+            jwt?: string
+        }
     }
 }
 
@@ -223,7 +228,8 @@ class UserService {
     }
 
     async storeJwtToken(req: Request, token: string): Promise<void> {
-        req.session.jwt = token
+        if(!req.session.backoffice) req.session.backoffice = {}
+        req.session.backoffice.jwt = token
     }
 }
 
