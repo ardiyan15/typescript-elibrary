@@ -5,6 +5,7 @@ import Privilege from "./backoffice/privileges/privileges";
 import Order from "@models/backoffice/orders";
 import Book from "@models/backoffice/books/book";
 import OrderDetails from "@models/backoffice/orderDetails";
+import Cart from "./frontoffice/cart/cart";
 
 export default function relation() {
     Menu.hasMany(Submenu, {foreignKey: 'menuId', as: 'submenus'})
@@ -15,4 +16,10 @@ export default function relation() {
 
     Order.belongsToMany(Book, {through: OrderDetails,  as: 'books', foreignKey: 'orderId'})
     Book.belongsToMany(Order, {through: OrderDetails, as: 'orders', foreignKey: 'bookId'})
+
+    User.hasMany(Cart, {foreignKey: 'userId', as: 'carts'})
+    Cart.belongsTo(User, {foreignKey: 'userId', as: 'user'})
+
+    Book.hasMany(Cart, {foreignKey: 'bookId', as: 'carts'})
+    Cart.belongsTo(Book, {foreignKey: 'bookId', as: 'book'})
 }
