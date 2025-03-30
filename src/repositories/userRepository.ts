@@ -39,7 +39,7 @@ class UserRepository {
     }
 
     async findByUsername(username: string): Promise<IUser | null> {
-        return (await User.findOne({ where: { username } })).get({plain: true})
+        return await User.findOne({ where: { username } })
     }
 
     async create(userData: IUser): Promise<Record<string, any>> {

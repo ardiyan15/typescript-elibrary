@@ -1,0 +1,98 @@
+<%- include('../includes/head.ejs') %>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* background-color: #f4f4f9; */
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-around;
+    margin: 50px;
+    margin-left: 10em !important;
+  }
+
+  .image-section {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-section img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .details-section {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin-left: -8em;
+    margin-top: 1.5em;
+  }
+
+  .book-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .book-price {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .description-title {
+    font-weight: bold;
+    margin-top: 1em;
+  }
+
+  .description {
+    margin-top: 0.5em;
+    line-height: 1.6;
+  }
+</style>
+<div class="container d-flex flex-row justify-content-around">
+  <div class="image-section">
+    <span>Home > Buku > Self Development > Judul Buku 1</span>
+    <img
+      src="/public/img/books/1741782753616-tab-item1.jpg"
+      alt="Seporsi Mie Ayam Sebelum Mati"
+      style="width: 50%;"
+    />
+  </div>
+  <div class="details-section">
+    <span >Self Development</span>
+    <span class="book-title">Lorem ipsum dolor sit amet.</span>
+    <span class="book-price">Rp 70.000</span>
+    <span class="description-title">Deskripsi</span>
+    <span class="description">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima magnam
+      porro sunt architecto quas et deserunt consequatur nam cum. Minus iure
+      explicabo ex aut numquam similique culpa quam beatae molestiae saepe
+      facilis, ducimus dicta quia officiis quaerat! Ducimus provident voluptate
+      perferendis voluptatem alias nesciunt ab nisi, aliquam deserunt, odio
+      veritatis facere numquam nobis quo, sequi error eaque dignissimos libero
+      doloribus aperiam expedita. Nesciunt, animi itaque aut quisquam debitis
+      dignissimos recusandae porro quaerat omnis eveniet odit ea veritatis
+      dolorem nam, quod modi labore? Dolor error possimus tenetur suscipit.
+      Beatae quis consectetur fugiat fuga debitis a atque, sit eveniet
+      exercitationem perferendis magni!
+    </span>
+    <div class="d-flex flex-row">
+        <button id="back" class="h-75 btn btn-sm btn-secondary btn-rounded w-100" style="margin-right: 1rem;">Back</button>
+        <button class="btn-primary h-75 btn-sm btn rounded w-100">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<%- include('../includes/end.ejs') %>
+<script>
+  $(document).ready(function () {
+    $("#back").on('click', function(){
+      window.history.back();
+    })
+  });
+</script>

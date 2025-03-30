@@ -88,7 +88,9 @@
 							<div class="col-md-3">
 								<div class="product-item">
 									<figure class="product-style">
-										<img src="/public/img/books/<%= book.image %>" alt="Books" class="product-item">
+										<a href="/detail/<%= book.id %>">
+											<img src="/public/img/books/<%= book.image %>" alt="Books" class="product-item">
+										</a>
 										<button type="button" value="<%= book.id %>" class="add-to-cart" data-product-tile="add-to-cart">Add to
 											Cart</button>
 									</figure>

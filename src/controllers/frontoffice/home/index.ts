@@ -10,3 +10,7 @@ export const getHome = async (req: Request, res: Response) => {
 
     res.render("frontoffice/home/index", { data });
 };
+
+export const detail = async (_: Request, res: Response) => {
+    res.render("frontoffice/home/detail");
+}

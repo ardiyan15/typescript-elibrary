@@ -17,9 +17,6 @@ declare module 'express-session' {
     interface SessionData {
         backoffice: {
             jwt?: string
-        },
-        frontoffice: {
-            jwt?: string
         }
     }
 }
@@ -228,7 +225,7 @@ class UserService {
     }
 
     async storeJwtToken(req: Request, token: string): Promise<void> {
-        if(!req.session.backoffice) req.session.backoffice = {}
+        if (!req.session.backoffice) req.session.backoffice = {}
         req.session.backoffice.jwt = token
     }
 }
