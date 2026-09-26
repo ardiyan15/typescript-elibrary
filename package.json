@@ -23,7 +23,7 @@
     "@types/cors": "^2.8.17",
     "@types/request": "^2.48.12",
     "@types/sequelize": "^4.28.20",
-    "amqplib": "^0.10.4",
+    "amqplib": "^2.0.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",

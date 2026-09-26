@@ -1,0 +1,67 @@
+services:
+  elibrary:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: e_library_typescript
+      DB_USER: root
+      DB_PASSWORD: ""
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: elibrary
+      RABBITMQ_PASSWORD: elibrary123
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+      - mysql
+      - rabbitmq
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  mysql:
+    image: mysql:8
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: e_library_typescript
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+  
+  rabbitmq:
+    image: rabbitmq:4-management
+    environment:
+      RABBITMQ_DEFAULT_USER: elibrary
+      RABBITMQ_DEFAULT_PASS: elibrary123
+    ports:
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  mysql_data:

@@ -1,10 +1,15 @@
-import amqplib, { Channel, Connection } from 'amqplib'
+import amqplib, { Channel, ChannelModel } from 'amqplib'
 
-let connection: Connection
+let connection: ChannelModel
 let channel: Channel
 
 export const connectRabbitMQ = async (): Promise<void> => {
-    const RABBIT_URL = 'amqp://localhost'
+    const host = process.env.RABBITMQ_HOST || 'localhost'
+    const port = Number(process.env.RABBITMQ_PORT) || 5672
+    const user = process.env.RABBITMQ_USER || 'guest'
+    const password = process.env.RABBITMQ_PASSWORD || 'guest'
+
+    const RABBIT_URL = `amqp://${user}:${password}@${host}:${port}`
 
     try {
         connection = await amqplib.connect(RABBIT_URL);

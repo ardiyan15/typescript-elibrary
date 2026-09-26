@@ -27,7 +27,7 @@ class Cart extends Model {
             bookId: {
                 allowNull: false,
                 type: DataTypes.INTEGER,
-                references: { model: 'books', key: 'id' }
+                references: { model: 'book', key: 'id' }
             },
         }, {
             sequelize,

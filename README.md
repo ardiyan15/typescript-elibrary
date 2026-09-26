@@ -1,7 +1,11 @@
 # eLibrary
-Build Web Application using Express Typescript
+Web application for managing an eLibrary system, built with Express.js and TypeScript.
 
-1. Feature's
+The project is fully containerized using Docker Compose, including the application, MySQL, Redis, and RabbitMQ services.
+
+---
+
+## Features
    - Master Data User (Create, Read, Update, Delete)
    - Master Book (Create Read. Update Delete)
    - Localization / Multi Language (English, Bahasa Indonesia)
@@ -18,27 +22,167 @@ Build Web Application using Express Typescript
    - Open API Documentation
    - Unit Test
 
-2. Tech Stack
-   - ExpressJs
-   - Typescript
-   - Mysql
-   - Sequelize
+---
+
+## Tech Stack
+
+   ### Backend
+   - Node.js
+   - Express.js
+   - TypeScript
+   - Sequelize ORM
+   - MySQL
    - Redis
    - RabbitMQ
    - JWT
+   - EJS Template Engine
+
+   ### Frontend
+   - Bootstrap
+   - jQuery
+   - SweetAlert 2
+   - SB Admin 2 Template
+
+   ### Architecture
    - MVC (Model View Controller)
    - Repository Pattern
-   - Sweetalert 2
-   - SB Admin 2 Template
-   - Bootstrap
-   - Jquery
-   - Open API Swagger
-   - Jest Testing
+
+   ### Documentation & Testing
+   - OpenAPI / Swagger
+   - Jest
    - Supertest
-   - Ejs Template Engine
+   
+---
 
+# Running with Docker
 
-3. Screeshot
+## Prerequisites
+
+Make sure the following are installed:
+
+- Docker
+- Docker Compose
+
+Services
+
+The application runs using the following Docker services:
+
+| Service    | Description                    | Internal Port | Host Port |
+| ---------- | ------------------------------ | ------------: | --------: |
+| `elibrary` | Express TypeScript application |          3000 |      3000 |
+| `mysql`    | MySQL database                 |          3306 |      3307 |
+| `redis`    | Redis cache                    |          6379 |         - |
+| `rabbitmq` | RabbitMQ message broker        |          5672 |         - |
+| `rabbitmq` | RabbitMQ Management UI         |         15672 |     15672 |
+
+Project Structure
+
+eLibrary-typescript/
+│
+├── src/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── repositories/
+│   ├── routes/
+│   ├── services/
+│   ├── utils/
+│   └── app.ts
+│
+├── public/
+├── views/
+├── Dockerfile
+├── docker-compose.yml
+├── package.json
+├── package-lock.json
+└── README.md
+
+Setup
+1. Clone Repository
+
+git clone https://github.com/ardiyan25/eLibrary-typescript.git
+cd eLibrary-typescript
+
+2. Build and Start Containers
+
+Run:
+docker compose up -d --build
+
+This will:
+
+=> Build the Node.js application image
+=> Start the Express application
+=> Start MySQL
+=> Start Redis
+=> Start RabbitMQ
+=> Create the MySQL database
+=> Connect the application to the required services
+
+3. Check Container Status
+
+Run:
+docker compose ps
+
+All required services should be running.
+
+Example
+
+NAME                              STATUS
+elibrary-typescript-elibrary-1   Up
+elibrary-typescript-mysql-1      Up
+elibrary-typescript-redis-1      Up
+elibrary-typescript-rabbitmq-1   Up
+
+Access Application
+
+Frontoffice
+
+Open:
+http://localhost:3000
+
+Backoffice
+
+Open:
+http://localhost:3000/backoffice
+
+Swagger / OpenAPI
+
+Open:
+http://localhost:3000/api-docs
+
+The Swagger URL may vary depending on the current Swagger configuration.
+
+RabbitMQ Management
+
+Open:
+http://localhost:15672
+
+Default credentials:
+Username: elibrary
+Password: elibrary123
+
+Database
+
+MySQL runs inside a Docker container.
+
+Application Configuration
+
+The application uses the following configuration inside Docker:
+
+| Configuration | Value                  |
+| ------------- | ---------------------- |
+| Host          | `mysql`                |
+| Port          | `3306`                 |
+| Database      | `e_library_typescript` |
+| Username      | `root`                 |
+| Password      | empty                  |
+
+The database is persisted using a Docker named volume:
+mysql_data:/var/lib/mysql
+
+This means the database data will remain available even if the MySQL container is recreated.
+
+4. Screeshot
    
    ![{53FF336F-1468-4021-BD95-ABE601BA0870}](https://github.com/user-attachments/assets/32edb962-4e74-4fa2-8ff6-9e61700855bf)
 

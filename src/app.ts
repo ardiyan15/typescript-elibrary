@@ -30,7 +30,7 @@ import backofficeRoutes from '@routes/backoffice'
 import frontOfficeRoutes from '@routes/frontoffice'
 
 dotenv.config();
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 
 const app = express();
 
@@ -105,7 +105,9 @@ sequelize
   .sync({ alter: true })
   .then(async () => {
     await connectRabbitMQ()
-    app.listen(port, () => console.log("Server is running"));
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`Server is running on port ${port}`);
+    });
   })
   .catch((err) => {
     console.log(err);
