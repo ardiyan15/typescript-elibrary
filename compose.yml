@@ -8,7 +8,7 @@ services:
       REDIS_PORT: 6379
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_NAME: e_library_typescript
+      DB_DATABASE: e_library_typescript
       DB_USER: root
       DB_PASSWORD: ""
       RABBITMQ_HOST: rabbitmq
