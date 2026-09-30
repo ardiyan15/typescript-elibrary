@@ -1,13 +1,18 @@
 import { connectRabbitMQ, getRabbitChannel } from "../utils/rabbitmq";
 import { importUser } from "../helper/ImportUser";
 import User from "../models/backoffice/users/user";
+import sequelize from '../utils/connection'
 
 const QUEUE = 'IMPORT_USER';
 const startWorker = async () => {
     await connectRabbitMQ()
 
+    User.initModel(sequelize)
+
     const channel = getRabbitChannel()
     await channel.assertQueue(QUEUE)
+
+    await User.initModel(sequelize)
 
     console.log(`Worker start listening`)
 
@@ -19,8 +24,7 @@ const startWorker = async () => {
                 console.log("Proccessing Import User")
                 console.time("Processing Time");
                 const result = await importUser(data.path)
-                User.bulkCreate(result.users)
-                console.timeEnd("Processing Time");
+                await User.bulkCreate(result.users)
                 console.log("Finished Import User")
             }
 

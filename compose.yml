@@ -23,6 +23,29 @@ services:
       - mysql
       - rabbitmq
 
+  worker:
+    build: .
+    command: npm run worker
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: e_library_typescript
+      DB_USER: root
+      DB_PASSWORD: ""
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: elibrary
+      RABBITMQ_PASSWORD: elibrary123
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+      - mysql
+      - rabbitmq
+
   redis:
     image: redis:7-alpine
     healthcheck:
