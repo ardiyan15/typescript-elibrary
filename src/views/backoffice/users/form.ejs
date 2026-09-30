@@ -64,7 +64,7 @@ include('../includes/navigation.ejs')%>
               <select name="roles" id="role" class="form-control <%= errors.find(e => e.path === 'roles') ? 'is-invalid' : '' %>">
                 <option value="">-- Select Role --</option>
                 <option value="admin" <%= user.roles == 'admin' ? "selected" : "" %>>Admin</option>
-                <option value="admin" <%= user.roles == 'user' ? "selected" : "" %>>User</option>
+                <option value="user" <%= user.roles == 'user' ? "selected" : "" %>>User</option>
               </select>
               <% errors.forEach(error => { if(error.path === 'roles') { %>
                 <span class="text-danger"><%= error.msg %></span> <br />
