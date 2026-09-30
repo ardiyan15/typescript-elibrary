@@ -133,26 +133,40 @@ export const saveImportUser = async (req: Request, res: Response): Promise<void>
 }
 
 export const exportUser = async (_: Request, res: Response) => {
-  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-  const page = await browser.newPage()
+  let browser;
 
-  const url = process.env.APP_URL + process.env.PORT + '/img/users/'
-  let start = 0
-  let length = 100
-  let search = { value: '', regex: '' }
+  try {
+    browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const page = await browser.newPage()
 
-  const users = (await userService.getAllUsers(start, length, search)).data
+    const url = process.env.APP_URL + process.env.PORT + '/img/users/'
+    let start = 0
+    let length = 100
+    let search = { value: '', regex: '' }
 
-  let pathTemplate = path.resolve('src', 'views', 'backoffice', 'users', 'userpdf.ejs')
+    const users = (await userService.getAllUsers(start, length, search)).data
 
-  let html = await ejs.renderFile(pathTemplate, { users, url })
+    let pathTemplate = path.resolve('src', 'views', 'backoffice', 'users', 'userpdf.ejs')
 
-  await page.setContent(html)
-  const pdfBuffer = await page.pdf({ format: 'A4' })
+    let html = await ejs.renderFile(pathTemplate, { users, url })
 
-  await browser.close()
+    await page.setContent(html)
+    const pdfBuffer = await page.pdf({ format: 'A4' })
 
-  res.setHeader('Content-Disposition', 'attachment; filename=output.pdf')
-  res.setHeader('Content-Type', 'application/pdf')
-  res.end(pdfBuffer)
+    await browser.close()
+
+    res.setHeader('Content-Disposition', 'attachment; filename=output.pdf')
+    res.setHeader('Content-Type', 'application/pdf')
+    res.end(pdfBuffer)
+  } catch (error) {
+    console.error("Export PDF error: ", error)
+
+    res.status(500).json({
+      messaage: 'Failed to export PDF'
+    })
+  } finally {
+    if (browser) {
+      await browser.close()
+    }
+  }
 }
