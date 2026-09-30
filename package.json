@@ -16,7 +16,9 @@
     "test": "jest --coverage",
     "worker": "nodemon --exec ts-node src/worker/worker.ts",
     "db:seed": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:all",
-    "db:seed:undo": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:undo"
+    "db:seed:undo": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:undo",
+    "db:migrate": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:migrate",
+    "db:migrate:undo": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:migrate:undo"
   },
   "author": "",
   "license": "ISC",
