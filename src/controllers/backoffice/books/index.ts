@@ -44,6 +44,7 @@ export const create = (_: Request, res: Response) => {
 export const store = async (req: Request, res: Response) => {
   try {
     await bookService.createBook(req)
+    req.flash("success", "Successfully create Book")
     res.redirect('/backoffice/books')
   } catch (error) {
     throw error
@@ -54,7 +55,7 @@ export const deleteBook = async (req: Request, res: Response): Promise<void> => 
   try {
     const bookId = req.params.id
     await bookService.deleteBook(bookId)
-    req.flash("success", "Successfully delete User")
+    req.flash("success", "Successfully delete Book")
     res.redirect('/backoffice/books')
   } catch (error) {
     res.send(error)
