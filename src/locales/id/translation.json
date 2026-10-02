@@ -29,5 +29,7 @@
     "title": "Judul",
     "image": "Gambar",
     "add book": "Tambah Buku",
-    "master book": "Master Buku"
+    "master book": "Master Buku",
+    "export user": "Ekspor Pengguna",
+    "import user": "Impor Pengguna"
 }

@@ -29,5 +29,7 @@
     "title": "Title",
     "image": "Image",
     "add book": "Add Book",
-    "master book": "Master Book"
+    "master book": "Master Book",
+    "export user": "Export User",
+    "import user": "Import User"
 }

@@ -21,9 +21,9 @@ include('../includes/navigation.ejs')%>
         </div>
         <div class="col-6 text-right">
             <form action="/backoffice/users/exportuser" method="POST" class="d-inline">
-              <button type="submit" class="btn btn-warning btn-sm rounded">Export User</button>
+              <button type="submit" class="btn btn-warning btn-sm rounded"><%= translate('export user') %></button>
             </form>
-            <a href="/backoffice/users/import" class="btn btn-primary btn-sm rounded">Import User</a>
+            <a href="/backoffice/users/import" class="btn btn-primary btn-sm rounded"><%= translate('import user') %></a>
         </div>
       </div>
     </div>
