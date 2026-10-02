@@ -7,7 +7,7 @@ import { IDataTableResponse } from "@generals/Interfaces"
 class BookRepository {
     async findAll(start: number, length: number, search: { value: string, regex: string }): Promise<IDataTableResponse<IBook>> {
         const searchValue = search?.value || '';
-        const whereCondition = searchValue ? { username: { [Op.like]: `%${searchValue}%` } } : {}
+        const whereCondition = searchValue ? { title: { [Op.like]: `%${searchValue}%` } } : {}
 
         const { rows, count } = await Book.findAndCountAll({
             where: whereCondition,
