@@ -13,14 +13,6 @@ import { IUserLogin } from '@generals/Interfaces'
 import { generateToken } from '@utils/jwt'
 import { logger, logFormatter } from "@utils/log";
 
-declare module 'express-session' {
-    interface SessionData {
-        backoffice: {
-            jwt?: string
-        }
-    }
-}
-
 class UserService {
     async getAllUsers(start: number, length: number, search: { value: string, regex: string }): Promise<IUserResponse> {
         const { data, recordsTotal, recordsFiltered } = await userRepository.findAll(start, length, search)

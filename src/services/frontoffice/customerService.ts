@@ -5,15 +5,6 @@ import CustomerRepository from "@repositories/frontoffice/customerRepository"
 import { encrypt } from "@utils/secure";
 import { generateToken } from '@utils/jwt'
 
-
-declare module 'express-session' {
-    interface SessionData {
-        frontoffice: {
-            jwt?: string
-        }
-    }
-}
-
 class CustomerService {
     async verifyCustomer(email: string, password: string) {
         const customer = await CustomerRepository.findByEmail(email)
