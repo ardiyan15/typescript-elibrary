@@ -11,6 +11,15 @@ jest.mock("../../../../src/utils/log")
 
 interface CustomSession extends Session, SessionData {
     jwt?: string;
+
+    backoffice?: {
+        jwt?: string
+    }
+
+    frontoffice?: {
+        jwt?: string
+    }
+
     reload: (callback: (err: any) => void) => this;
     resetMaxAge: () => this;
     save: (callbak: (err: any) => void) => this;
@@ -34,7 +43,6 @@ describe("Auth Controller - index", () => {
             flash: flashMock,
             session: {
                 id: "mock-session-id",
-                jwt: undefined,
                 regenerate: jest.fn(),
                 destroy: jest.fn(),
                 cookie: {} as any,
@@ -42,12 +50,16 @@ describe("Auth Controller - index", () => {
                 resetMaxAge: jest.fn(() => req.session!),
                 save: jest.fn(),
                 touch: jest.fn(),
+                backoffice: undefined,
+                frontoffice: undefined,
             },
         };
     });
 
     it("should be redirect to '/backoffice/home' if jwt exists", async () => {
-        req.session!.jwt = 'valid_token'
+        req.session!.backoffice = {
+            jwt: 'valid_token'
+        }
         res = {
             redirect: redirectMock
         }
@@ -58,7 +70,7 @@ describe("Auth Controller - index", () => {
     })
 
     it("should be render 'backoffice/auth' if jwt does not exists", async () => {
-        req.session!.jwt = undefined
+        req.session!.backoffice = undefined
         res = {
             render: renderMock
         }
@@ -141,7 +153,9 @@ describe("Auth Controller - Logout", () => {
         req = {
             session: {
                 id: "mock-session-id",
-                jwt: "mock-jwt-token",
+                backoffice: {
+                    jwt: "mock-jwt-token",
+                },
                 destroy: jest.fn(),
                 regenerate: jest.fn(),
                 cookie: {} as any,

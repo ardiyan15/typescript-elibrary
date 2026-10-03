@@ -39,7 +39,6 @@ export const logout = (req: Request, res: Response) => {
         if (err) {
             const logData = logFormatter("Logout Failed!", { data: err.message })
             logger.info(logData)
-            console.log('test')
             return res.send("Failed to destroy session")
         }
 
