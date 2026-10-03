@@ -1,57 +1,61 @@
-import dotenv from 'dotenv';
 import 'module-alias/register';
+import dotenv from 'dotenv';
 import path from "path";
 
 import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import flash from "connect-flash";
 import morgan from 'morgan';
-// import helmet from 'helmet';
 
-import { sequelize } from '@models/index'
-
-import { closeRabbitMQ, connectRabbitMQ } from '@utils/rabbitmq';
-import language from '@utils/language';
 import { logStream, logger } from '@utils/log';
+import language from '@utils/language';
 
 import menuMiddleware from '@middleware/menuMiddleware';
 import languageMiddleware from '@middleware/languageMiddleware';
 import { isAuthenticated } from '@middleware/authMiddleware';
 import isAuthorized from '@middleware/authorizedMiddleware';
+
 import { setupSwagger } from '@utils/swagger';
-// import { sendMessage } from '@utils/telegram';
 
-// API
 import apiRoutes from '@routes/api'
-
-// backiffice
 import authRoutes from '@routes/backoffice/auth/index'
 import backofficeRoutes from '@routes/backoffice'
 import frontOfficeRoutes from '@routes/frontoffice'
 
 dotenv.config();
-const port = Number(process.env.PORT) || 3000;
 
 const app = express();
 
+/**
+ * Body Parser
+ */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// app.use(helmet.contentSecurityPolicy({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     scriptSrc: ["'self'", "https://cdn.datatables.net"]
-//   }
-// }))
 
+/**
+ * Logger
+ */
 app.use(morgan("combined", { stream: logStream }));
 
+/**
+ * Swagger
+ */
 setupSwagger(app)
 
+/**
+ * API
+ */
 app.use("/api/v1", apiRoutes)
 
+/**
+ * Language
+ */
 app.use(language())
 
+/**
+ * Session
+ */
 app.use(
   session({
     secret: "123456",
@@ -61,17 +65,30 @@ app.use(
 );
 
 app.use(flash());
+
+/**
+ * Static Files
+ */
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/public", express.static(path.join(__dirname, "public")));
 
+/**
+ * View Engine
+ */
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+/**
+ * Authentication
+ */
 app.use("/backoffice", authRoutes)
 
 app.use(isAuthenticated)
 
+/**
+ * Authorization & Global Middleware
+ */
 app.use(languageMiddleware);
 app.use(menuMiddleware)
 app.use(isAuthorized)
@@ -90,30 +107,22 @@ app.use("/backoffice", (_, res) => {
 app.use("/", frontOfficeRoutes)
 
 app.use((_, res) => {
-  res.render('frontoffice/errors/NotFound')
+  res.status(404).render('frontoffice/errors/NotFound');
 })
 
-app.use((_err: Error, _: Request, res: Response, _next: NextFunction) => {
-  // sendMessage(err.message)
-  const menus = res.locals.menus ? [...res.locals.menus] : []
-  console.log(_err)
-  logger.error(_err.stack)
-  res.status(500).render("backoffice/Error", { menus })
-});
-
-sequelize
-  .sync({ alter: true })
-  .then(async () => {
-    await connectRabbitMQ()
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+/**
+ * Error Handler
+ */
+app.use(
+  (
+    _err: Error,
+    _: Request,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    const menus = res.locals.menus ? [...res.locals.menus] : []
+    logger.error(_err.stack)
+    res.status(500).render("backoffice/Error", { menus })
   });
 
-process.on('SIGINT', async () => {
-  await closeRabbitMQ()
-  process.exit(0)
-})
+export default app;
