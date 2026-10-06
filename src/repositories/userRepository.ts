@@ -124,7 +124,7 @@ class UserRepository {
         }
     }
 
-    async delete(id: string): Promise<number> {
+    async delete(id: number | string): Promise<number> {
         return User.destroy({ where: { id } })
     }
 

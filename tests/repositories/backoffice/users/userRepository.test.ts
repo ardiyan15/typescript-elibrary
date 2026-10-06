@@ -1,12 +1,14 @@
 import UserRepository from "../../../../src/repositories/userRepository";
 import User from "../../../../src/models/backoffice/users/user";
+import userRepository from "../../../../src/repositories/userRepository";
 import SubMenu from "../../../../src/models/backoffice/submenus/submenu"
 
 jest.mock('../../../../src/models/backoffice/users/user', () => ({
     __esModule: true,
     default: {
         findOne: jest.fn(),
-        findByPk: jest.fn()
+        findByPk: jest.fn(),
+        destroy: jest.fn()
     }
 }))
 
@@ -99,6 +101,44 @@ describe("UserRepository - findById", () => {
                     as: 'submenu'
                 }
             ]
+        })
+    })
+})
+
+describe("UserRepository - delete", () => {
+    beforeAll(() => {
+        jest.clearAllMocks()
+    })
+
+    it("should be return 1 when delete user is successfully", async () => {
+        const userId = 9999;
+
+        ;(User.destroy as jest.Mock).mockResolvedValue(1)
+
+        const result = await UserRepository.delete(userId)
+
+        expect(result).toBe(1)
+
+        expect(User.destroy).toHaveBeenCalledWith({
+            where: {
+                id: userId
+            }
+        })
+    })
+
+    it("should be return 0 where delete user is failed", async () => {
+        const userId = 9999
+
+        ;(User.destroy as jest.Mock).mockResolvedValue(0)
+
+        const result = await userRepository.delete(userId)
+
+        expect(result).toBe(0)
+
+        expect(User.destroy).toHaveBeenCalledWith({
+            where: {
+                id: userId
+            }
         })
     })
 })
