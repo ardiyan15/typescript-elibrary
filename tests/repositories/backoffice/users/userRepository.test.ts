@@ -1,8 +1,8 @@
 import { Op } from "sequelize";
 import UserRepository from "../../../../src/repositories/userRepository";
 import User from "../../../../src/models/backoffice/users/user";
-import userRepository from "../../../../src/repositories/userRepository";
 import SubMenu from "../../../../src/models/backoffice/submenus/submenu"
+import { getRabbitChannel } from "../../../../src/utils/rabbitmq";
 
 jest.mock('../../../../src/models/backoffice/users/user', () => ({
     __esModule: true,
@@ -12,6 +12,10 @@ jest.mock('../../../../src/models/backoffice/users/user', () => ({
         findByPk: jest.fn(),
         destroy: jest.fn()
     }
+}))
+
+jest.mock('../../../../src/utils/rabbitmq', () => ({
+    getRabbitChannel: jest.fn()
 }))
 
 describe("UserRepository - findAll", () => {
@@ -192,7 +196,7 @@ describe("UserRepository - findById", () => {
 })
 
 describe("UserRepository - delete", () => {
-    beforeAll(() => {
+    beforeEach(() => {
         jest.clearAllMocks()
     })
 
@@ -217,7 +221,7 @@ describe("UserRepository - delete", () => {
 
         ;(User.destroy as jest.Mock).mockResolvedValue(0)
 
-        const result = await userRepository.delete(userId)
+        const result = await UserRepository.delete(userId)
 
         expect(result).toBe(0)
 
@@ -226,5 +230,69 @@ describe("UserRepository - delete", () => {
                 id: userId
             }
         })
+    })
+})
+
+describe("UserRepository - bulkCreate", () => {
+    const mockAssertQueue = jest.fn()
+    const mockSendToQueue = jest.fn()
+
+    beforeEach(() => {
+        jest.clearAllMocks()
+
+        mockAssertQueue.mockReset()
+        mockSendToQueue.mockReset()
+    
+        ;(getRabbitChannel as jest.Mock).mockReturnValue({
+            assertQueue: mockAssertQueue,
+            sendToQueue: mockSendToQueue
+        })
+    })
+
+    it("should send message to RabbitMQ and return success response", async () => {
+        const path = "/uploads/users.xlsx"
+
+        mockAssertQueue.mockResolvedValue(undefined)
+        mockSendToQueue.mockReturnValue(true)
+
+        const result = await UserRepository.bulkCreate(path)
+
+        expect(result).toEqual({
+            responseCode: 200,
+            responseMessage: 'Success'
+        })
+
+        expect(getRabbitChannel).toHaveBeenCalled()
+        expect(mockAssertQueue).toHaveBeenCalledWith('IMPORT_USER')
+
+        const expectedMessage = JSON.stringify({
+            messageType: 'Import User',
+            path: path
+        })
+
+        expect(mockSendToQueue).toHaveBeenCalledWith(
+            'IMPORT_USER',
+            Buffer.from(expectedMessage)
+        )
+    })
+
+    it("should return error response when sendToQueue throws an error", async () => {
+        const path = "/uploads/users.xlsx"
+        const mockError = new Error("RabbitMQ connection failed")
+
+        mockAssertQueue.mockResolvedValue(undefined)
+        mockSendToQueue.mockImplementation(() => {
+            throw mockError
+        })
+
+        const result = await UserRepository.bulkCreate(path)
+
+        expect(result).toEqual({
+            responseCode: 500,
+            responseMessage: mockError
+        })
+
+        expect(getRabbitChannel).toHaveBeenCalled()
+        expect(mockAssertQueue).toHaveBeenCalledWith('IMPORT_USER')
     })
 })
