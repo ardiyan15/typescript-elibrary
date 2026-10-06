@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import UserRepository from "../../../../src/repositories/userRepository";
 import User from "../../../../src/models/backoffice/users/user";
 import userRepository from "../../../../src/repositories/userRepository";
@@ -6,11 +7,96 @@ import SubMenu from "../../../../src/models/backoffice/submenus/submenu"
 jest.mock('../../../../src/models/backoffice/users/user', () => ({
     __esModule: true,
     default: {
+        findAndCountAll: jest.fn(),
         findOne: jest.fn(),
         findByPk: jest.fn(),
         destroy: jest.fn()
     }
 }))
+
+describe("UserRepository - findAll", () => {
+
+    it("should be return all users", async () => {
+        const mockUsers = [
+            {
+                id: 2,
+                username: 'user2'
+            },
+            {
+                id: 1,
+                username: 'user1'
+            }
+        ]
+    
+        ;(User.findAndCountAll as jest.Mock).mockResolvedValue({
+            rows: mockUsers,
+            count: 2
+        })
+
+        const result = await UserRepository.findAll(
+            0,
+            10,
+            {
+                value: '',
+                regex: ''
+            }
+        )
+
+        expect(result).toEqual({
+            data: mockUsers,
+            recordsTotal: 2,
+            recordsFiltered: 2
+        })
+
+        expect(User.findAndCountAll).toHaveBeenCalledWith({
+            where: {},
+            offset: 0,
+            limit: 10,
+            order: [["id", "DESC"]]
+        })
+    })
+
+    it('should return filtered users when search is provided', async () => {
+        const mockUsers = [
+            {
+                id: 1,
+                username: 'admin'
+            }
+        ]
+
+            ; (User.findAndCountAll as jest.Mock).mockResolvedValue({
+                rows: mockUsers,
+                count: 1
+            })
+
+        const result = await UserRepository.findAll(
+            0,
+            10,
+            {
+                value: 'admin',
+                regex: ''
+            }
+        )
+
+        expect(result).toEqual({
+            data: mockUsers,
+            recordsTotal: 1,
+            recordsFiltered: 1
+        })
+
+        expect(User.findAndCountAll).toHaveBeenCalledWith({
+            where: {
+                username: {
+                    [Op.like]: '%admin%'
+                }
+            },
+            offset: 0,
+            limit: 10,
+            order: [['id', 'DESC']]
+        })
+    })
+
+})
 
 describe('UserRepository - findByUsername', () => {
 
