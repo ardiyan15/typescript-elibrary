@@ -2,7 +2,10 @@ import { Op } from "sequelize";
 import UserRepository from "../../../../src/repositories/userRepository";
 import User from "../../../../src/models/backoffice/users/user";
 import SubMenu from "../../../../src/models/backoffice/submenus/submenu"
+import bcrypt from 'bcrypt'
 import { getRabbitChannel } from "../../../../src/utils/rabbitmq";
+import sequelize from "../../../../src/utils/connection";
+import Privilege from "../../../../src/models/backoffice/privileges/privileges";
 
 jest.mock('../../../../src/models/backoffice/users/user', () => ({
     __esModule: true,
@@ -10,9 +13,23 @@ jest.mock('../../../../src/models/backoffice/users/user', () => ({
         findAndCountAll: jest.fn(),
         findOne: jest.fn(),
         findByPk: jest.fn(),
-        destroy: jest.fn()
+        destroy: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn()
     }
 }))
+
+jest.mock('../../../../src/utils/connection', () => ({
+    __esModule: true,
+    default: { transaction: jest.fn() }
+}))
+
+jest.mock('../../../../src/models/backoffice/privileges/privileges', () => ({
+    __esModule: true,
+    default: { bulkCreate: jest.fn(), destroy: jest.fn() }
+}))
+
+jest.mock('bcrypt', () => ({ hash: jest.fn() }))
 
 jest.mock('../../../../src/utils/rabbitmq', () => ({
     getRabbitChannel: jest.fn()
@@ -230,6 +247,93 @@ describe("UserRepository - delete", () => {
                 id: userId
             }
         })
+    })
+})
+
+describe("UserRepository - create", () => {
+    const transaction = { commit: jest.fn(), rollback: jest.fn() }
+
+    beforeEach(() => {
+        jest.clearAllMocks()
+        ;(sequelize.transaction as jest.Mock).mockResolvedValue(transaction)
+    })
+
+    it("creates a hashed user and its privileges in one transaction", async () => {
+        const userData = {
+            username: 'admin', password: 'plain-password', email: 'admin@mail.com', roles: 'admin', privileges: ['1', '2']
+        }
+        const createdUser = { id: 7, get: jest.fn().mockReturnValue({ id: 7, username: 'admin' }) }
+        ;(bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password')
+        ;(User.create as jest.Mock).mockResolvedValue(createdUser)
+        ;(Privilege.bulkCreate as jest.Mock).mockResolvedValue([])
+
+        const result = await UserRepository.create(userData as any)
+
+        expect(bcrypt.hash).toHaveBeenCalledWith('plain-password', 10)
+        expect(User.create).toHaveBeenCalledWith({ username: 'admin', password: 'hashed-password', email: 'admin@mail.com', roles: 'admin' }, { transaction })
+        expect(Privilege.bulkCreate).toHaveBeenCalledWith([
+            { userId: 7, submenuId: 1 }, { userId: 7, submenuId: 2 }
+        ], { transaction })
+        expect(transaction.commit).toHaveBeenCalledTimes(1)
+        expect(transaction.rollback).not.toHaveBeenCalled()
+        expect(result).toEqual({ id: 7, username: 'admin' })
+    })
+
+    it("rolls back and rethrows when creating the user fails", async () => {
+        const error = new Error('create failed')
+        ;(bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password')
+        ;(User.create as jest.Mock).mockRejectedValue(error)
+
+        await expect(UserRepository.create({
+            username: 'admin', password: 'plain-password', email: 'admin@mail.com', roles: 'admin', privileges: '1'
+        } as any)).rejects.toThrow(error)
+
+        expect(transaction.rollback).toHaveBeenCalledTimes(1)
+        expect(transaction.commit).not.toHaveBeenCalled()
+    })
+})
+
+describe("UserRepository - update", () => {
+    const transaction = { commit: jest.fn(), rollback: jest.fn() }
+
+    beforeEach(() => {
+        jest.clearAllMocks()
+        ;(sequelize.transaction as jest.Mock).mockResolvedValue(transaction)
+    })
+
+    it("updates user details and replaces privileges in one transaction", async () => {
+        ;(bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password')
+        ;(User.update as jest.Mock).mockResolvedValue([1])
+        ;(Privilege.destroy as jest.Mock).mockResolvedValue(2)
+        ;(Privilege.bulkCreate as jest.Mock).mockResolvedValue([])
+
+        const result = await UserRepository.update('7', {
+            username: 'editor', password: 'plain-password', email: 'editor@mail.com', roles: 'editor', image: 'avatar.png', privileges: ['3', '4']
+        } as any)
+
+        expect(User.update).toHaveBeenCalledWith({
+            username: 'editor', email: 'editor@mail.com', roles: 'editor', password: 'hashed-password', image: 'avatar.png'
+        }, { where: { id: '7' }, transaction })
+        expect(Privilege.destroy).toHaveBeenCalledWith({ where: { userId: '7' }, transaction })
+        expect(Privilege.bulkCreate).toHaveBeenCalledWith([
+            { userId: '7', submenuId: 3 }, { userId: '7', submenuId: 4 }
+        ], { transaction })
+        expect(transaction.commit).toHaveBeenCalledTimes(1)
+        expect(result).toEqual([1])
+    })
+
+    it("rolls back and returns the error when privilege replacement fails", async () => {
+        const error = new Error('privilege failed')
+        ;(User.update as jest.Mock).mockResolvedValue([1])
+        ;(Privilege.destroy as jest.Mock).mockRejectedValue(error)
+
+        const result = await UserRepository.update('7', {
+            username: 'editor', email: 'editor@mail.com', roles: 'editor', privileges: '3'
+        } as any)
+
+        expect(transaction.rollback).toHaveBeenCalledTimes(1)
+        expect(transaction.commit).not.toHaveBeenCalled()
+        expect(result).toBe(error)
     })
 })
 
