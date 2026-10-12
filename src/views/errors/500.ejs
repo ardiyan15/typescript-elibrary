@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Service temporarily unavailable</title>
+    <style>
+      :root { color-scheme: light; font-family: Arial, sans-serif; color: #243247; background: #f3f6fa; }
+      body { min-height: 100vh; margin: 0; display: grid; place-items: center; }
+      main { box-sizing: border-box; width: min(92%, 560px); padding: 40px; border-radius: 12px; background: #fff; box-shadow: 0 12px 36px #1f35501a; }
+      .code { color: #3974b8; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
+      h1 { margin: 12px 0; font-size: 28px; }
+      p { color: #58677a; line-height: 1.6; }
+      ul { padding-left: 22px; color: #58677a; }
+      li { margin: 6px 0; }
+      .hint { margin-top: 24px; padding-top: 18px; border-top: 1px solid #e5eaf0; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="code">ERROR 503</div>
+      <h1>Service temporarily unavailable</h1>
+      <p>The application server is running, but one or more required services are unavailable. Please try again later.</p>
+      <% if (unavailableDependencies && unavailableDependencies.length) { %>
+        <p>Unavailable services:</p>
+        <ul>
+          <% unavailableDependencies.forEach(service => { %>
+            <li><%= service %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+      <p class="hint">Please try again after the required services have been restored and the application reconnects.</p>
+    </main>
+  </body>
+</html>

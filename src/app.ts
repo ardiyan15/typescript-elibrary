@@ -7,7 +7,8 @@ import session from "express-session";
 import flash from "connect-flash";
 import morgan from 'morgan';
 
-import { logStream, logger } from '@utils/log';
+import { logStream, logger, logTimestamp } from '@utils/log';
+import { areDependenciesAvailable, getUnavailableDependencies } from '@utils/dependencyStatus';
 import language from '@utils/language';
 
 import menuMiddleware from '@middleware/menuMiddleware';
@@ -36,17 +37,8 @@ app.use(express.json());
 /**
  * Logger
  */
+morgan.token('date', () => logTimestamp('DD/MMM/YYYY:HH:mm:ss ZZ'));
 app.use(morgan("combined", { stream: logStream }));
-
-/**
- * Swagger
- */
-setupSwagger(app)
-
-/**
- * API
- */
-app.use("/api/v1", apiRoutes)
 
 /**
  * Language
@@ -78,6 +70,25 @@ app.use("/public", express.static(path.join(__dirname, "public")));
  */
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.get('/500', (_: Request, res: Response) => {
+  res.status(503).render('errors/500', {
+    unavailableDependencies: getUnavailableDependencies()
+  });
+});
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (areDependenciesAvailable() || req.path === '/500') {
+    return next();
+  }
+  return res.redirect('/500');
+});
+
+/**
+ * Swagger and application routes are only available when dependencies are ready.
+ */
+setupSwagger(app)
+app.use("/api/v1", apiRoutes)
 
 /**
  * Authentication
