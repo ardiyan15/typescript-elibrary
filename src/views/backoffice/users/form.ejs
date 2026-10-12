@@ -114,6 +114,9 @@ include('../includes/navigation.ejs')%>
               <% }) %>
             </tbody>
           </table>
+          <% errors.forEach(error => { if(error.path === 'privileges') { %>
+            <div class="text-danger mb-3"><%= error.msg %></div>
+          <% }}) %>
         </div>
         <a href="/backoffice/users" class="btn btn-warning btn-sm rounded">
           <i class="fa fa-arrow-left"></i>

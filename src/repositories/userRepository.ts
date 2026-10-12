@@ -45,13 +45,11 @@ class UserRepository {
     async create(userData: IUser): Promise<Record<string, any>> {
         const { privileges, ...userDetails } = userData
 
-        let newPrivileges: number[] = []
-
-        if (typeof privileges === 'string') {
-            newPrivileges.push(privileges)
-        } else {
-            newPrivileges = privileges
-        }
+        const newPrivileges: (number | string)[] = privileges == null
+            ? []
+            : typeof privileges === 'string'
+                ? [privileges]
+                : privileges
 
         userDetails.password = await bcrypt.hash(userDetails.password, 10)
 
@@ -78,12 +76,11 @@ class UserRepository {
     async update(id: string, userData: Partial<IUser>): Promise<[number]> {
         const { privileges, ...userDetails } = userData
 
-        let newPrivileges: number[] = []
-        if (typeof privileges === 'string') {
-            newPrivileges.push(privileges)
-        } else {
-            newPrivileges = privileges
-        }
+        const newPrivileges: (number | string)[] = privileges == null
+            ? []
+            : typeof privileges === 'string'
+                ? [privileges]
+                : privileges
         const submenuIds = newPrivileges.map((id) => Number(id))
 
         const updateData: IUser = {

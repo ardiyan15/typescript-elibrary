@@ -6,7 +6,7 @@ import puppeteer from "puppeteer";
 import ejs from 'ejs'
 
 import userService from '@services/userService';
-import { User, TemplateUser } from '@customTypes/user'
+import { TemplateUser } from '@customTypes/user'
 import subMenuService from "@services/subMenuService";
 import { logger } from "@utils/log";
 
@@ -33,12 +33,25 @@ export const getUsers = (req: Request, res: Response) => {
   });
 };
 
-export const userForm = async (_: Request, res: Response) => {
+export const userForm = async (req: Request, res: Response) => {
   const url = '/backoffice/users/saveuser'
-  const user: User[] = [];
-  const errors: ValidationError[] = []
+  let user: Record<string, any> = {};
+  let errors: ValidationError[] = []
+  let userSubMenus: number[] = []
+
+  const [formState] = req.flash('userForm')
+  if (formState) {
+    try {
+      const restored = JSON.parse(formState)
+      user = restored.user || {}
+      errors = restored.errors || []
+      userSubMenus = restored.userSubMenus || []
+    } catch (error) {
+      logger.info('Unable to restore user form state', error)
+    }
+  }
+
   const subMenus = await subMenuService.getAllSubMenus()
-  const userSubMenus: number[] = []
   const formType = 'create'
   const basePath = '/backoffice/users'
   res.render("backoffice/users/form", { url, user, errors, subMenus, basePath, userSubMenus, formType });
@@ -48,21 +61,24 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await userService.createUser(req)
     if (result.isError) {
-      const url = '/backoffice/users/saveuser'
-      const user: Object = result.data;
-      const errors = result.errors
-      const subMenus = await subMenuService.getAllSubMenus()
-      const formType = 'create'
-      const userSubMenus: number[] = []
+      const user = { ...req.body }
+      // Browsers cannot restore a file input, and passwords should not be kept
+      // in the session when redirecting back to the form.
+      delete user.password
+      const privileges = Array.isArray(user.privileges)
+        ? user.privileges
+        : user.privileges === undefined ? [] : [user.privileges]
+      const userSubMenus = privileges.map((id: string | number) => Number(id))
 
-      res.render("backoffice/users/form", { errors, url, user, subMenus, formType, userSubMenus });
+      req.flash('userForm', JSON.stringify({ user, errors: result.errors, userSubMenus }))
+      res.redirect('/backoffice/users/form')
     } else {
       req.flash("success", "Successfully add User");
       res.redirect('/backoffice/users')
     }
   } catch (error) {
     logger.info("Create User Failed", error)
-    res.send(error)
+    res.status(500).send("Failed to create user. Please check the submitted data and try again.")
   }
 }
 

@@ -102,9 +102,8 @@ class UserService {
             return results
         }
 
-        const image = req.file.filename
-
-        req.body.image = image
+        // Profile photo is optional on the add user form.
+        req.body.image = req.file?.filename ?? 'default-profile.jpg'
 
         const userData: Partial<IUser> = req.body;
         delete userData.id;

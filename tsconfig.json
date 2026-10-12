@@ -28,5 +28,8 @@
     },
     "typeRoots": ["./node_modules/@types", "src/customTypes"]
   },
+  "ts-node": {
+    "files": true
+  },
   "include": ["src/**/*"]
 }
