@@ -37,13 +37,23 @@ export const create = (_: Request, res: Response) => {
     formTitle,
     book,
     basePath,
-    action
+    action,
+    errors: []
   })
 }
 
 export const store = async (req: Request, res: Response) => {
   try {
-    await bookService.createBook(req)
+    const result = await bookService.createBook(req)
+    if (result.isError) {
+      return res.status(422).render('backoffice/books/form', {
+        formTitle: 'Create Book',
+        book: req.body,
+        basePath: '/backoffice/books',
+        action: '/backoffice/books/store',
+        errors: result.errors
+      })
+    }
     req.flash("success", "Successfully create Book")
     res.redirect('/backoffice/books')
   } catch (error) {
@@ -71,13 +81,25 @@ export const getBook = async (req: Request, res: Response) => {
     book,
     bookId,
     formTitle,
-    action
+    action,
+    errors: []
   })
 }
 
 export const update = async (req: Request, res: Response) => {
   try {
-    await bookService.updateBook(req)
+    const result = await bookService.updateBook(req)
+    if ('isError' in result && result.isError) {
+      const currentBook = await bookService.getBook(req.body.id)
+      return res.status(422).render('backoffice/books/form', {
+        book: { ...currentBook, ...req.body },
+        bookId: req.body.id,
+        formTitle: 'Update Book',
+        action: '/backoffice/books/update',
+        basePath: '/backoffice/books',
+        errors: result.errors
+      })
+    }
     req.flash("success", "Successfully update Book")
     res.redirect('/backoffice/books')
   } catch (error) {
