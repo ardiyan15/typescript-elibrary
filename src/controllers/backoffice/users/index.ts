@@ -115,7 +115,25 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    await userService.updateUser(req)
+    const result = await userService.updateUser(req)
+    if (!Array.isArray(result) && result.isError) {
+      const existingUser = await userService.getUserBydId(req.body.id)
+      const privileges = Array.isArray(req.body.privileges)
+        ? req.body.privileges
+        : req.body.privileges === undefined ? [] : [req.body.privileges]
+      const userSubMenus = privileges.map((id: string | number) => Number(id))
+
+      return void res.status(422).render('backoffice/users/form', {
+        user: { ...(existingUser || {}), ...req.body },
+        url: '/backoffice/users/update',
+        errors: result.errors,
+        userId: req.body.id,
+        subMenus: await subMenuService.getAllSubMenus(),
+        userSubMenus,
+        formType: 'update',
+        basePath: '/backoffice/users'
+      })
+    }
     req.flash("success", "Successfully update User")
     res.redirect('/backoffice/users')
   } catch (error) {

@@ -14,7 +14,15 @@ import { generateToken } from '@utils/jwt'
 import { logger, logFormatter } from "@utils/log";
 
 class UserService {
+    private logFatalError(operation: string, error: unknown, moduleUrl: string = ''): void {
+        const details = error instanceof Error
+            ? { message: error.message, stack: error.stack }
+            : { message: String(error) }
+        logger.error(logFormatter(`${operation} failed unexpectedly`, { error: details }, moduleUrl))
+    }
+
     async getAllUsers(start: number, length: number, search: { value: string, regex: string }): Promise<IUserResponse> {
+        try {
         const { data, recordsTotal, recordsFiltered } = await userRepository.findAll(start, length, search)
 
         const encryptedData = data.map(user => {
@@ -40,24 +48,41 @@ class UserService {
             }
         })
 
-        return {
+        const result = {
             data: encryptedData,
             recordsTotal,
             recordsFiltered
         }
+        logger.info(logFormatter('Get users successfully', { recordsTotal, recordsFiltered }))
+        return result
+        } catch (error) {
+            this.logFatalError('Get users', error)
+            throw error
+        }
     }
 
     async getUserBydId(id: string, isEncrypt: boolean = true): Promise<IUser | null> {
+        try {
         let userId = id
         if (isEncrypt) {
             userId = decrypt(id)
         }
 
         const user = await userRepository.findById(userId)
+        if (!user) {
+            logger.warn(logFormatter('User not found', { isEncrypted: isEncrypt }))
+        } else {
+            logger.info(logFormatter('Get user successfully', { isEncrypted: isEncrypt }))
+        }
         return user;
+        } catch (error) {
+            this.logFatalError('Get user by id', error)
+            throw error
+        }
     }
 
     async verifyUser(username: string, password: string): Promise<IUserLogin> {
+        try {
         const user = await userRepository.findByUsername(username)
         let result: IUserLogin
 
@@ -70,13 +95,19 @@ class UserService {
                     data: user
                 }
 
+                logger.info(logFormatter('User authentication succeeded'))
                 return result
             }
         }
 
+        logger.warn(logFormatter('User authentication failed', { userFound: Boolean(user) }))
         return {
             isUserValid: false,
             data: null
+        }
+        } catch (error) {
+            this.logFatalError('Verify user credentials', error)
+            throw error
         }
     }
 
@@ -94,10 +125,17 @@ class UserService {
                 data: req.body
             }
 
-            const data = { results }
+            const { password, ...safeBody } = req.body
+
+            const data = {
+                results: {
+                    ...results,
+                    data: safeBody
+                }
+            }
 
             const logData = logFormatter("Error User Validation", data, req.originalUrl)
-            logger.error(logData)
+            logger.warn(logData)
 
             return results
         }
@@ -108,7 +146,13 @@ class UserService {
         const userData: Partial<IUser> = req.body;
         delete userData.id;
 
-        const user = await userRepository.create(req.body)
+        let user: Record<string, any>
+        try {
+            user = await userRepository.create(req.body)
+        } catch (error) {
+            this.logFatalError('Create user', error, req.originalUrl)
+            throw error
+        }
 
         results = {
             isError: false,
@@ -116,9 +160,7 @@ class UserService {
             data: user
         }
 
-        const data = { results }
-
-        logData = logFormatter("Create User Successfully!", data, req.originalUrl)
+        logData = logFormatter("Create User Successfully!", { userId: user.id }, req.originalUrl)
         logger.info(logData)
 
         return results
@@ -140,10 +182,8 @@ class UserService {
                 data: []
             }
 
-            const data = { results }
-
-            const logData = logFormatter("Error User Validation Update", data, req.originalUrl)
-            logger.error(logData)
+            const logData = logFormatter("User update validation failed", { errors: results.errors }, req.originalUrl)
+            logger.warn(logData)
 
             return results
         }
@@ -153,24 +193,35 @@ class UserService {
             req.body.image = image
         }
 
-        const userId = decrypt(req.body.id)
-        delete req.body.id
-        const result = await userRepository.update(userId, req.body)
+        try {
+            const userId = decrypt(req.body.id)
+            delete req.body.id
+            const result = await userRepository.update(userId, req.body)
 
-        logData = logFormatter("Update User Successfully!", results, req.originalUrl)
-        logger.info(logData)
-
-        return result
+            if (Array.isArray(result)) {
+                logData = logFormatter("Update User Successfully!", { affectedRows: result[0] }, req.originalUrl)
+                logger.info(logData)
+            } else {
+                logger.warn(logFormatter("User update processing failed", { error: String(result) }, req.originalUrl))
+            }
+            return result
+        } catch (error) {
+            this.logFatalError('Update user', error, req.originalUrl)
+            throw error
+        }
 
     }
 
     async deleteUser(id: string): Promise<number> {
-        const userId = decrypt(id)
-        const result = await userRepository.delete(userId)
-        const logData = logFormatter("Delete User Successfully!", { data: result })
-        logger.info(logData)
-
-        return result
+        try {
+            const userId = decrypt(id)
+            const result = await userRepository.delete(userId)
+            logger.info(logFormatter("Delete user successfully", { affectedRows: result }))
+            return result
+        } catch (error) {
+            this.logFatalError('Delete user', error)
+            throw error
+        }
     }
 
     async download(templateName: string): Promise<TemplateUser> {
@@ -184,7 +235,7 @@ class UserService {
                 data: filePath
             }
 
-            const logData = logFormatter("Download Successfully!", { data: result })
+            const logData = logFormatter("Download Successfully!",  result )
             logger.info(logData)
 
             return result
@@ -195,29 +246,52 @@ class UserService {
                 data: err
             }
 
-            const logData = logFormatter("Download failed!", { data: result })
-            logger.error(logData)
+            const logData = logFormatter("Download failed!", result )
+            logger.warn(logData)
 
             return result
         }
     }
 
     async bulkCreate(filePath: string): Promise<ResponseData> {
-        return userRepository.bulkCreate(filePath)
+        try {
+            const result = await userRepository.bulkCreate(filePath)
+            if (result.responseCode === 200) {
+                logger.info(logFormatter('Bulk user import queued successfully', { responseCode: result.responseCode }))
+            } else {
+                logger.warn(logFormatter('Bulk user import could not be queued', { responseCode: result.responseCode, responseMessage: String(result.responseMessage) }))
+            }
+            return result
+        } catch (error) {
+            this.logFatalError('Bulk create users', error)
+            throw error
+        }
     }
 
     async generateJwtToken(dataId: string | number, dataUsername: string): Promise<string> {
-        const id = encrypt(dataId.toString())
-        const username = encrypt(dataUsername)
+        try {
+            const id = encrypt(dataId.toString())
+            const username = encrypt(dataUsername)
 
-        const payload = { id, username }
-        const token = generateToken(payload)
-        return token
+            const payload = { id, username }
+            const token = generateToken(payload)
+            logger.info(logFormatter('JWT generated successfully', { userId: dataId }))
+            return token
+        } catch (error) {
+            this.logFatalError('Generate JWT', error)
+            throw error
+        }
     }
 
     async storeJwtToken(req: Request, token: string): Promise<void> {
-        if (!req.session.backoffice) req.session.backoffice = {}
-        req.session.backoffice.jwt = token
+        try {
+            if (!req.session.backoffice) req.session.backoffice = {}
+            req.session.backoffice.jwt = token
+            logger.info(logFormatter('JWT stored in backoffice session', {}, req.originalUrl))
+        } catch (error) {
+            this.logFatalError('Store JWT in session', error, req.originalUrl)
+            throw error
+        }
     }
 }
 
