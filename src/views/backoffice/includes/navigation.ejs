@@ -38,7 +38,7 @@
 
     <div
       id="collapse<%= menu.id %>"
-      class="collapse <%= menu.submenus.some(subMenu => basePath === subMenu.url) ? 'show' : '' %>"
+      class="collapse <%= menu.submenus.some(subMenu => basePath === subMenu.url || basePath.startsWith(subMenu.url + '/')) ? 'show' : '' %>"
       aria-labelledby="heading<%= menu.id %>"
       data-parent="#accordionSidebar"
     >
@@ -46,7 +46,7 @@
         <h6 class="collapse-header"><%= translate(menu.name) %></h6>
         <% menu.submenus.forEach(subMenu => { %>
         <a
-          class="collapse-item <%= basePath === subMenu.url ? 'active' : '' %>"
+          class="collapse-item <%= basePath === subMenu.url || basePath.startsWith(subMenu.url + '/') ? 'active' : '' %>"
           href="<%= subMenu.url %>"
         >
           <%= translate(subMenu.name) %>
