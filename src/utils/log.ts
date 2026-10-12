@@ -8,6 +8,9 @@ export const logStream = fs.createWriteStream(path.join(__dirname, '../logs/acce
     flags: 'a'
 })
 
+export const logTimestamp = (format: string = 'YYYY-MM-DD HH:mm:ss'): string =>
+    moment().utcOffset(7).format(format)
+
 const onlyInfo = winston.format((info) => (info.level === "info" ? info : false))();
 const onlyError = winston.format((info) => (info.level === "error" ? info : false))();
 const onlyWarn = winston.format((info) => (info.level === "warn" ? info : false))();
@@ -18,7 +21,7 @@ const infoTransport = new winston.transports.File({
     format: winston.format.combine(
         onlyInfo,
         winston.format.timestamp({
-            format: () => moment().format("YYYY-MM-DD HH:mm:ss")
+            format: () => logTimestamp()
         }),
         winston.format.printf(({ timestamp, level, message }) => `[${timestamp}] ${level.toUpperCase()}: ${message}`)
     ),
@@ -30,7 +33,7 @@ const errorTransport = new winston.transports.File({
     format: winston.format.combine(
         onlyError,
         winston.format.timestamp({
-            format: () => moment().format("YYYY-MM-DD HH:mm:ss")
+            format: () => logTimestamp()
         }),
         winston.format.printf(({ timestamp, level, message }) => `[${timestamp}] ${level.toUpperCase()}: ${message}`)
     ),
@@ -42,7 +45,7 @@ const warnTransport = new winston.transports.File({
     format: winston.format.combine(
         onlyWarn,
         winston.format.timestamp({
-            format: () => moment().format("YYYY-MM-DD HH:mm:ss")
+            format: () => logTimestamp()
         }),
         winston.format.printf(
             ({ timestamp, level, message }) =>
