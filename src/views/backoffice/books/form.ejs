@@ -19,21 +19,23 @@
               type="text"
               name="title"
               id="title"
-              class="form-control"
+              class="form-control <%= errors.some(error => error.path === 'title') ? 'is-invalid' : '' %>"
               placeholder="Title"
               required
               value="<%= book.title ? book.title : '' %>"
             />
+            <% errors.forEach(error => { if(error.path === 'title') { %><div class="text-danger"><%= error.msg %></div><% }}) %>
           </div>
           <div class="col-md-4 form-group">
             <label for="category">Category</label>
-            <select name="category" class="form-control" required>
+            <select name="category" class="form-control <%= errors.some(error => error.path === 'category') ? 'is-invalid' : '' %>" required>
               <option value="">-- Select Category --</option>
               <option value="Self Development" <%= book.category == 'Self Development' ? "selected" : "" %>>Self Development</option>
               <option value="Fiction" <%= book.category == 'Fiction' ? "selected" : "" %>>Fiction</option>
               <option value="History" <%= book.category == 'History' ? "selected" : "" %>>History</option>
               <option value="Economy" <%= book.category == 'Economy' ? "selected" : "" %>>Economy</option>
             </select>
+            <% errors.forEach(error => { if(error.path === 'category') { %><div class="text-danger"><%= error.msg %></div><% }}) %>
           </div>
           <div class="col-md-4 form-group">
             <% if(book.id) { %>
@@ -59,29 +61,35 @@
             </div>
             <% } else { %>
             <label for="image">Image</label>
-            <input type="file" name="book-image" id="image" class="form-control" />
+            <input type="file" name="book-image" id="image" class="form-control <%= errors.some(error => error.path === 'book-image') ? 'is-invalid' : '' %>" />
+            <% errors.forEach(error => { if(error.path === 'book-image') { %><div class="text-danger"><%= error.msg %></div><% }}) %>
             <% } %>
           </div>
           <div class="col-md-8 form-group">
             <label for="text">Description</label>
             <textarea
-              class="form-control"
+              class="form-control <%= errors.some(error => error.path === 'description') ? 'is-invalid' : '' %>"
               name="description"
               id="description"
               cols="30"
               rows="5"
               placeholder="Some Description"><%= book.description ? book.description : '' %>
             </textarea>
+            <% errors.forEach(error => { if(error.path === 'description') { %><div class="text-danger"><%= error.msg %></div><% }}) %>
           </div>
           <div class="col-md-4 form-group">
             <label for="text">Price</label>
             <input
-              class="form-control"
+              class="form-control <%= errors.some(error => error.path === 'price') ? 'is-invalid' : '' %>"
               name="price"
               id="price"
+              type="number"
+              min="0"
+              step="0.01"
               required
               value="<%= book.price ? book.price : '' %>"
             />
+            <% errors.forEach(error => { if(error.path === 'price') { %><div class="text-danger"><%= error.msg %></div><% }}) %>
           </div>
         </div>
         <a href="/backoffice/books" class="btn btn-warning btn-sm rounded">
