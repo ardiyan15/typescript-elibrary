@@ -22,12 +22,12 @@ export const login = async (req: Request, res: Response) => {
     if (result.isUserValid) {
         const token = await userService.generateJwtToken(result.data.id, result.data.username)
         await userService.storeJwtToken(req, token)
-        const logData = logFormatter("Login Successfully!", { data: result }, req.originalUrl)
+        const logData = logFormatter("Login Successfully!", result, req.originalUrl)
         logger.info(logData)
         res.redirect('/backoffice/home')
     } else {
-        const logData = logFormatter("Login Failed!", { data: result })
-        logger.info(logData)
+        const logData = logFormatter("Login Failed!", result, req.originalUrl)
+        logger.warn(logData)
         req.flash("failed", "Invalid Username or Password")
         res.redirect('/backoffice')
     }
@@ -38,11 +38,11 @@ export const logout = (req: Request, res: Response) => {
     req.session.destroy((err) => {
         if (err) {
             const logData = logFormatter("Logout Failed!", { data: err.message })
-            logger.info(logData)
+            logger.warn(logData)
             return res.send("Failed to destroy session")
         }
 
-        const logData = logFormatter("Logout Successfully!", { data: token })
+        const logData = logFormatter("Logout Successfully!", { token })
         logger.info(logData)
 
         res.redirect('/backoffice')

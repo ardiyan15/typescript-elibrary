@@ -29,5 +29,11 @@ export const userValidator = [
 export const userUpdateValidator = [
     body('username').notEmpty().withMessage('Username is required'),
     body('email').notEmpty().withMessage('Email is required').isEmail().withMessage("Email is not valid"),
-    body('roles').notEmpty().withMessage('Roles is required')
+    body('roles').notEmpty().withMessage('Roles is required'),
+    body('privileges').custom(value => {
+        if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+            throw new Error('Select at least 1 privilege');
+        }
+        return true;
+    })
 ]
