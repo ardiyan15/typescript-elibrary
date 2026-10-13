@@ -17,27 +17,60 @@ export const connectRabbitMQ = async (): Promise<void> => {
 
     const rabbitUrl = `amqp://${credentials}@${host}:${port}`
 
-    try {
-        connection = await amqplib.connect(rabbitUrl, { timeout: 3000 })
-        channel = await connection.createChannel()
-        setDependencyStatus('rabbitmq', true)
+    const maxRetries = 5;
 
-        connection.on('error', (error) => {
-            setDependencyStatus('rabbitmq', false)
-            logger.error(
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        let newConnection: ChannelModel | undefined;
+
+        try {
+            newConnection = await amqplib.connect(rabbitUrl);
+            const newChannel = await newConnection.createChannel();
+
+            connection = newConnection;
+            channel = newChannel;
+            setDependencyStatus('rabbitmq', true)
+
+            connection.on('error', (error) => {
+                setDependencyStatus('rabbitmq', false)
+                logger.error(
+                    logFormatter(
+                        'RabbitMQ Connection Error',
+                        { error: error.message },
+                        'rabbitmq'
+                    )
+                )
+            })
+
+            connection.on('close', () => {
+                logger.warn(
+                    logFormatter(
+                        'RabbitMQ Connection Closed',
+                        {},
+                        'rabbitmq'
+                    )
+                )
+
+                connection = undefined
+                channel = undefined
+                setDependencyStatus('rabbitmq', false)
+            })
+
+            logger.info(
                 logFormatter(
-                    'RabbitMQ Connection Error',
-                    { error: error.message },
+                    'RabbitMQ Connected Successfully',
+                    { host, port },
                     'rabbitmq'
                 )
             )
-        })
-
-        connection.on('close', () => {
-            logger.warn(
+        } catch (error) {
+            logger.error(
                 logFormatter(
-                    'RabbitMQ Connection Closed',
-                    {},
+                    'Failed to Connect to RabbitMQ',
+                    {
+                        error: error instanceof Error
+                            ? error.message
+                            : String(error)
+                    },
                     'rabbitmq'
                 )
             )
@@ -45,33 +78,9 @@ export const connectRabbitMQ = async (): Promise<void> => {
             connection = undefined
             channel = undefined
             setDependencyStatus('rabbitmq', false)
-        })
 
-        logger.info(
-            logFormatter(
-                'RabbitMQ Connected Successfully',
-                { host, port },
-                'rabbitmq'
-            )
-        )
-    } catch (error) {
-        logger.error(
-            logFormatter(
-                'Failed to Connect to RabbitMQ',
-                {
-                    error: error instanceof Error
-                        ? error.message
-                        : String(error)
-                },
-                'rabbitmq'
-            )
-        )
-
-        connection = undefined
-        channel = undefined
-        setDependencyStatus('rabbitmq', false)
-
-        throw error
+            throw error
+        }
     }
 }
 
