@@ -23,38 +23,38 @@ class UserService {
 
     async getAllUsers(start: number, length: number, search: { value: string, regex: string }): Promise<IUserResponse> {
         try {
-        const { data, recordsTotal, recordsFiltered } = await userRepository.findAll(start, length, search)
+            const { data, recordsTotal, recordsFiltered } = await userRepository.findAll(start, length, search)
 
-        const encryptedData = data.map(user => {
-            const encryptedId = encrypt(user.id.toString());
-            const createdAt = moment(user.createdAt).format("D MMMM YYYY");
-            const updatedAt = moment(user.updatedAt).format("D MMMM YYYY");
+            const encryptedData = data.map(user => {
+                const encryptedId = encrypt(user.id.toString());
+                const createdAt = moment(user.createdAt).format("D MMMM YYYY");
+                const updatedAt = moment(user.updatedAt).format("D MMMM YYYY");
 
-            let userImage = user.image
+                let userImage = user.image
 
-            if (!user.image) {
-                userImage = `default-profile.jpg`
+                if (!user.image) {
+                    userImage = `default-profile.jpg`
+                }
+
+                return {
+                    id: encryptedId,
+                    username: user.username,
+                    password: user.password,
+                    roles: user.roles,
+                    email: user.email,
+                    image: userImage,
+                    createdAt,
+                    updatedAt
+                }
+            })
+
+            const result = {
+                data: encryptedData,
+                recordsTotal,
+                recordsFiltered
             }
-
-            return {
-                id: encryptedId,
-                username: user.username,
-                password: user.password,
-                roles: user.roles,
-                email: user.email,
-                image: userImage,
-                createdAt,
-                updatedAt
-            }
-        })
-
-        const result = {
-            data: encryptedData,
-            recordsTotal,
-            recordsFiltered
-        }
-        logger.info(logFormatter('Get users successfully', { recordsTotal, recordsFiltered }))
-        return result
+            logger.info(logFormatter('Get users successfully', { recordsTotal, recordsFiltered }))
+            return result
         } catch (error) {
             this.logFatalError('Get users', error)
             throw error
@@ -63,18 +63,18 @@ class UserService {
 
     async getUserBydId(id: string, isEncrypt: boolean = true): Promise<IUser | null> {
         try {
-        let userId = id
-        if (isEncrypt) {
-            userId = decrypt(id)
-        }
+            let userId = id
+            if (isEncrypt) {
+                userId = decrypt(id)
+            }
 
-        const user = await userRepository.findById(userId)
-        if (!user) {
-            logger.warn(logFormatter('User not found', { isEncrypted: isEncrypt }))
-        } else {
-            logger.info(logFormatter('Get user successfully', { isEncrypted: isEncrypt }))
-        }
-        return user;
+            const user = await userRepository.findById(userId)
+            if (!user) {
+                logger.warn(logFormatter('User not found', { isEncrypted: isEncrypt }))
+            } else {
+                logger.info(logFormatter('Get user successfully', { isEncrypted: isEncrypt }))
+            }
+            return user;
         } catch (error) {
             this.logFatalError('Get user by id', error)
             throw error
@@ -83,28 +83,28 @@ class UserService {
 
     async verifyUser(username: string, password: string): Promise<IUserLogin> {
         try {
-        const user = await userRepository.findByUsername(username)
-        let result: IUserLogin
+            const user = await userRepository.findByUsername(username)
+            let result: IUserLogin
 
-        if (user) {
-            const isPasswordValid = await bcrypt.compare(password, user.password)
-            if (isPasswordValid) {
-                delete user.password
-                result = {
-                    isUserValid: true,
-                    data: user
+            if (user) {
+                const isPasswordValid = await bcrypt.compare(password, user.password)
+                if (isPasswordValid) {
+                    delete user.password
+                    result = {
+                        isUserValid: true,
+                        data: user
+                    }
+
+                    logger.info(logFormatter('User authentication succeeded'))
+                    return result
                 }
-
-                logger.info(logFormatter('User authentication succeeded'))
-                return result
             }
-        }
 
-        logger.warn(logFormatter('User authentication failed', { userFound: Boolean(user) }))
-        return {
-            isUserValid: false,
-            data: null
-        }
+            logger.warn(logFormatter('User authentication failed', { reason: "invalid credential" }))
+            return {
+                isUserValid: false,
+                data: null
+            }
         } catch (error) {
             this.logFatalError('Verify user credentials', error)
             throw error
@@ -235,7 +235,7 @@ class UserService {
                 data: filePath
             }
 
-            const logData = logFormatter("Download Successfully!",  result )
+            const logData = logFormatter("Download Successfully!", result)
             logger.info(logData)
 
             return result
@@ -246,7 +246,7 @@ class UserService {
                 data: err
             }
 
-            const logData = logFormatter("Download failed!", result )
+            const logData = logFormatter("Download failed!", result)
             logger.warn(logData)
 
             return result

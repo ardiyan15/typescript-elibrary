@@ -1,5 +1,6 @@
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
 import userService from '@services/userService'
+import { regenerateSession, saveSession } from "@helper/session";
 import { logger, logFormatter } from "@utils/log";
 
 export const index = async (req: Request, res: Response) => {
@@ -14,37 +15,59 @@ export const index = async (req: Request, res: Response) => {
     })
 }
 
-export const login = async (req: Request, res: Response) => {
-    const { username, password } = req.body
+export const login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
 
-    const result = await userService.verifyUser(username, password)
+        const { username, password } = req.body
 
-    if (result.isUserValid) {
-        const token = await userService.generateJwtToken(result.data.id, result.data.username)
-        await userService.storeJwtToken(req, token)
-        const logData = logFormatter("Login Successfully!", result, req.originalUrl)
-        logger.info(logData)
-        res.redirect('/backoffice/home')
-    } else {
-        const logData = logFormatter("Login Failed!", result, req.originalUrl)
-        logger.warn(logData)
-        req.flash("failed", "Invalid Username or Password")
-        res.redirect('/backoffice')
-    }
-}
+        const result = await userService.verifyUser(username, password)
 
-export const logout = (req: Request, res: Response) => {
-    const token = req.session.backoffice.jwt
-    req.session.destroy((err) => {
-        if (err) {
-            const logData = logFormatter("Logout Failed!", { data: err.message })
-            logger.warn(logData)
-            return res.send("Failed to destroy session")
+        if (result.isUserValid && result.data) {
+            const token = await userService.generateJwtToken(result.data.id, result.data.username)
+
+            await regenerateSession(req)
+
+            await userService.storeJwtToken(req, token)
+            await saveSession(req)
+
+            res.redirect('/backoffice/home')
+        } else {
+            req.flash("failed", "Invalid Username or Password")
+            res.redirect('/backoffice')
         }
 
-        const logData = logFormatter("Logout Successfully!", { token })
-        logger.info(logData)
+    } catch (error) {
+        return next(error)
+    }
 
-        res.redirect('/backoffice')
-    })
 }
+
+export const logout = (req: Request, res: Response, next: NextFunction) => {
+    req.session.destroy((err) => {
+        if (err) {
+            logger.error(
+                logFormatter(
+                    "Logout Failed!",
+                    { error: err.message },
+                    req.originalUrl
+                )
+            );
+
+            return next(err);
+        }
+
+        res.clearCookie("connect.sid", {
+            path: "/",
+        });
+
+        logger.info(
+            logFormatter(
+                "Logout Successfully!",
+                {},
+                req.originalUrl
+            )
+        );
+
+        return res.redirect("/backoffice");
+    });
+};
