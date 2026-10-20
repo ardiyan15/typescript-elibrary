@@ -1,76 +1,873 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#b99a80" />
     <title>E-Library | Backoffice</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
     />
-    <link
-      href="/public/vendor/fontawesome-free/css/all.min.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link rel="icon" type="image/x-icon" href="/public/img/books.png" />
+
     <style>
-      .btn-primary {
-        background-color: #1d5b79 !important;
-        border-color: #1d5b79 !important;
+      :root {
+        color-scheme: light;
+
+        --ink: #30383d;
+        --ink-soft: #515a60;
+
+        /* Backoffice beige and brown palette */
+        --primary: #b99a80;
+        --primary-hover: #a88970;
+        --primary-dark: #80634d;
+        --gold: #dfc18d;
+
+        --paper: #fbfaf8;
+        --white: #ffffff;
+        --muted: #858b91;
+        --line: #e6e1dc;
+        --input-bg: #ffffff;
+
+        font-family: "DM Sans", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .page {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 1.12fr 0.88fr;
+      }
+
+      /* ========================================
+         LEFT PANEL
+      ======================================== */
+
+      .library {
+        position: relative;
+        display: flex;
+        min-height: 100vh;
+        align-items: flex-end;
+        overflow: hidden;
+        padding: 64px clamp(40px, 8vw, 116px);
+        color: #ffffff;
+        background: #5b4536;
+        isolation: isolate;
+      }
+
+      .library::before {
+        position: absolute;
+        z-index: -2;
+        inset: 0;
+        content: "";
+        background:
+          linear-gradient(
+            0deg,
+            rgba(48, 34, 25, 0.91) 0%,
+            rgba(75, 52, 37, 0.62) 35%,
+            rgba(75, 52, 37, 0.20) 72%,
+            rgba(75, 52, 37, 0.08) 100%
+          ),
+          url("/public/img/library.jpg") center / cover no-repeat;
+        transform: scale(1.01);
+      }
+
+      .library::after {
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        content: "";
+        background: linear-gradient(
+          90deg,
+          rgba(74, 49, 33, 0.15),
+          transparent 80%
+        );
+        pointer-events: none;
+      }
+
+      .library-copy {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 560px);
+        padding-bottom: 2px;
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 24px;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+      }
+
+      .eyebrow::before {
+        width: 34px;
+        height: 1px;
+        content: "";
+        background: var(--gold);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(42px, 5vw, 66px);
+        font-weight: 500;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+      }
+
+      h1 em {
+        color: var(--gold);
+        font-weight: 500;
+      }
+
+      .intro {
+        max-width: 390px;
+        margin: 22px 0 0;
+        color: rgba(255, 255, 255, 0.83);
+        font-size: 15px;
+        line-height: 1.85;
+      }
+
+      /* ========================================
+         BRAND
+      ======================================== */
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 6px;
+        color: #ffffff;
+        background: var(--primary);
+      }
+
+      .brand-mark svg {
+        width: 23px;
+        height: 23px;
+      }
+
+      .brand-name {
+        margin: 0;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+      }
+
+      .brand-caption {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: 0.11em;
+      }
+
+      .brand--light .brand-mark {
+        color: #ffffff;
+        background: rgba(185, 154, 128, 0.95);
+      }
+
+      .brand--light .brand-name {
+        color: #ffffff;
+      }
+
+      .brand--light .brand-caption {
+        color: rgba(255, 255, 255, 0.76);
+      }
+
+      .mobile-head {
+        display: none;
+      }
+
+      /* ========================================
+         RIGHT PANEL
+      ======================================== */
+
+      .form-side {
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        padding: 58px clamp(28px, 6vw, 80px);
+        background:
+          radial-gradient(
+            ellipse at 90% 0%,
+            rgba(185, 154, 128, 0.055),
+            transparent 48%
+          ),
+          var(--paper);
+      }
+
+      .form-wrap {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .form-brand {
+        margin-bottom: 58px;
+      }
+
+      .kicker {
+        margin: 0 0 15px;
+        color: var(--primary-dark);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+      }
+
+      h2 {
+        margin: 0;
+        color: #30383d;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(38px, 4vw, 48px);
+        font-weight: 500;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+      }
+
+      .form-intro {
+        margin: 15px 0 30px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.75;
+      }
+
+      /* ========================================
+         ERROR MESSAGE
+      ======================================== */
+
+      .alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 22px;
+        padding: 13px 15px;
+        border: 1px solid #e8c9c2;
+        border-radius: 6px;
+        color: #873e35;
+        background: #fbefec;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .alert svg {
+        width: 17px;
+        height: 17px;
+        flex: 0 0 17px;
+        margin-top: 1px;
+      }
+
+      /* ========================================
+         FORM FIELDS
+      ======================================== */
+
+      .field {
+        margin-top: 20px;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--ink-soft);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .field input {
+        display: block;
+        width: 100%;
+        height: 50px;
+        padding: 0 15px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        outline: none;
+        color: var(--ink);
+        background: var(--input-bg);
+        font-size: 14px;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .field input::placeholder {
+        color: #9a9fa5;
+      }
+
+      .field input:hover {
+        border-color: #d2c5b9;
+      }
+
+      .field input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(185, 154, 128, 0.17);
+      }
+
+      .password-wrap input {
+        padding-right: 52px;
+      }
+
+      .password-toggle {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border: 0;
+        border-radius: 5px;
+        color: #858b91;
+        background: transparent;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .password-toggle:hover {
+        color: var(--primary-dark);
+        background: #f5f0eb;
+      }
+
+      .password-toggle svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      /* ========================================
+         SUBMIT BUTTON
+      ======================================== */
+
+      .submit {
+        display: flex;
+        width: 100%;
+        min-height: 50px;
+        align-items: center;
+        justify-content: center;
+        gap: 11px;
+        margin-top: 27px;
+        padding: 12px 18px;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: #ffffff;
+        background: var(--primary);
+        box-shadow: 0 3px 8px rgba(92, 65, 44, 0.08);
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .submit:hover {
+        background: var(--primary-hover);
+        box-shadow: 0 5px 13px rgba(92, 65, 44, 0.15);
+      }
+
+      .submit:active {
+        transform: translateY(1px);
+      }
+
+      .submit svg {
+        width: 17px;
+        height: 17px;
+        transition: transform 0.2s ease;
+      }
+
+      .submit:hover svg {
+        transform: translateX(3px);
+      }
+
+      .submit:disabled {
+        opacity: 0.7;
+        cursor: wait;
+      }
+
+      .submit:focus-visible,
+      .password-toggle:focus-visible {
+        outline: 3px solid rgba(185, 154, 128, 0.4);
+        outline-offset: 3px;
+      }
+
+      /* ========================================
+         SECURITY NOTE & FOOTER
+      ======================================== */
+
+      .secure-note {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 28px;
+        padding-top: 19px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      .secure-note svg {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 16px;
+        color: var(--primary-dark);
+      }
+
+      .copyright {
+        margin: 29px 0 0;
+        color: #92979b;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ========================================
+         RESPONSIVE
+      ======================================== */
+
+      @media (min-width: 1500px) {
+        .form-wrap {
+          max-width: 440px;
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .page {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .library {
+          padding: 48px clamp(28px, 5vw, 60px);
+        }
+
+        .form-side {
+          padding: 45px clamp(26px, 4vw, 48px);
+        }
+
+        .form-brand {
+          margin-bottom: 45px;
+        }
+
+        h1 {
+          font-size: clamp(38px, 4.5vw, 54px);
+        }
+
+        h2 {
+          font-size: clamp(36px, 4vw, 44px);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          grid-template-columns: 1fr;
+        }
+
+        .library {
+          min-height: 210px;
+          align-items: flex-start;
+          padding: 23px 25px;
+        }
+
+        .library::before {
+          background-position: center 38%;
+        }
+
+        .library-copy {
+          display: none;
+        }
+
+        .mobile-head {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+        }
+
+        .mobile-brand {
+          display: flex;
+        }
+
+        .mobile-brand .brand-mark {
+          width: 40px;
+          height: 40px;
+          flex-basis: 40px;
+        }
+
+        .mobile-label {
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.13em;
+        }
+
+        .form-side {
+          min-height: auto;
+          align-items: flex-start;
+          padding: 36px 25px 32px;
+        }
+
+        .form-wrap {
+          max-width: 470px;
+          margin: 0 auto;
+        }
+
+        .form-brand {
+          display: none;
+        }
+
+        .kicker {
+          margin-bottom: 12px;
+        }
+
+        h2 {
+          font-size: 40px;
+        }
+
+        .form-intro {
+          margin: 14px 0 26px;
+        }
+
+        .field {
+          margin-top: 19px;
+        }
+
+        .submit {
+          margin-top: 25px;
+        }
+
+        .secure-note {
+          margin-top: 25px;
+        }
+
+        .copyright {
+          margin-top: 24px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .library {
+          min-height: 185px;
+          padding: 20px;
+        }
+
+        .form-side {
+          padding: 30px 20px;
+        }
+
+        .brand-name {
+          font-size: 12px;
+        }
+
+        .brand-caption {
+          font-size: 9px;
+        }
+
+        h2 {
+          font-size: 36px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
       }
     </style>
   </head>
-  <body style="height: 100%; margin: 0px; overflow: hidden">
-    <div class="row" style="height: 100%">
-      <div
-        class="col-md-8"
-        style="
-          background-image: url('/public/img/library.jpg');
-          background-size: cover;
-          background-position: bottom;
-        "
-      ></div>
-      <div
-        class="col-md-4 d-flex align-items-center"
-        style="margin: 0px auto; background-color: #e6e8eb; height: 100vh"
-      >
-        <div class="container">
-          <% if(flashMessage.length > 0) { %>
-            <div class="alert alert-danger" role="alert">
-                <%= flashMessage[0] %>
-              </div>
+
+  <body>
+    <main class="page">
+      <!-- LEFT: LIBRARY SHOWCASE -->
+      <section class="library" aria-label="E-Library">
+
+        <!-- Mobile brand -->
+        <div class="mobile-head">
+          <div class="brand brand--light mobile-brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 7v14m0-14C10.7 5.4 8.8 4.5 5 4.5c-1.1 0-2 .9-2 2V18c0 1.1.9 2 2 2 3.8 0 5.7.9 7 2m0-15c1.3-1.6 3.2-2.5 7-2.5 1.1 0 2 .9 2 2V18c0 1.1-.9 2-2 2-3.8 0-5.7.9-7 2"
+                />
+              </svg>
+            </span>
+
+            <span>
+              <p class="brand-name">E-LIBRARY</p>
+              <p class="brand-caption">PERPUSTAKAAN DIGITAL</p>
+            </span>
+          </div>
+
+          <span class="mobile-label">BACKOFFICE</span>
+        </div>
+
+        <!-- Desktop showcase copy -->
+        <div class="library-copy">
+          <p class="eyebrow">RUANG BACA DIGITAL</p>
+
+          <h1>
+            Temukan cerita,<br />
+            <em>buka cakrawala.</em>
+          </h1>
+
+          <p class="intro">
+            Satu tempat untuk merawat koleksi dan menemani lebih banyak pembaca.
+          </p>
+        </div>
+      </section>
+
+      <!-- RIGHT: LOGIN FORM -->
+      <section class="form-side">
+        <div class="form-wrap">
+
+          <!-- Brand -->
+          <div class="form-brand">
+            <div class="brand">
+              <span class="brand-mark" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 7v14m0-14C10.7 5.4 8.8 4.5 5 4.5c-1.1 0-2 .9-2 2V18c0 1.1.9 2 2 2 3.8 0 5.7.9 7 2m0-15c1.3-1.6 3.2-2.5 7-2.5 1.1 0 2 .9 2 2V18c0 1.1-.9 2-2 2-3.8 0-5.7.9-7 2"
+                  />
+                </svg>
+              </span>
+
+              <span>
+                <p class="brand-name">E-LIBRARY</p>
+                <p class="brand-caption">PERPUSTAKAAN DIGITAL</p>
+              </span>
+            </div>
+          </div>
+
+          <!-- Heading -->
+          <p class="kicker">PORTAL PENGELOLA</p>
+
+          <h2>
+            Selamat datang<br />
+            kembali
+          </h2>
+
+          <p class="form-intro">
+            Masuk untuk melanjutkan ke ruang pengelolaan E-Library.
+          </p>
+
+          <!-- Flash message from Express -->
+          <% if (flashMessage && flashMessage.length > 0) { %>
+            <div class="alert" role="alert">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v4m0 4h.01" />
+              </svg>
+
+              <span><%= flashMessage[0] %></span>
+            </div>
           <% } %>
-          <h3 class="text-center"><i class="fas fa-book"></i> E-LIBRARY</h3>
+
+          <!-- Login form -->
           <form method="POST" action="/backoffice/login">
-            <div class="form-group">
-              <label for="exampleInputEmail1">Username</label>
-              <input
-                type="text"
-                class="form-control"
-                id="exampleInputEmail1"
-                name="username"
-                placeholder="Username"
-              />
+            <div class="field">
+              <label for="username">Username</label>
+
+              <div class="input-wrap">
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Masukkan username"
+                  autocomplete="username"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  required
+                />
+              </div>
             </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input
-                type="password"
-                name="password"
-                class="form-control"
-                id="exampleInputPassword1"
-                placeholder="Password"
-              />
+
+            <div class="field">
+              <label for="password">Password</label>
+
+              <div class="input-wrap password-wrap">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Masukkan password"
+                  autocomplete="current-password"
+                  required
+                />
+
+                <button
+                  class="password-toggle"
+                  type="button"
+                  id="togglePassword"
+                  aria-label="Tampilkan password"
+                  aria-pressed="false"
+                >
+                  <svg
+                    id="eyeIcon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-sm rounded">
-              Login
+
+            <button class="submit" type="submit">
+              <span>Masuk ke backoffice</span>
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14m-7-7 7 7-7 7" />
+              </svg>
             </button>
           </form>
+
+          <!-- Security note -->
+          <div class="secure-note">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="4" y="10" width="16" height="11" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2" />
+            </svg>
+
+            <span>Akses ini khusus untuk pengelola perpustakaan.</span>
+          </div>
+
+          <!-- Footer -->
+          <p class="copyright">
+            © E-Library · Ruang baca digital
+          </p>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
+
+    <script>
+      const passwordField = document.getElementById("password");
+      const passwordToggle = document.getElementById("togglePassword");
+      const eyeIcon = document.getElementById("eyeIcon");
+
+      passwordToggle.addEventListener("click", () => {
+        const isVisible = passwordField.type === "password";
+
+        passwordField.type = isVisible ? "text" : "password";
+
+        passwordToggle.setAttribute(
+          "aria-pressed",
+          String(isVisible)
+        );
+
+        passwordToggle.setAttribute(
+          "aria-label",
+          isVisible ? "Sembunyikan password" : "Tampilkan password"
+        );
+
+        eyeIcon.innerHTML = isVisible
+          ? `
+            <path d="M3 3 21 21" />
+            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+            <path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7s-1.3 2.5-3.5 4.5" />
+            <path d="M6.2 6.2C3.5 8.1 2 12 2 12s3.6 7 10 7c1 0 2-.2 2.8-.5" />
+          `
+          : `
+            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+            <circle cx="12" cy="12" r="3" />
+          `;
+      });
+    </script>
   </body>
 </html>
